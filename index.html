@@ -164,6 +164,18 @@
         .species-icon {
             font-size: 2rem;
             margin-bottom: 0.5rem;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+        }
+
+        .species-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .species-name {
@@ -414,6 +426,29 @@
             font-size: 0.8rem;
         }
 
+        .species-tag img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+        }
+
+        /* Icon styling for various items */
+        .item-icon {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .ingredient-tag img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+
         /* Building Requirements Section */
         .building-requirements {
             background-color: var(--bg-secondary);
@@ -593,6 +628,52 @@
                 padding: 0.875rem;
             }
         }
+
+        /* Footer Styling */
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 2px solid var(--border-color);
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .footer h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .footer p {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        .footer-credits {
+            font-size: 0.9rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-disclaimer {
+            font-size: 0.85rem;
+            font-style: italic;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
     </style>
 </head>
 <body>
@@ -635,6 +716,28 @@
             </section>
 
             <section class="results" id="results"></section>
+
+            <!-- Footer with Credits -->
+            <footer class="footer">
+                <div class="footer-credits">
+                    <h3>⚡ Credits & Attribution</h3>
+                    <p>
+                        <strong>Against the Storm</strong> is developed and published by <strong>Eremite Games</strong>.
+                        <br>
+                        All game icons, images, and assets are property of Eremite Games.
+                    </p>
+                    <p>
+                        Official Website: <a href="https://eremitegames.com/" target="_blank" rel="noopener noreferrer">eremitegames.com</a>
+                        <br>
+                        Steam Page: <a href="https://store.steampowered.com/app/1336490/Against_the_Storm/" target="_blank" rel="noopener noreferrer">Against the Storm on Steam</a>
+                    </p>
+                    <div class="footer-disclaimer">
+                        This is an unofficial fan-made tool created to help players with species selection and needs management.
+                        It is not affiliated with, endorsed by, or sponsored by Eremite Games.
+                        All game content and assets remain the intellectual property of their respective owners.
+                    </div>
+                </div>
+            </footer>
         </main>
     </div>
 
@@ -644,6 +747,7 @@
             humans: {
                 name: 'Humans',
                 icon: '👤',
+                image: 'images/species/humans.png',
                 complexFood: ['Biscuits', 'Jerky', 'Pickled Goods', 'Pie'],
                 services: ['Leisure', 'Religion', 'Education'],
                 clothing: ['Coats']
@@ -651,6 +755,7 @@
             beavers: {
                 name: 'Beavers',
                 icon: '🦫',
+                image: 'images/species/beavers.png',
                 complexFood: ['Biscuits', 'Jerky', 'Pickled Goods'],
                 services: ['Leisure', 'Education', 'Cleanliness'],
                 clothing: ['Coats']
@@ -658,6 +763,7 @@
             lizards: {
                 name: 'Lizards',
                 icon: '🦎',
+                image: 'images/species/lizards.png',
                 complexFood: ['Jerky', 'Pickled Goods', 'Pie', 'Skewers'],
                 services: ['Leisure', 'Brawling', 'Religion'],
                 clothing: ['Boots']
@@ -665,6 +771,7 @@
             harpies: {
                 name: 'Harpies',
                 icon: '🦅',
+                image: 'images/species/harpies.png',
                 complexFood: ['Jerky', 'Pie', 'Skewers'],
                 services: ['Cleanliness', 'Religion', 'Education'],
                 clothing: ['Coats']
@@ -672,6 +779,7 @@
             foxes: {
                 name: 'Foxes',
                 icon: '🦊',
+                image: 'images/species/foxes.png',
                 complexFood: ['Biscuits', 'Jerky', 'Skewers'],
                 services: ['Cleanliness', 'Brawling', 'Education'],
                 clothing: ['Boots']
@@ -679,6 +787,7 @@
             frogs: {
                 name: 'Frogs',
                 icon: '🐸',
+                image: 'images/species/frogs.png',
                 complexFood: ['Porridge', 'Paste', 'Pie'],
                 services: ['Brawling', 'Luxury', 'Religion', 'Education'],
                 clothing: ['Boots']
@@ -686,6 +795,7 @@
             bats: {
                 name: 'Bats',
                 icon: '🦇',
+                image: 'images/species/bats.png',
                 complexFood: ['Biscuits', 'Paste', 'Skewers'],
                 services: ['Brawling', 'Education'],
                 clothing: ['Coats']
@@ -844,6 +954,15 @@
             maxSelection: 3
         };
 
+        // Helper function to create image element with emoji fallback
+        function createIconElement(imagePath, emoji, altText) {
+            if (imagePath) {
+                return `<img src="${imagePath}" alt="${altText}" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                        <span style="display:none; font-size: inherit;">${emoji}</span>`;
+            }
+            return emoji;
+        }
+
         // Initialize the app
         function init() {
             renderSpeciesGrid();
@@ -868,7 +987,7 @@
                 }
 
                 card.innerHTML = `
-                    <div class="species-icon">${species.icon}</div>
+                    <div class="species-icon">${createIconElement(species.image, species.icon, species.name)}</div>
                     <div class="species-name">${species.name}</div>
                 `;
 
@@ -946,7 +1065,8 @@
                     if (speciesWithNeed.length >= 2) {
                         pairwiseData[category][need] = speciesWithNeed.map(s => ({
                             name: s.name,
-                            icon: s.icon
+                            icon: s.icon,
+                            image: s.image
                         }));
                     }
                 });
@@ -983,9 +1103,10 @@
             html += '<div class="results-grid">';
 
             selectedData.forEach((species, index) => {
+                const speciesIcon = createIconElement(species.image, species.icon, species.name);
                 html += `
                     <div class="result-card">
-                        <h3>${species.icon} ${species.name}</h3>
+                        <h3><span class="species-icon" style="width: 32px; height: 32px; display: inline-flex; vertical-align: middle; margin-right: 0.5rem;">${speciesIcon}</span>${species.name}</h3>
                         <div class="needs-section">
                             <h4>Complex Food</h4>
                             <ul class="needs-list">
@@ -1083,7 +1204,7 @@
                             <div class="pairwise-item">
                                 <div class="pairwise-need-name">${need}</div>
                                 <div class="pairwise-species-list">
-                                    ${species.map(s => `<span class="species-tag">${s.icon} ${s.name}</span>`).join('')}
+                                    ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
                                 </div>
                             </div>
                         `;
@@ -1102,7 +1223,7 @@
                             <div class="pairwise-item">
                                 <div class="pairwise-need-name">${need}</div>
                                 <div class="pairwise-species-list">
-                                    ${species.map(s => `<span class="species-tag">${s.icon} ${s.name}</span>`).join('')}
+                                    ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
                                 </div>
                             </div>
                         `;
@@ -1121,7 +1242,7 @@
                             <div class="pairwise-item">
                                 <div class="pairwise-need-name">${need}</div>
                                 <div class="pairwise-species-list">
-                                    ${species.map(s => `<span class="species-tag">${s.icon} ${s.name}</span>`).join('')}
+                                    ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
                                 </div>
                             </div>
                         `;
