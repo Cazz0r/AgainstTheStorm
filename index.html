@@ -413,6 +413,187 @@
             border-radius: 4px;
             font-size: 0.8rem;
         }
+
+        /* Building Requirements Section */
+        .building-requirements {
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .building-requirements h2 {
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .need-buildings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .need-buildings-item {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.25rem;
+        }
+
+        .need-buildings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .need-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .need-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            background-color: var(--bg-tertiary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .buildings-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .building-card {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+            transition: all 0.2s;
+        }
+
+        .building-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .building-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .building-name {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 0.15rem;
+            font-size: 1rem;
+            color: #fbbf24;
+        }
+
+        .star-rating.stars-3 {
+            color: #fbbf24;
+        }
+
+        .star-rating.stars-2 {
+            color: #60a5fa;
+        }
+
+        .star-rating.stars-1 {
+            color: #9ca3af;
+        }
+
+        .building-ingredients {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .ingredient-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .ingredient-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .ingredient-tag {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .ingredient-chain {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chain-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .sub-building {
+            background-color: var(--bg-secondary);
+            border-left: 3px solid var(--accent-color);
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .sub-building-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .worker-note {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .building-requirements {
+                padding: 1rem;
+            }
+
+            .need-buildings-item {
+                padding: 1rem;
+            }
+
+            .building-card {
+                padding: 0.875rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -510,6 +691,152 @@
                 services: ['Brawling', 'Education'],
                 clothing: ['Coats']
             }
+        };
+
+        // Buildings and Recipes Data
+        const recipesData = {
+            // Complex Food
+            'Biscuits': [
+                { building: 'Bakery', stars: 3, ingredients: ['Flour', 'Herbs or Berries or Roots'] },
+                { building: 'Cookhouse', stars: 2, ingredients: ['Flour', 'Herbs or Berries or Roots'] },
+                { building: 'Field Kitchen', stars: 1, ingredients: ['Flour', 'Herbs or Berries or Roots'] },
+                { building: 'Apothecary', stars: 1, ingredients: ['Flour', 'Herbs or Berries or Roots'] },
+                { building: 'Smelter', stars: 1, ingredients: ['Flour', 'Herbs or Berries or Roots'] }
+            ],
+            'Jerky': [
+                { building: 'Smokehouse', stars: 3, ingredients: ['Meat or Insects', 'Wood or Oil or Coal'] },
+                { building: 'Butcher', stars: 2, ingredients: ['Meat or Insects', 'Wood or Oil or Coal'] },
+                { building: 'Kiln', stars: 2, ingredients: ['Meat or Insects', 'Wood or Oil or Coal'] },
+                { building: 'Field Kitchen', stars: 1, ingredients: ['Meat or Insects', 'Wood or Oil or Coal'] },
+                { building: 'Cellar', stars: 1, ingredients: ['Meat or Insects', 'Wood or Oil or Coal'] }
+            ],
+            'Pickled Goods': [
+                { building: 'Cellar', stars: 3, ingredients: ['Vegetables or Mushrooms or Roots or Berries or Eggs', 'Pottery or Barrels or Waterskins'] },
+                { building: 'Brewery', stars: 2, ingredients: ['Vegetables or Mushrooms or Roots or Berries or Eggs', 'Pottery or Barrels or Waterskins'] },
+                { building: 'Beanery', stars: 2, ingredients: ['Vegetables or Mushrooms or Roots or Berries or Eggs', 'Pottery or Barrels or Waterskins'] },
+                { building: 'Granary', stars: 1, ingredients: ['Vegetables or Mushrooms or Roots or Berries or Eggs', 'Pottery or Barrels or Waterskins'] },
+                { building: 'Field Kitchen', stars: 1, ingredients: ['Vegetables or Mushrooms or Roots or Berries or Eggs', 'Pottery or Barrels or Waterskins'] }
+            ],
+            'Pie': [
+                { building: 'Bakery', stars: 3, ingredients: ['Flour', 'Meat or Berries or Insects or Eggs or Herbs'] },
+                { building: 'Brick Oven', stars: 2, ingredients: ['Flour', 'Meat or Berries or Insects or Eggs or Herbs'] },
+                { building: 'Furnace', stars: 1, ingredients: ['Flour', 'Meat or Berries or Insects or Eggs or Herbs'] }
+            ],
+            'Skewers': [
+                { building: 'Grill', stars: 3, ingredients: ['Meat or Mushrooms or Jerky or Insects', 'Roots or Berries or Eggs or Vegetables'] },
+                { building: 'Butcher', stars: 2, ingredients: ['Meat or Mushrooms or Jerky or Insects', 'Roots or Berries or Eggs or Vegetables'] },
+                { building: 'Cookhouse', stars: 2, ingredients: ['Meat or Mushrooms or Jerky or Insects', 'Roots or Berries or Eggs or Vegetables'] }
+            ],
+            'Porridge': [
+                { building: 'Beanery', stars: 3, ingredients: ['Berries or Reeds or Mushrooms', 'Pottery or Waterskins or Barrels'] },
+                { building: 'Field Kitchen', stars: 2, ingredients: ['Berries or Reeds or Mushrooms', 'Pottery or Waterskins or Barrels'] },
+                { building: 'Teahouse', stars: 2, ingredients: ['Berries or Reeds or Mushrooms', 'Pottery or Waterskins or Barrels'] },
+                { building: 'Distillery', stars: 1, ingredients: ['Berries or Reeds or Mushrooms', 'Pottery or Waterskins or Barrels'] }
+            ],
+            'Paste': [
+                { building: 'Apothecary', stars: 3, ingredients: ['Berries or Insects or Reeds', 'Pottery or Barrels or Waterskins'] },
+                { building: 'Cookhouse', stars: 2, ingredients: ['Berries or Insects or Reeds', 'Pottery or Barrels or Waterskins'] },
+                { building: 'Field Kitchen', stars: 1, ingredients: ['Berries or Insects or Reeds', 'Pottery or Barrels or Waterskins'] }
+            ],
+            // Clothing
+            'Coats': [
+                { building: 'Clothier', stars: 3, ingredients: ['Fabric', 'Leather', 'Dye', 'Resin'] },
+                { building: 'Artisan', stars: 2, ingredients: ['Fabric', 'Leather', 'Dye', 'Resin'] },
+                { building: 'Cooperage', stars: 2, ingredients: ['Fabric', 'Leather', 'Dye', 'Resin'] },
+                { building: "Druid's Hut", stars: 1, ingredients: ['Fabric', 'Leather', 'Dye', 'Resin'] }
+            ],
+            'Boots': [
+                { building: 'Clothier', stars: 3, ingredients: ['Leather', 'Scales', 'Fabric'] },
+                { building: 'Artisan', stars: 2, ingredients: ['Leather', 'Scales', 'Fabric'] },
+                { building: 'Leatherworker', stars: 1, ingredients: ['Leather', 'Scales', 'Fabric'] }
+            ],
+            // Services
+            'Leisure': [
+                { building: 'Tavern', stars: 3, ingredients: ['Ale'], workerRequired: true },
+                { building: 'Forum', stars: 2, ingredients: ['Ale'], workerRequired: true },
+                { building: 'Monastery', stars: 2, ingredients: ['Ale'], workerRequired: true }
+            ],
+            'Religion': [
+                { building: 'Temple', stars: 3, ingredients: ['Incense'], workerRequired: true },
+                { building: 'Holy Temple', stars: 3, ingredients: ['Incense'], workerRequired: true },
+                { building: 'Monastery', stars: 2, ingredients: ['Incense'], workerRequired: true },
+                { building: 'Clan Hall', stars: 2, ingredients: ['Incense'], workerRequired: true }
+            ],
+            'Education': [
+                { building: 'Academy', stars: 3, ingredients: ['Scrolls'], workerRequired: true },
+                { building: 'Forum', stars: 2, ingredients: ['Scrolls'], workerRequired: true },
+                { building: 'Temple', stars: 2, ingredients: ['Scrolls'], workerRequired: true },
+                { building: "Explorer's Lodge", stars: 2, ingredients: ['Scrolls'], workerRequired: true }
+            ],
+            'Cleanliness': [
+                { building: 'Bath House', stars: 3, ingredients: ['Cosmetics or Tea'], workerRequired: true },
+                { building: 'Tea Doctor', stars: 2, ingredients: ['Cosmetics or Tea'], workerRequired: true },
+                { building: 'Holy Market', stars: 2, ingredients: ['Cosmetics or Tea'], workerRequired: true }
+            ],
+            'Brawling': [
+                { building: 'Clan Hall', stars: 3, ingredients: ['Training Gear'], workerRequired: true },
+                { building: "Explorer's Lodge", stars: 2, ingredients: ['Training Gear'], workerRequired: true },
+                { building: 'Tea Doctor', stars: 2, ingredients: ['Training Gear'], workerRequired: true },
+                { building: 'Tavern', stars: 2, ingredients: ['Training Gear'], workerRequired: true }
+            ],
+            'Luxury': [
+                { building: 'Market', stars: 3, ingredients: ['Wine'], workerRequired: true },
+                { building: 'Tavern', stars: 2, ingredients: ['Wine'], workerRequired: true },
+                { building: 'Guild House', stars: 2, ingredients: ['Wine'], workerRequired: true },
+                { building: 'Holy Market', stars: 2, ingredients: ['Wine'], workerRequired: true }
+            ]
+        };
+
+        // Ingredient recipes (for the secondary ingredients needed)
+        const ingredientRecipes = {
+            'Flour': [
+                { building: 'Mill', stars: 3, ingredients: ['Grain or Roots or Mushrooms'] }
+            ],
+            'Fabric': [
+                { building: 'Weaver', stars: 3, ingredients: ['Plant Fiber or Reed or Leather'] }
+            ],
+            'Leather': [
+                { building: 'Leatherworker', stars: 3, ingredients: ['Meat or Insects'] }
+            ],
+            'Ale': [
+                { building: 'Brewery', stars: 3, ingredients: ['Grain or Roots', 'Pottery or Barrels or Waterskins'] }
+            ],
+            'Incense': [
+                { building: 'Apothecary', stars: 3, ingredients: ['Herbs or Reeds or Roots', 'Wood or Oil or Coal'] }
+            ],
+            'Scrolls': [
+                { building: 'Scribe', stars: 3, ingredients: ['Leather or Reed or Wood', 'Dye or Oil'] }
+            ],
+            'Cosmetics': [
+                { building: 'Apothecary', stars: 3, ingredients: ['Herbs or Berries or Crystalized Dew'] }
+            ],
+            'Tea': [
+                { building: 'Teahouse', stars: 3, ingredients: ['Herbs or Reeds or Roots', 'Pottery or Barrels or Waterskins'] }
+            ],
+            'Training Gear': [
+                { building: 'Smithy', stars: 3, ingredients: ['Copper Bars or Crystalized Dew', 'Planks or Reed'] }
+            ],
+            'Wine': [
+                { building: 'Brewery', stars: 3, ingredients: ['Berries or Reed or Grain', 'Pottery or Barrels or Waterskins'] }
+            ],
+            'Pottery': [
+                { building: 'Kiln', stars: 3, ingredients: ['Clay', 'Wood or Oil or Coal'] }
+            ],
+            'Barrels': [
+                { building: 'Cooperage', stars: 3, ingredients: ['Planks or Copper Bars'] }
+            ],
+            'Waterskins': [
+                { building: 'Leatherworker', stars: 2, ingredients: ['Leather'] }
+            ],
+            'Dye': [
+                { building: 'Tinctury', stars: 3, ingredients: ['Roots or Pigment or Mushrooms or Insects'] }
+            ],
+            'Resin': [
+                { building: "Forester's Hut", stars: 3, ingredients: ['Gathered from trees'] }
+            ],
+            'Scales': [
+                { building: 'Lizard Post', stars: 3, ingredients: ['Gathered from lizards'] }
+            ]
         };
 
         // State Management
@@ -727,6 +1054,12 @@
                 </div>
             `;
 
+            // Add building requirements for shared needs
+            if (hasSharedNeeds) {
+                const allSharedNeeds = [...sharedComplexFood, ...sharedClothing, ...sharedServices];
+                html += renderBuildingRequirements(allSharedNeeds);
+            }
+
             // Add pairwise shared needs section
             const pairwiseData = calculatePairwiseNeeds(selectedData);
             const hasPairwiseNeeds = Object.values(pairwiseData).some(category => 
@@ -806,7 +1139,151 @@
             resultsContainer.innerHTML = html;
         }
 
-        // Setup event listeners
+        // Render building requirements for shared needs
+        function renderBuildingRequirements(sharedNeeds) {
+            if (!sharedNeeds || sharedNeeds.length === 0) {
+                return '';
+            }
+
+            let html = `
+                <div class="building-requirements">
+                    <h2>🏗️ How to Provide These Needs</h2>
+                    <div class="need-buildings-list">
+            `;
+
+            sharedNeeds.forEach(need => {
+                const recipes = recipesData[need];
+                if (!recipes || recipes.length === 0) return;
+
+                // Sort buildings by star rating (descending)
+                const sortedRecipes = [...recipes].sort((a, b) => b.stars - a.stars);
+
+                // Determine category
+                let category = 'Unknown';
+                if (['Biscuits', 'Jerky', 'Pickled Goods', 'Pie', 'Skewers', 'Porridge', 'Paste'].includes(need)) {
+                    category = 'Complex Food';
+                } else if (['Coats', 'Boots'].includes(need)) {
+                    category = 'Clothing';
+                } else {
+                    category = 'Service';
+                }
+
+                html += `
+                    <div class="need-buildings-item">
+                        <div class="need-buildings-header">
+                            <h3 class="need-name">${need}</h3>
+                            <span class="need-category">${category}</span>
+                        </div>
+                        <div class="buildings-grid">
+                `;
+
+                sortedRecipes.forEach(recipe => {
+                    const starIcons = '⭐'.repeat(recipe.stars);
+                    const starClass = `stars-${recipe.stars}`;
+                    
+                    html += `
+                        <div class="building-card">
+                            <div class="building-header">
+                                <span class="building-name">${recipe.building}</span>
+                                <span class="star-rating ${starClass}" title="${recipe.stars} stars">${starIcons}</span>
+                            </div>
+                            <div class="building-ingredients">
+                                <div class="ingredient-label">Required Ingredients:</div>
+                                <div class="ingredient-list">
+                    `;
+
+                    recipe.ingredients.forEach(ingredient => {
+                        html += `<span class="ingredient-tag">${ingredient}</span>`;
+                    });
+
+                    html += `
+                                </div>
+                            </div>
+                    `;
+
+                    // Check if this has worker requirement
+                    if (recipe.workerRequired) {
+                        html += `<div class="worker-note">⚠️ Requires at least one worker assigned</div>`;
+                    }
+
+                    // Add ingredient chains for complex ingredients
+                    const ingredientChains = getIngredientChains(recipe.ingredients);
+                    if (ingredientChains.length > 0) {
+                        html += `
+                            <div class="ingredient-chain">
+                                <div class="chain-label">🔗 Buildings for Ingredients:</div>
+                        `;
+                        ingredientChains.forEach(chain => {
+                            html += `
+                                <div class="sub-building">
+                                    <div class="sub-building-name">${chain.ingredient} → ${chain.building}</div>
+                                    <div class="ingredient-list" style="margin-top: 0.25rem;">
+                                        ${chain.ingredients.map(ing => `<span class="ingredient-tag">${ing}</span>`).join('')}
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        html += `
+                            </div>
+                        `;
+                    }
+
+                    html += `
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            return html;
+        }
+
+        // Get ingredient chains (buildings needed to produce ingredients)
+        function getIngredientChains(ingredients) {
+            const chains = [];
+            
+            ingredients.forEach(ingredientOptions => {
+                // Parse ingredient options (e.g., "Flour", "Meat or Insects")
+                const baseIngredients = ingredientOptions.split(' or ').map(i => i.trim());
+                
+                // For each base ingredient, check if it has a recipe
+                baseIngredients.forEach(ingredient => {
+                    if (ingredientRecipes[ingredient]) {
+                        // Use the first (best) recipe for this ingredient
+                        const recipe = ingredientRecipes[ingredient][0];
+                        chains.push({
+                            ingredient: ingredient,
+                            building: recipe.building,
+                            ingredients: recipe.ingredients
+                        });
+                    }
+                });
+            });
+
+            // Remove duplicates based on ingredient name
+            const uniqueChains = [];
+            const seenIngredients = new Set();
+            
+            chains.forEach(chain => {
+                if (!seenIngredients.has(chain.ingredient)) {
+                    seenIngredients.add(chain.ingredient);
+                    uniqueChains.push(chain);
+                }
+            });
+
+            return uniqueChains;
+        }
+
+        // Update results display
         function setupEventListeners() {
             // Sidebar toggle for mobile
             const sidebar = document.getElementById('sidebar');
