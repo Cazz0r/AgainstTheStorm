@@ -736,19 +736,25 @@
                 <div class="footer-credits">
                     <h3>⚡ Credits & Attribution</h3>
                     <p>
-                        <strong>Against the Storm</strong> is developed and published by <strong>Eremite Games</strong>.
+                        <strong>Against the Storm</strong> is developed by <strong>Eremite Games</strong> and published by <strong>Hooded Horse</strong>.
                         <br>
-                        All game icons, images, and assets are property of Eremite Games.
+                        All game icons, images, and assets are property of Eremite Games and Hooded Horse.
                     </p>
                     <p>
-                        Official Website: <a href="https://eremitegames.com/" target="_blank" rel="noopener noreferrer">eremitegames.com</a>
+                        Official Wiki: <a href="https://wiki.hoodedhorse.com/Against_the_Storm/Against_the_Storm_Official_Wiki" target="_blank" rel="noopener noreferrer">Against the Storm Official Wiki</a>
+                        <br>
+                        Developer: <a href="https://eremitegames.com/" target="_blank" rel="noopener noreferrer">eremitegames.com</a>
+                        <br>
+                        Publisher: <a href="https://hoodedhorse.com/" target="_blank" rel="noopener noreferrer">hoodedhorse.com</a>
                         <br>
                         Steam Page: <a href="https://store.steampowered.com/app/1336490/Against_the_Storm/" target="_blank" rel="noopener noreferrer">Against the Storm on Steam</a>
                     </p>
                     <div class="footer-disclaimer">
                         This is an unofficial fan-made tool created to help players with species selection and needs management.
-                        It is not affiliated with, endorsed by, or sponsored by Eremite Games.
+                        It is not affiliated with, endorsed by, or sponsored by Eremite Games or Hooded Horse.
                         All game content and assets remain the intellectual property of their respective owners.
+                        <br><br>
+                        <strong>Icon Source:</strong> Game icons should be sourced from the <a href="https://wiki.hoodedhorse.com/Against_the_Storm/Against_the_Storm_Official_Wiki" target="_blank" rel="noopener noreferrer">official wiki</a>. See <code>images/README.md</code> for instructions.
                     </div>
                 </div>
             </footer>
@@ -971,13 +977,30 @@
         // Helper function to create image element with emoji fallback
         function createIconElement(imagePath, emoji, altText) {
             if (imagePath) {
-                // Basic sanitization: ensure path starts with images/ and contains only safe characters
-                const sanitizedPath = imagePath.replace(/[^a-zA-Z0-9\/_.-]/g, '');
-                if (sanitizedPath.startsWith('images/')) {
-                    const escapedAlt = altText.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                    return `<img src="${sanitizedPath}" alt="${escapedAlt}" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='block';" />
-                            <span class="emoji-fallback">${emoji}</span>`;
+                let sanitizedPath = imagePath;
+                
+                // Check if it's an external URL (hotlink) or local path
+                const isExternalUrl = imagePath.startsWith('http://') || imagePath.startsWith('https://');
+                
+                if (isExternalUrl) {
+                    // For external URLs, validate it's from the official wiki
+                    if (imagePath.startsWith('https://wiki.hoodedhorse.com/')) {
+                        sanitizedPath = imagePath;
+                    } else {
+                        // Only allow official wiki hotlinks
+                        return emoji;
+                    }
+                } else {
+                    // For local paths, ensure path starts with images/ and contains only safe characters
+                    sanitizedPath = imagePath.replace(/[^a-zA-Z0-9\/_.-]/g, '');
+                    if (!sanitizedPath.startsWith('images/')) {
+                        return emoji;
+                    }
                 }
+                
+                const escapedAlt = altText.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                return `<img src="${sanitizedPath}" alt="${escapedAlt}" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                        <span class="emoji-fallback">${emoji}</span>`;
             }
             return emoji;
         }
