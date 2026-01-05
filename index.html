@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Against the Storm - Species Helper</title>
+    <style>
+        /* CSS Variables for theming */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-tertiary: #e8e8e8;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --border-color: #d0d0d0;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
+            --sidebar-width: 280px;
+            --transition-speed: 0.3s;
+        }
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #1a1a1a;
+                --bg-secondary: #252525;
+                --bg-tertiary: #303030;
+                --text-primary: #e8e8e8;
+                --text-secondary: #a0a0a0;
+                --border-color: #404040;
+                --accent-color: #3b82f6;
+                --accent-hover: #60a5fa;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color var(--transition-speed);
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform var(--transition-speed);
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+        }
+
+        .hamburger:hover {
+            opacity: 0.7;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            transition: margin-left var(--transition-speed);
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+        }
+
+        /* Species Selection */
+        .species-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .species-card {
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .species-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .species-card.selected {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        .species-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .species-card.disabled:hover {
+            transform: none;
+            border-color: var(--border-color);
+        }
+
+        .species-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .species-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Results Section */
+        .results {
+            margin-top: 2rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .result-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .needs-section {
+            margin-bottom: 1rem;
+        }
+
+        .needs-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .needs-section h4 {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .needs-list {
+            list-style: none;
+        }
+
+        .needs-list li {
+            padding: 0.5rem;
+            background-color: var(--bg-tertiary);
+            margin-bottom: 0.25rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .shared-needs {
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .shared-needs h2 {
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .shared-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Mobile Hamburger Button in Main Content */
+        .mobile-hamburger {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 999;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-hamburger:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 4rem 1rem 1rem;
+            }
+
+            .hamburger,
+            .mobile-hamburger {
+                display: block;
+            }
+
+            .species-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .shared-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Selection Counter */
+        .selection-info {
+            background-color: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .selection-info.complete {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        /* Pairwise Shared Needs */
+        .pairwise-needs {
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .pairwise-needs h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .pairwise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .pairwise-category {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+        }
+
+        .pairwise-category h3 {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .pairwise-item {
+            background-color: var(--bg-tertiary);
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-radius: 4px;
+        }
+
+        .pairwise-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .pairwise-need-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .pairwise-species-list {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .species-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background-color: var(--bg-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">Species Helper</h2>
+                <button class="hamburger" id="sidebarClose" aria-label="Close sidebar">✕</button>
+            </div>
+            
+            <div class="selection-info" id="selectionInfo">
+                Select 3 Species
+            </div>
+
+            <div id="sidebarContent">
+                <h3 style="margin-bottom: 1rem; font-size: 1rem;">Instructions</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">
+                    Select exactly 3 species to view their shared needs. The tool will show what Complex Food, Services, and Clothing all three species have in common.
+                </p>
+            </div>
+        </aside>
+
+        <!-- Overlay for mobile -->
+        <div class="overlay" id="overlay"></div>
+
+        <!-- Mobile Hamburger Button -->
+        <button class="mobile-hamburger" id="mobileHamburger" aria-label="Open sidebar">☰</button>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <header class="header">
+                <h1>Against the Storm - Species Helper</h1>
+                <p>Select exactly 3 species to discover their shared needs</p>
+            </header>
+
+            <section class="species-selection">
+                <h2 style="margin-bottom: 1rem;">Select Species</h2>
+                <div class="species-grid" id="speciesGrid"></div>
+            </section>
+
+            <section class="results" id="results"></section>
+        </main>
+    </div>
+
+    <script>
+        // Game Data: Species and their needs
+        const speciesData = {
+            humans: {
+                name: 'Humans',
+                icon: '👤',
+                complexFood: ['Biscuits', 'Jerky', 'Pickled Goods', 'Pie'],
+                services: ['Leisure', 'Religion', 'Education'],
+                clothing: ['Coats']
+            },
+            beavers: {
+                name: 'Beavers',
+                icon: '🦫',
+                complexFood: ['Biscuits', 'Jerky', 'Pickled Goods'],
+                services: ['Leisure', 'Education', 'Cleanliness'],
+                clothing: ['Coats']
+            },
+            lizards: {
+                name: 'Lizards',
+                icon: '🦎',
+                complexFood: ['Jerky', 'Pickled Goods', 'Pie', 'Skewers'],
+                services: ['Leisure', 'Brawling', 'Religion'],
+                clothing: ['Boots']
+            },
+            harpies: {
+                name: 'Harpies',
+                icon: '🦅',
+                complexFood: ['Jerky', 'Pie', 'Skewers'],
+                services: ['Cleanliness', 'Religion', 'Education'],
+                clothing: ['Coats']
+            },
+            foxes: {
+                name: 'Foxes',
+                icon: '🦊',
+                complexFood: ['Biscuits', 'Jerky', 'Skewers'],
+                services: ['Cleanliness', 'Brawling', 'Education'],
+                clothing: ['Boots']
+            },
+            frogs: {
+                name: 'Frogs',
+                icon: '🐸',
+                complexFood: ['Porridge', 'Paste', 'Pie'],
+                services: ['Brawling', 'Luxury', 'Religion', 'Education'],
+                clothing: ['Boots']
+            },
+            bats: {
+                name: 'Bats',
+                icon: '🦇',
+                complexFood: ['Biscuits', 'Paste', 'Skewers'],
+                services: ['Brawling', 'Education'],
+                clothing: ['Coats']
+            }
+        };
+
+        // State Management
+        const state = {
+            selectedSpecies: [],
+            maxSelection: 3
+        };
+
+        // Initialize the app
+        function init() {
+            renderSpeciesGrid();
+            setupEventListeners();
+        }
+
+        // Render species selection grid
+        function renderSpeciesGrid() {
+            const grid = document.getElementById('speciesGrid');
+            grid.innerHTML = '';
+
+            Object.keys(speciesData).forEach(speciesId => {
+                const species = speciesData[speciesId];
+                const card = document.createElement('div');
+                card.className = 'species-card';
+                card.dataset.speciesId = speciesId;
+
+                if (state.selectedSpecies.includes(speciesId)) {
+                    card.classList.add('selected');
+                } else if (state.selectedSpecies.length >= state.maxSelection) {
+                    card.classList.add('disabled');
+                }
+
+                card.innerHTML = `
+                    <div class="species-icon">${species.icon}</div>
+                    <div class="species-name">${species.name}</div>
+                `;
+
+                card.addEventListener('click', () => toggleSpecies(speciesId));
+                grid.appendChild(card);
+            });
+
+            updateSelectionInfo();
+            updateResults();
+        }
+
+        // Toggle species selection
+        function toggleSpecies(speciesId) {
+            const index = state.selectedSpecies.indexOf(speciesId);
+
+            if (index > -1) {
+                // Deselect
+                state.selectedSpecies.splice(index, 1);
+            } else if (state.selectedSpecies.length < state.maxSelection) {
+                // Select
+                state.selectedSpecies.push(speciesId);
+            }
+
+            renderSpeciesGrid();
+        }
+
+        // Update selection info in sidebar
+        function updateSelectionInfo() {
+            const info = document.getElementById('selectionInfo');
+            const count = state.selectedSpecies.length;
+            const remaining = state.maxSelection - count;
+
+            if (count === state.maxSelection) {
+                info.textContent = `✓ ${count} Species Selected`;
+                info.classList.add('complete');
+            } else {
+                info.textContent = `Select ${remaining} More Species`;
+                info.classList.remove('complete');
+            }
+        }
+
+        // Calculate intersection of arrays
+        function getIntersection(arrays) {
+            if (arrays.length === 0) return [];
+            return arrays.reduce((acc, curr) => 
+                acc.filter(item => curr.includes(item))
+            );
+        }
+
+        // Calculate pairwise shared needs (for any 2 species)
+        function calculatePairwiseNeeds(selectedData) {
+            const pairwiseData = {
+                complexFood: {},
+                services: {},
+                clothing: {}
+            };
+
+            // For each need category
+            const categories = ['complexFood', 'services', 'clothing'];
+            
+            categories.forEach(category => {
+                // Collect all unique needs in this category
+                const allNeeds = new Set();
+                selectedData.forEach(species => {
+                    species[category].forEach(need => allNeeds.add(need));
+                });
+
+                // For each unique need, find which species have it
+                allNeeds.forEach(need => {
+                    const speciesWithNeed = selectedData.filter(species => 
+                        species[category].includes(need)
+                    );
+                    
+                    // Only include if at least 2 species share it
+                    if (speciesWithNeed.length >= 2) {
+                        pairwiseData[category][need] = speciesWithNeed.map(s => ({
+                            name: s.name,
+                            icon: s.icon
+                        }));
+                    }
+                });
+            });
+
+            return pairwiseData;
+        }
+
+        // Update results display
+        function updateResults() {
+            const resultsContainer = document.getElementById('results');
+
+            if (state.selectedSpecies.length !== state.maxSelection) {
+                resultsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔍</div>
+                        <h3>Select ${state.maxSelection} species to see their shared needs</h3>
+                        <p>Choose species from the grid above to discover what they have in common</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Get selected species data
+            const selectedData = state.selectedSpecies.map(id => speciesData[id]);
+
+            // Calculate intersections
+            const sharedComplexFood = getIntersection(selectedData.map(s => s.complexFood));
+            const sharedServices = getIntersection(selectedData.map(s => s.services));
+            const sharedClothing = getIntersection(selectedData.map(s => s.clothing));
+
+            // Build results HTML
+            let html = '<h2 style="margin-bottom: 1.5rem;">Individual Species Needs</h2>';
+            html += '<div class="results-grid">';
+
+            selectedData.forEach((species, index) => {
+                html += `
+                    <div class="result-card">
+                        <h3>${species.icon} ${species.name}</h3>
+                        <div class="needs-section">
+                            <h4>Complex Food</h4>
+                            <ul class="needs-list">
+                                ${species.complexFood.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="needs-section">
+                            <h4>Services</h4>
+                            <ul class="needs-list">
+                                ${species.services.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="needs-section">
+                            <h4>Clothing</h4>
+                            <ul class="needs-list">
+                                ${species.clothing.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+
+            // Add shared needs section
+            const hasSharedNeeds = sharedComplexFood.length > 0 || 
+                                   sharedServices.length > 0 || 
+                                   sharedClothing.length > 0;
+
+            html += `
+                <div class="shared-needs">
+                    <h2>🎯 Shared Needs (All 3 Species)</h2>
+                    ${hasSharedNeeds ? `
+                        <div class="shared-grid">
+                            ${sharedComplexFood.length > 0 ? `
+                                <div>
+                                    <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.875rem;">COMPLEX FOOD</h4>
+                                    <ul class="needs-list">
+                                        ${sharedComplexFood.map(item => `<li>${item}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                            ${sharedServices.length > 0 ? `
+                                <div>
+                                    <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.875rem;">SERVICES</h4>
+                                    <ul class="needs-list">
+                                        ${sharedServices.map(item => `<li>${item}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                            ${sharedClothing.length > 0 ? `
+                                <div>
+                                    <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.875rem;">CLOTHING</h4>
+                                    <ul class="needs-list">
+                                        ${sharedClothing.map(item => `<li>${item}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                        </div>
+                    ` : `
+                        <p style="text-align: center; color: var(--text-secondary); padding: 2rem;">
+                            These species have no needs in common. Try a different combination!
+                        </p>
+                    `}
+                </div>
+            `;
+
+            // Add pairwise shared needs section
+            const pairwiseData = calculatePairwiseNeeds(selectedData);
+            const hasPairwiseNeeds = Object.values(pairwiseData).some(category => 
+                Object.keys(category).length > 0
+            );
+
+            if (hasPairwiseNeeds) {
+                html += `
+                    <div class="pairwise-needs">
+                        <h2>🔗 Shared Needs (Any 2 Species)</h2>
+                        <div class="pairwise-grid">
+                `;
+
+                // Complex Food
+                if (Object.keys(pairwiseData.complexFood).length > 0) {
+                    html += `
+                        <div class="pairwise-category">
+                            <h3>Complex Food</h3>
+                    `;
+                    Object.entries(pairwiseData.complexFood).forEach(([need, species]) => {
+                        html += `
+                            <div class="pairwise-item">
+                                <div class="pairwise-need-name">${need}</div>
+                                <div class="pairwise-species-list">
+                                    ${species.map(s => `<span class="species-tag">${s.icon} ${s.name}</span>`).join('')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+
+                // Services
+                if (Object.keys(pairwiseData.services).length > 0) {
+                    html += `
+                        <div class="pairwise-category">
+                            <h3>Services</h3>
+                    `;
+                    Object.entries(pairwiseData.services).forEach(([need, species]) => {
+                        html += `
+                            <div class="pairwise-item">
+                                <div class="pairwise-need-name">${need}</div>
+                                <div class="pairwise-species-list">
+                                    ${species.map(s => `<span class="species-tag">${s.icon} ${s.name}</span>`).join('')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+
+                // Clothing
+                if (Object.keys(pairwiseData.clothing).length > 0) {
+                    html += `
+                        <div class="pairwise-category">
+                            <h3>Clothing</h3>
+                    `;
+                    Object.entries(pairwiseData.clothing).forEach(([need, species]) => {
+                        html += `
+                            <div class="pairwise-item">
+                                <div class="pairwise-need-name">${need}</div>
+                                <div class="pairwise-species-list">
+                                    ${species.map(s => `<span class="species-tag">${s.icon} ${s.name}</span>`).join('')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+
+            resultsContainer.innerHTML = html;
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Sidebar toggle for mobile
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const mobileHamburger = document.getElementById('mobileHamburger');
+            const sidebarClose = document.getElementById('sidebarClose');
+
+            mobileHamburger.addEventListener('click', () => {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+            });
+
+            sidebarClose.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+
+        // Start the app
+        init();
+    </script>
+</body>
+</html>
