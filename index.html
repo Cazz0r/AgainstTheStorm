@@ -342,6 +342,77 @@
             background-color: var(--accent-color);
             color: white;
         }
+
+        /* Pairwise Shared Needs */
+        .pairwise-needs {
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .pairwise-needs h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .pairwise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .pairwise-category {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+        }
+
+        .pairwise-category h3 {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .pairwise-item {
+            background-color: var(--bg-tertiary);
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-radius: 4px;
+        }
+
+        .pairwise-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .pairwise-need-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .pairwise-species-list {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .species-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background-color: var(--bg-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
@@ -521,6 +592,43 @@
             );
         }
 
+        // Calculate pairwise shared needs (for any 2 species)
+        function calculatePairwiseNeeds(selectedData) {
+            const pairwiseData = {
+                complexFood: {},
+                services: {},
+                clothing: {}
+            };
+
+            // For each need category
+            const categories = ['complexFood', 'services', 'clothing'];
+            
+            categories.forEach(category => {
+                // Collect all unique needs in this category
+                const allNeeds = new Set();
+                selectedData.forEach(species => {
+                    species[category].forEach(need => allNeeds.add(need));
+                });
+
+                // For each unique need, find which species have it
+                allNeeds.forEach(need => {
+                    const speciesWithNeed = selectedData.filter(species => 
+                        species[category].includes(need)
+                    );
+                    
+                    // Only include if at least 2 species share it
+                    if (speciesWithNeed.length >= 2) {
+                        pairwiseData[category][need] = speciesWithNeed.map(s => ({
+                            name: s.name,
+                            icon: s.icon
+                        }));
+                    }
+                });
+            });
+
+            return pairwiseData;
+        }
+
         // Update results display
         function updateResults() {
             const resultsContainer = document.getElementById('results');
@@ -618,6 +726,82 @@
                     `}
                 </div>
             `;
+
+            // Add pairwise shared needs section
+            const pairwiseData = calculatePairwiseNeeds(selectedData);
+            const hasPairwiseNeeds = Object.values(pairwiseData).some(category => 
+                Object.keys(category).length > 0
+            );
+
+            if (hasPairwiseNeeds) {
+                html += `
+                    <div class="pairwise-needs">
+                        <h2>🔗 Shared Needs (Any 2 Species)</h2>
+                        <div class="pairwise-grid">
+                `;
+
+                // Complex Food
+                if (Object.keys(pairwiseData.complexFood).length > 0) {
+                    html += `
+                        <div class="pairwise-category">
+                            <h3>Complex Food</h3>
+                    `;
+                    Object.entries(pairwiseData.complexFood).forEach(([need, species]) => {
+                        html += `
+                            <div class="pairwise-item">
+                                <div class="pairwise-need-name">${need}</div>
+                                <div class="pairwise-species-list">
+                                    ${species.map(s => `<span class="species-tag">${s.icon} ${s.name}</span>`).join('')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+
+                // Services
+                if (Object.keys(pairwiseData.services).length > 0) {
+                    html += `
+                        <div class="pairwise-category">
+                            <h3>Services</h3>
+                    `;
+                    Object.entries(pairwiseData.services).forEach(([need, species]) => {
+                        html += `
+                            <div class="pairwise-item">
+                                <div class="pairwise-need-name">${need}</div>
+                                <div class="pairwise-species-list">
+                                    ${species.map(s => `<span class="species-tag">${s.icon} ${s.name}</span>`).join('')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+
+                // Clothing
+                if (Object.keys(pairwiseData.clothing).length > 0) {
+                    html += `
+                        <div class="pairwise-category">
+                            <h3>Clothing</h3>
+                    `;
+                    Object.entries(pairwiseData.clothing).forEach(([need, species]) => {
+                        html += `
+                            <div class="pairwise-item">
+                                <div class="pairwise-need-name">${need}</div>
+                                <div class="pairwise-species-list">
+                                    ${species.map(s => `<span class="species-tag">${s.icon} ${s.name}</span>`).join('')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
 
             resultsContainer.innerHTML = html;
         }
