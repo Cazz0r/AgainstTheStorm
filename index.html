@@ -674,6 +674,20 @@
             padding-top: 1.5rem;
             border-top: 1px solid var(--border-color);
         }
+
+        /* Inline icon styling */
+        .species-icon-inline {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+
+        .emoji-fallback {
+            display: none;
+            font-size: inherit;
+        }
     </style>
 </head>
 <body>
@@ -957,8 +971,13 @@
         // Helper function to create image element with emoji fallback
         function createIconElement(imagePath, emoji, altText) {
             if (imagePath) {
-                return `<img src="${imagePath}" alt="${altText}" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='block';" />
-                        <span style="display:none; font-size: inherit;">${emoji}</span>`;
+                // Basic sanitization: ensure path starts with images/ and contains only safe characters
+                const sanitizedPath = imagePath.replace(/[^a-zA-Z0-9\/_.-]/g, '');
+                if (sanitizedPath.startsWith('images/')) {
+                    const escapedAlt = altText.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    return `<img src="${sanitizedPath}" alt="${escapedAlt}" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                            <span class="emoji-fallback">${emoji}</span>`;
+                }
             }
             return emoji;
         }
@@ -1106,7 +1125,7 @@
                 const speciesIcon = createIconElement(species.image, species.icon, species.name);
                 html += `
                     <div class="result-card">
-                        <h3><span class="species-icon" style="width: 32px; height: 32px; display: inline-flex; vertical-align: middle; margin-right: 0.5rem;">${speciesIcon}</span>${species.name}</h3>
+                        <h3><span class="species-icon species-icon-inline">${speciesIcon}</span>${species.name}</h3>
                         <div class="needs-section">
                             <h4>Complex Food</h4>
                             <ul class="needs-list">
