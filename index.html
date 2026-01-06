@@ -593,6 +593,49 @@
             color: #9ca3af;
         }
 
+        .building-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem 0.75rem;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .building-item:hover {
+            border-color: var(--accent-color);
+            background-color: var(--bg-secondary);
+        }
+
+        .building-item.selected {
+            border-color: var(--accent-color);
+            background-color: rgba(37, 99, 235, 0.1);
+        }
+
+        .building-item-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .building-item-status {
+            display: none;
+            font-size: 0.8rem;
+            color: var(--accent-color);
+            font-weight: 500;
+            margin-left: 0.25rem;
+        }
+
+        .building-item:hover .building-item-status {
+            display: inline;
+        }
+
+        .building-item.selected .building-item-status {
+            display: inline;
+        }
+
         .building-ingredients {
             display: flex;
             flex-direction: column;
@@ -922,7 +965,8 @@
         const state = {
             selectedSpecies: [],
             maxSelection: 3,
-            selectedIngredients: {} // Track selected ingredients per recipe: { recipeId: { ingredientIndex: selectedOption } }
+            selectedIngredients: {}, // Track selected ingredients per recipe: { recipeId: { ingredientIndex: selectedOption } }
+            selectedBuildings: {} // Track selected buildings: { buildingName: true }
         };
 
         // Helper function to create image element with emoji fallback
@@ -1488,12 +1532,16 @@
                     group.buildings.forEach((building, index) => {
                         const starIcons = '⭐'.repeat(building.stars);
                         const starClass = `stars-${building.stars}`;
+                        const isSelected = state.selectedBuildings[building.name] || false;
+                        const selectedClass = isSelected ? ' selected' : '';
+                        
                         if (index > 0) {
                             html += `<span style="color: var(--text-secondary);">•</span>`;
                         }
-                        html += `<span style="display: flex; align-items: center; gap: 0.25rem;">
-                                    <span style="font-weight: 600; font-size: 0.95rem;">${building.name}</span>
+                        html += `<span class="building-item${selectedClass}" data-building-name="${building.name}">
+                                    <span class="building-item-name">${building.name}</span>
                                     <span class="star-rating ${starClass}" style="font-size: 0.9rem;" title="${building.stars} stars">${starIcons}</span>
+                                    <span class="building-item-status">${isSelected ? 'Blueprint Obtained' : 'Blueprint Obtained'}</span>
                                 </span>`;
                     });
                     
@@ -1542,12 +1590,16 @@
                             chain.buildings.forEach((building, index) => {
                                 const starIcons = '⭐'.repeat(building.stars);
                                 const starClass = `stars-${building.stars}`;
+                                const isSelected = state.selectedBuildings[building.name] || false;
+                                const selectedClass = isSelected ? ' selected' : '';
+                                
                                 if (index > 0) {
                                     html += `<span style="color: var(--text-secondary);">•</span>`;
                                 }
-                                html += `<span style="display: flex; align-items: center; gap: 0.25rem;">
-                                            <span style="font-weight: 600; font-size: 0.9rem;">${building.name}</span>
+                                html += `<span class="building-item${selectedClass}" data-building-name="${building.name}">
+                                            <span class="building-item-name">${building.name}</span>
                                             <span class="star-rating ${starClass}" style="font-size: 0.85rem;" title="${building.stars} stars">${starIcons}</span>
+                                            <span class="building-item-status">${isSelected ? 'Blueprint Obtained' : 'Blueprint Obtained'}</span>
                                         </span>`;
                             });
                             
@@ -1676,7 +1728,28 @@
                 if (ingredientOption) {
                     handleIngredientSelection(ingredientOption);
                 }
+                
+                // Event delegation for building selection
+                const buildingItem = e.target.closest('.building-item');
+                if (buildingItem) {
+                    handleBuildingSelection(buildingItem);
+                }
             });
+        }
+
+        // Handle building selection
+        function handleBuildingSelection(buildingElement) {
+            const buildingName = buildingElement.dataset.buildingName;
+            
+            // Toggle selection
+            if (state.selectedBuildings[buildingName]) {
+                delete state.selectedBuildings[buildingName];
+            } else {
+                state.selectedBuildings[buildingName] = true;
+            }
+            
+            // Re-render results to update the building states
+            updateResults();
         }
 
         // Handle ingredient selection
