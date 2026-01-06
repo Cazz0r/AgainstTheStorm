@@ -865,11 +865,13 @@
             
             // If user has saved preference, use it; otherwise default to dark
             const theme = savedTheme || 'dark';
-            setTheme(theme, false); // Don't save to localStorage on initial load if using default
+            // Don't persist the default theme to allow future default changes to take effect
+            const shouldPersist = false;
+            setTheme(theme, shouldPersist);
         }
         
         // Set theme and update UI
-        function setTheme(theme, save = true) {
+        function setTheme(theme, shouldPersist = true) {
             document.documentElement.setAttribute('data-theme', theme);
             
             const themeIcon = document.getElementById('themeIcon');
@@ -883,8 +885,8 @@
                 themeText.textContent = 'Dark';
             }
             
-            // Save preference to localStorage
-            if (save) {
+            // Save preference to localStorage if requested
+            if (shouldPersist) {
                 localStorage.setItem(THEME_KEY, theme);
             }
         }
