@@ -1056,17 +1056,8 @@
 
         // Map need item names to their icon paths
         function getNeedIconPath(needName, category) {
-            // Convert need name to camelCase filename (matching existing goods naming convention)
-            const words = needName.split(' ');
-            const filename = words.map((word, index) => {
-                if (index === 0) {
-                    return word.toLowerCase();
-                }
-                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-            }).join('');
-            
-            // All icons are in the goods directory with .webp extension
-            return `images/goods/${filename}.webp`;
+            // Reuse the existing getGoodIconPath function which already handles camelCase conversion
+            return getGoodIconPath(needName);
         }
 
         // Render a need item (food/clothing/service) with icon
@@ -1080,7 +1071,7 @@
             const escapedAlt = needName.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             const escapedNeed = needName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
             if (iconPath) {
-                return `<img src="${iconPath}" alt="${escapedAlt}" class="item-icon" title="${needName}" onerror="this.style.display='none';" /> ${escapedNeed}`;
+                return `<img src="${iconPath}" alt="${escapedAlt}" class="item-icon" title="${escapedAlt}" onerror="this.style.display='none';" /> ${escapedNeed}`;
             } else {
                 return escapedNeed;
             }
