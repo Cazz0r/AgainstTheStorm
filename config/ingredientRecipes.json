@@ -1,34 +1,71 @@
 {
   "Flour": {
     "ingredients": [
-      "Grain or Roots or Mushrooms"
+      "Grain or Mushrooms or Roots or Algae"
     ],
     "buildings": [
       {
-        "building": "Mill",
+        "building": "Rain Mill",
         "stars": 3
+      },
+      {
+        "building": "Provisoner",
+        "stars": 2
+      },
+      {
+        "building": "Stamping Mill",
+        "stars": 2
+      },
+      
+      {
+        "building": "Supplier",
+        "stars": 2
+      },
+      {
+        "building": "Press",
+        "stars": 1
       }
     ]
   },
   "Fabric": {
     "ingredients": [
-      "Plant Fiber or Reed or Leather"
+      "Plant Fiber or Reed or Algae"
     ],
     "buildings": [
       {
         "building": "Weaver",
         "stars": 3
-      }
+      },
+      {
+        "building": "Workshop",
+        "stars": 2
+      },
+      {
+        "building": "Granary",
+        "stars": 2
+      },
+      {
+        "building": "Manufactory",
+        "stars": 2
+      },
+      {
+        "building": "Crude Workstation",
+        "stars": 0
+      },
     ]
   },
   "Leather": {
     "ingredients": [
-      "Meat or Insects"
+      "Algae or Reed or Grain or Vegetables"
     ],
     "buildings": [
       {
-        "building": "Leatherworker",
-        "stars": 3
+        "building": "Harvesters' Camp",
+        "stars": 2
+      },
+      {
+        "building": "Ranch",
+        "stars": 1
       }
     ]
   },
@@ -41,6 +78,18 @@
       {
         "building": "Brewery",
         "stars": 3
+      },
+      {
+        "building": "Distillery",
+        "stars": 2
+      },
+      {
+        "building": "Tinctury",
+        "stars": 2
+      },
+      {
+        "building": "Scribe",
+        "stars": 1
       }
     ]
   },
