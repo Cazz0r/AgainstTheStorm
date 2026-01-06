@@ -1159,6 +1159,9 @@
 
         // Utility function to convert a name to camelCase filename
         function toCamelCase(name) {
+            if (!name || typeof name !== 'string') {
+                return '';
+            }
             return name
                 .split(' ')
                 .filter(word => word.length > 0) // Filter out empty strings
@@ -1175,6 +1178,9 @@
         // Note: This is for display purposes only. Input text is assumed to be plain text,
         // not already-escaped HTML. Double escaping is avoided by treating input as raw text.
         function escapeHtml(text) {
+            if (!text || typeof text !== 'string') {
+                return '';
+            }
             return text
                 .replace(/&/g, '&amp;')
                 .replace(/"/g, '&quot;')
