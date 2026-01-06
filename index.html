@@ -984,16 +984,22 @@
                 { building: 'Brewery', stars: 3, ingredients: ['Berries or Reed or Grain', 'Pottery or Barrels or Waterskins'] }
             ],
             'Pottery': [
-                { building: 'Kiln', stars: 3, ingredients: ['Clay', 'Wood or Oil or Coal'] },
-                { building: 'Brick Oven', stars: 2, ingredients: ['Clay', 'Wood or Oil or Coal'] },
-                { building: 'Smelter', stars: 2, ingredients: ['Clay', 'Wood or Oil or Coal'] },
-                { building: 'Furnace', stars: 1, ingredients: ['Clay', 'Wood or Oil or Coal'] }
+                { building: 'Brickyard', stars: 3, ingredients: ['Clay', 'Wood or Oil or Coal or Sea Marrow'] },
+                { building: 'Bakery', stars: 2, ingredients: ['Clay', 'Wood or Oil or Coal'] },
+                { building: 'Smokehouse', stars: 2, ingredients: ['Clay', 'Wood or Oil or Coal'] }
             ],
             'Barrels': [
-                { building: 'Cooperage', stars: 3, ingredients: ['Planks or Copper Bars'] }
+                { building: 'Cooperage', stars: 3, ingredients: ['Copper Bars or Crystallized Dew', 'Planks'] },
+                { building: 'Flawless Cooperage', stars: 3, ingredients: ['Copper Bars or Crystallized Dew', 'Planks'] },
+                { building: 'Toolshop', stars: 2, ingredients: ['Copper Bars or Crystallized Dew', 'Planks'] },
+                { building: 'Provisioner', stars: 2, ingredients: ['Copper Bars or Crystallized Dew', 'Planks'] },
+                { building: 'Artisan', stars: 2, ingredients: ['Copper Bars or Crystallized Dew', 'Planks'] },
+                { building: 'Distillery', stars: 1, ingredients: ['Copper Bars or Crystallized Dew', 'Planks'] }
             ],
             'Waterskins': [
-                { building: 'Leatherworker', stars: 2, ingredients: ['Leather'] }
+                { building: 'Leatherworker', stars: 3, ingredients: ['Leather', 'Plant Fiber', 'Pigment'] },
+                { building: 'Tannery', stars: 2, ingredients: ['Leather', 'Plant Fiber', 'Pigment'] },
+                { building: 'Supplier', stars: 2, ingredients: ['Leather', 'Plant Fiber', 'Pigment'] }
             ],
             'Dye': [
                 { building: 'Tinctury', stars: 3, ingredients: ['Roots or Pigment or Mushrooms or Insects'] }
@@ -1645,13 +1651,15 @@
                         // Sort recipes by stars (descending) - most stars to least stars
                         const sortedRecipes = [...recipes].sort((a, b) => b.stars - a.stars);
                         
+                        // Use the first recipe's ingredients as the canonical set
+                        // In practice, all recipes for the same ingredient should have the same ingredient requirements
                         chains.push({
                             ingredient: ingredient,
                             buildings: sortedRecipes.map(recipe => ({
                                 name: recipe.building,
                                 stars: recipe.stars
                             })),
-                            ingredients: sortedRecipes[0].ingredients // All recipes have same ingredients
+                            ingredients: sortedRecipes[0].ingredients
                         });
                     }
                 });
