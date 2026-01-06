@@ -6,24 +6,24 @@
     ],
     "buildings": [
       {
-        "building": "Bakery",
+        "building": "Brick Oven",
         "stars": 3
+      },
+      {
+        "building": "Bakery",
+        "stars": 2
       },
       {
         "building": "Cookhouse",
         "stars": 2
       },
       {
+        "building": "Cannery",
+        "stars": 1
+      },
+      {
         "building": "Field Kitchen",
-        "stars": 1
-      },
-      {
-        "building": "Apothecary",
-        "stars": 1
-      },
-      {
-        "building": "Smelter",
-        "stars": 1
+        "stars": 0
       }
     ]
   },
@@ -42,15 +42,11 @@
         "stars": 2
       },
       {
-        "building": "Kiln",
+        "building": "Apothecary",
         "stars": 2
       },
       {
-        "building": "Field Kitchen",
-        "stars": 1
-      },
-      {
-        "building": "Cellar",
+        "building": "Kiln",
         "stars": 1
       }
     ]
@@ -62,24 +58,28 @@
     ],
     "buildings": [
       {
-        "building": "Cellar",
+        "building": "Flawless Cellar",
         "stars": 3
       },
       {
-        "building": "Brewery",
+        "building": "Cellar",
         "stars": 2
       },
       {
-        "building": "Beanery",
+        "building": "Distillery",
         "stars": 2
       },
       {
         "building": "Granary",
+        "stars": 2
+      },
+      {
+        "building": "Beanery",
         "stars": 1
       },
       {
         "building": "Field Kitchen",
-        "stars": 1
+        "stars": 0
       }
     ]
   },
@@ -90,15 +90,23 @@
     ],
     "buildings": [
       {
-        "building": "Bakery",
+        "building": "Flawless Smelter",
         "stars": 3
       },
       {
-        "building": "Brick Oven",
+        "building": "Bakery",
         "stars": 2
       },
       {
         "building": "Furnace",
+        "stars": 2
+      },
+      {
+        "building": "Pantry",
+        "stars": 2
+      },
+      {
+        "building": "Smelter",
         "stars": 1
       }
     ]
@@ -120,6 +128,14 @@
       {
         "building": "Cookhouse",
         "stars": 2
+      },
+      {
+        "building": "Furnace",
+        "stars": 2
+      },
+      {
+        "building": "Field Kitchen",
+        "stars": 0
       }
     ]
   },
@@ -134,16 +150,20 @@
         "stars": 3
       },
       {
-        "building": "Field Kitchen",
+        "building": "Flawless Brewery",
+        "stars": 3
+      },
+      {
+        "building": "Brewery",
         "stars": 2
       },
       {
-        "building": "Teahouse",
+        "building": "Cookhouse",
         "stars": 2
       },
       {
-        "building": "Distillery",
-        "stars": 1
+        "building": "Pantry",
+        "stars": 2
       }
     ]
   },
@@ -154,16 +174,28 @@
     ],
     "buildings": [
       {
-        "building": "Apothecary",
+        "building": "Cannery",
         "stars": 3
       },
       {
-        "building": "Cookhouse",
+        "building": "Flawless Rain Mill",
+        "stars": 3
+      },
+      {
+        "building": "Grill",
         "stars": 2
       },
       {
-        "building": "Field Kitchen",
+        "building": "Press",
         "stars": 1
+      },
+      {
+        "building": "Rain Mill",
+        "stars": 1
+      },
+      {
+        "building": "Field Kitchen",
+        "stars": 0
       }
     ]
   },
@@ -175,6 +207,14 @@
     "buildings": [
       {
         "building": "Clothier",
+        "stars": 3
+      },
+      {
+        "building": "Flawless Cooperage",
+        "stars": 3
+      },
+      {
+        "building": "Flawless Druid's Hut",
         "stars": 3
       },
       {
@@ -201,7 +241,15 @@
         "stars": 3
       },
       {
+        "building": "Flawless Leatherworker",
+        "stars": 3
+      },
+      {
         "building": "Leatherworker",
+        "stars": 2
+      },
+      {
+        "building": "Toolshop",
         "stars": 2
       },
       {
@@ -217,15 +265,15 @@
     "buildings": [
       {
         "building": "Tavern",
-        "stars": 3
+        "stars": 1
       },
       {
-        "building": "Forum",
-        "stars": 2
+        "building": "Market",
+        "stars": 1
       },
       {
         "building": "Monastery",
-        "stars": 2
+        "stars": 1
       }
     ],
     "workerRequired": true
@@ -237,19 +285,15 @@
     "buildings": [
       {
         "building": "Temple",
-        "stars": 3
+        "stars": 1
       },
       {
-        "building": "Holy Temple",
-        "stars": 3
+        "building": "Tea Doctor",
+        "stars": 1
       },
       {
         "building": "Monastery",
-        "stars": 2
-      },
-      {
-        "building": "Clan Hall",
-        "stars": 2
+        "stars": 1
       }
     ],
     "workerRequired": true
@@ -261,19 +305,15 @@
     "buildings": [
       {
         "building": "Academy",
-        "stars": 3
+        "stars": 1
       },
       {
-        "building": "Forum",
-        "stars": 2
+        "building": "Guild House",
+        "stars": 1
       },
       {
         "building": "Temple",
-        "stars": 2
-      },
-      {
-        "building": "Explorer's Lodge",
-        "stars": 2
+        "stars": 1
       }
     ],
     "workerRequired": true
@@ -285,19 +325,19 @@
     "buildings": [
       {
         "building": "Clan Hall",
-        "stars": 3
+        "stars": 1
       },
       {
-        "building": "Explorer's Lodge",
-        "stars": 2
+        "building": "Academy",
+        "stars": 1
       },
       {
-        "building": "Tea Doctor",
-        "stars": 2
+        "building": "Feast Hall",
+        "stars": 1
       },
       {
-        "building": "Tavern",
-        "stars": 2
+        "building": "Forum",
+        "stars": 1
       }
     ],
     "workerRequired": true
@@ -308,20 +348,16 @@
     ],
     "buildings": [
       {
-        "building": "Market",
-        "stars": 3
-      },
-      {
-        "building": "Tavern",
-        "stars": 2
+        "building": "Forum",
+        "stars": 1
       },
       {
         "building": "Guild House",
-        "stars": 2
+        "stars": 1
       },
       {
-        "building": "Holy Market",
-        "stars": 2
+        "building": "Tavern",
+        "stars": 1
       }
     ],
     "workerRequired": true
