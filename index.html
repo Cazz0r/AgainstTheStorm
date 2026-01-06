@@ -989,12 +989,12 @@
                 { building: 'Smokehouse', stars: 2, ingredients: ['Clay', 'Wood or Oil or Coal'] }
             ],
             'Barrels': [
-                { building: 'Cooperage', stars: 3, ingredients: ['Copper Bars or Crystallized Dew', 'Planks'] },
-                { building: 'Flawless Cooperage', stars: 3, ingredients: ['Copper Bars or Crystallized Dew', 'Planks'] },
-                { building: 'Toolshop', stars: 2, ingredients: ['Copper Bars or Crystallized Dew', 'Planks'] },
-                { building: 'Provisioner', stars: 2, ingredients: ['Copper Bars or Crystallized Dew', 'Planks'] },
-                { building: 'Artisan', stars: 2, ingredients: ['Copper Bars or Crystallized Dew', 'Planks'] },
-                { building: 'Distillery', stars: 1, ingredients: ['Copper Bars or Crystallized Dew', 'Planks'] }
+                { building: 'Cooperage', stars: 3, ingredients: ['Copper Bars or Crystalized Dew', 'Planks'] },
+                { building: 'Flawless Cooperage', stars: 3, ingredients: ['Copper Bars or Crystalized Dew', 'Planks'] },
+                { building: 'Toolshop', stars: 2, ingredients: ['Copper Bars or Crystalized Dew', 'Planks'] },
+                { building: 'Provisioner', stars: 2, ingredients: ['Copper Bars or Crystalized Dew', 'Planks'] },
+                { building: 'Artisan', stars: 2, ingredients: ['Copper Bars or Crystalized Dew', 'Planks'] },
+                { building: 'Distillery', stars: 1, ingredients: ['Copper Bars or Crystalized Dew', 'Planks'] }
             ],
             'Waterskins': [
                 { building: 'Leatherworker', stars: 3, ingredients: ['Leather', 'Plant Fiber', 'Pigment'] },
@@ -1573,7 +1573,7 @@
                             html += `
                                 <div class="sub-building">
                                     <div class="sub-building-name" style="margin-bottom: 0.5rem;">
-                                        <strong>${chain.ingredient}</strong>
+                                        <strong>${renderIngredientWithIcons(chain.ingredient)}</strong>
                                     </div>
                                     <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
                             `;
