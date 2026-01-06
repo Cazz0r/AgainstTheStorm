@@ -1157,13 +1157,9 @@
             return emoji;
         }
 
-        // Map ingredient names to their icon paths
-        function getGoodIconPath(goodName) {
-            // Clean up the good name (remove parenthetical notes like "(from trees)")
-            const cleanName = goodName.replace(/\s*\(.*?\)\s*$/g, '').trim();
-            
-            // Convert good name to camelCase filename
-            const filename = cleanName
+        // Utility function to convert a name to camelCase filename
+        function toCamelCase(name) {
+            return name
                 .split(' ')
                 .map((word, index) => {
                     if (index === 0) {
@@ -1172,6 +1168,15 @@
                     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
                 })
                 .join('');
+        }
+
+        // Map ingredient names to their icon paths
+        function getGoodIconPath(goodName) {
+            // Clean up the good name (remove parenthetical notes like "(from trees)")
+            const cleanName = goodName.replace(/\s*\(.*?\)\s*$/g, '').trim();
+            
+            // Convert good name to camelCase filename and use .webp format for goods
+            const filename = toCamelCase(cleanName);
             
             return `images/goods/${filename}.webp`;
         }
@@ -1244,22 +1249,13 @@
 
         // Map need item names to their icon paths
         function getNeedIconPath(needName, category) {
-            // Services have their own directory
+            // Services have their own directory and use .png format
+            // (Species use .png, goods use .webp, services use .png for consistency with species assets)
             if (category === 'services') {
-                // Convert service name to camelCase filename
-                const filename = needName
-                    .split(' ')
-                    .map((word, index) => {
-                        if (index === 0) {
-                            return word.toLowerCase();
-                        }
-                        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-                    })
-                    .join('');
-                
+                const filename = toCamelCase(needName);
                 return `images/services/${filename}.png`;
             }
-            // For goods/food/clothing, use the existing function
+            // For goods/food/clothing, use the existing function (returns .webp format)
             return getGoodIconPath(needName);
         }
 
