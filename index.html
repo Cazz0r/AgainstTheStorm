@@ -443,7 +443,7 @@
             margin-bottom: 0.75rem;
             border-radius: 4px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: border-color 0.2s, background-color 0.2s, transform 0.2s;
             border: 2px solid transparent;
         }
 
@@ -1412,7 +1412,7 @@
                     `;
                     Object.entries(pairwiseData.complexFood).forEach(([need, species]) => {
                         html += `
-                            <div class="pairwise-item" data-need-name="${escapeHtml(need)}" data-need-category="complexFood">
+                            <div class="pairwise-item" data-need-name="${escapeHtml(need)}">
                                 <div class="pairwise-need-name">${renderNeedWithIcon(need, 'complexFood')}</div>
                                 <div class="pairwise-species-list">
                                     ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
@@ -1431,7 +1431,7 @@
                     `;
                     Object.entries(pairwiseData.clothing).forEach(([need, species]) => {
                         html += `
-                            <div class="pairwise-item" data-need-name="${escapeHtml(need)}" data-need-category="clothing">
+                            <div class="pairwise-item" data-need-name="${escapeHtml(need)}">
                                 <div class="pairwise-need-name">${renderNeedWithIcon(need, 'clothing')}</div>
                                 <div class="pairwise-species-list">
                                     ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
@@ -1450,7 +1450,7 @@
                     `;
                     Object.entries(pairwiseData.services).forEach(([need, species]) => {
                         html += `
-                            <div class="pairwise-item" data-need-name="${escapeHtml(need)}" data-need-category="services">
+                            <div class="pairwise-item" data-need-name="${escapeHtml(need)}">
                                 <div class="pairwise-need-name">${renderNeedWithIcon(need, 'services')}</div>
                                 <div class="pairwise-species-list">
                                     ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
@@ -1736,10 +1736,10 @@
             const html = renderBuildingRequirements([needName]);
             container.innerHTML = html;
 
-            // Scroll to the requirements section smoothly
-            setTimeout(() => {
+            // Wait for the DOM to update before scrolling to ensure the content is rendered
+            requestAnimationFrame(() => {
                 container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 100);
+            });
         }
 
         // Update results display
