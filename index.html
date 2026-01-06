@@ -1159,10 +1159,12 @@
 
         // Utility function to convert a name to camelCase filename
         function toCamelCase(name) {
-            if (!name || typeof name !== 'string') {
+            // Only check for null/undefined, convert other types to string
+            if (name == null) {
                 return '';
             }
-            return name
+            const str = String(name);
+            return str
                 .split(' ')
                 .filter(word => word.length > 0) // Filter out empty strings
                 .map((word, index) => {
@@ -1178,10 +1180,12 @@
         // Note: This is for display purposes only. Input text is assumed to be plain text,
         // not already-escaped HTML. Double escaping is avoided by treating input as raw text.
         function escapeHtml(text) {
-            if (!text || typeof text !== 'string') {
+            // Only check for null/undefined, convert other types to string
+            if (text == null) {
                 return '';
             }
-            return text
+            const str = String(text);
+            return str
                 .replace(/&/g, '&amp;')
                 .replace(/"/g, '&quot;')
                 .replace(/</g, '&lt;')
