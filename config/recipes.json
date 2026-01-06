@@ -42,10 +42,10 @@
     { "building": "Field Kitchen", "stars": 1, "ingredients": ["Berries or Insects or Reeds", "Pottery or Barrels or Waterskins"] }
   ],
   "Coats": [
-    { "building": "Clothier", "stars": 3, "ingredients": ["Fabric", "Leather", "Dye", "Resin"] },
-    { "building": "Artisan", "stars": 2, "ingredients": ["Fabric", "Leather", "Dye", "Resin"] },
-    { "building": "Cooperage", "stars": 2, "ingredients": ["Fabric", "Leather", "Dye", "Resin"] },
-    { "building": "Druid's Hut", "stars": 1, "ingredients": ["Fabric", "Leather", "Dye", "Resin"] }
+    { "building": "Clothier", "stars": 3, "ingredients": ["Leather or Fabric", "Dye or Resin"] },
+    { "building": "Artisan", "stars": 2, "ingredients": ["Leather or Fabric", "Dye or Resin"] },
+    { "building": "Cooperage", "stars": 2, "ingredients": ["Leather or Fabric", "Dye or Resin"] },
+    { "building": "Druid's Hut", "stars": 1, "ingredients": ["Leather or Fabric", "Dye or Resin"] }
   ],
   "Boots": [
     { "building": "Clothier", "stars": 3, "ingredients": ["Leather", "Scales", "Fabric"] },
