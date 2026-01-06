@@ -19,9 +19,9 @@
             --transition-speed: 0.3s;
         }
 
-        /* Dark mode */
+        /* Dark mode - system preference */
         @media (prefers-color-scheme: dark) {
-            :root {
+            :root:not([data-theme="light"]) {
                 --bg-primary: #1a1a1a;
                 --bg-secondary: #252525;
                 --bg-tertiary: #303030;
@@ -31,6 +31,18 @@
                 --accent-color: #3b82f6;
                 --accent-hover: #60a5fa;
             }
+        }
+
+        /* Dark mode - manual override */
+        :root[data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #252525;
+            --bg-tertiary: #303030;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a0a0a0;
+            --border-color: #404040;
+            --accent-color: #3b82f6;
+            --accent-hover: #60a5fa;
         }
 
         * {
@@ -80,6 +92,37 @@
         .sidebar-title {
             font-size: 1.25rem;
             font-weight: 600;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background-color: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            width: fit-content;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .theme-toggle-icon {
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
         }
 
         /* Hamburger Menu */
@@ -749,6 +792,11 @@
                 <button class="hamburger" id="sidebarClose" aria-label="Close sidebar">✕</button>
             </div>
             
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="theme-toggle-icon" id="themeIcon">🌙</span>
+                <span id="themeText">Dark</span>
+            </button>
+            
             <div class="selection-info" id="selectionInfo">
                 Select 3 Species
             </div>
@@ -808,6 +856,51 @@
     </div>
 
     <script>
+        // Theme Management
+        const THEME_KEY = 'ats-theme-preference';
+        
+        // Initialize theme on page load
+        function initTheme() {
+            const savedTheme = localStorage.getItem(THEME_KEY);
+            
+            // If user has saved preference, use it; otherwise default to dark
+            const theme = savedTheme || 'dark';
+            // Don't persist the default theme to allow future default changes to take effect
+            const shouldPersist = false;
+            setTheme(theme, shouldPersist);
+        }
+        
+        // Set theme and update UI
+        function setTheme(theme, shouldPersist = true) {
+            document.documentElement.setAttribute('data-theme', theme);
+            
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            
+            if (theme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+            }
+            
+            // Save preference to localStorage if requested
+            if (shouldPersist) {
+                localStorage.setItem(THEME_KEY, theme);
+            }
+        }
+        
+        // Toggle theme
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme, true);
+        }
+        
+        // Initialize theme immediately
+        initTheme();
+
         // Game Data: Species and their needs
         const speciesData = {
             humans: {
@@ -1692,6 +1785,10 @@
 
         // Update results display
         function setupEventListeners() {
+            // Theme toggle button
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.addEventListener('click', toggleTheme);
+
             // Sidebar toggle for mobile
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
