@@ -51,8 +51,14 @@ No build process or dependencies required - this is a static HTML/CSS/JavaScript
 AgainstTheStorm/
 ├── index.html          # Main application file
 ├── README.md          # This file
+├── config/            # Configuration files (JSON)
+│   ├── species.json            # Species data (names, needs, icons)
+│   ├── recipes.json            # Recipes for complex food, clothing, and services
+│   ├── ingredientRecipes.json  # Recipes for secondary ingredients
+│   └── README.md               # Config documentation
 └── images/            # Game assets and icons
     ├── species/       # Species icons
+    ├── services/      # Service icons
     └── goods/         # Resource and item icons (includes food, clothing, ingredients, etc.)
 ```
 
@@ -111,6 +117,16 @@ Contributions are welcome! If you'd like to improve this tool:
 - Test on multiple browsers and devices
 - Follow the existing code style
 - Update documentation as needed
+
+### Updating Game Data
+
+Game data is stored in JSON configuration files in the `config/` directory:
+
+- **`species.json`**: Add or update species information (name, icon, needs)
+- **`recipes.json`**: Add or update recipes for complex food, clothing, and services
+- **`ingredientRecipes.json`**: Add or update recipes for secondary ingredients
+
+After updating any config file, test the application locally to ensure it loads and displays correctly.
 
 ## 📝 License
 
