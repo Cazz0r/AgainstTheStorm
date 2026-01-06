@@ -1,0 +1,58 @@
+{
+  "humans": {
+    "name": "Humans",
+    "icon": "👤",
+    "image": "images/species/human.png",
+    "complexFood": ["Biscuits", "Jerky", "Pickled Goods", "Pie"],
+    "services": ["Leisure", "Religion", "Education"],
+    "clothing": ["Coats"]
+  },
+  "beavers": {
+    "name": "Beavers",
+    "icon": "🦫",
+    "image": "images/species/beaver.png",
+    "complexFood": ["Biscuits", "Jerky", "Pickled Goods"],
+    "services": ["Leisure", "Education", "Cleanliness"],
+    "clothing": ["Coats"]
+  },
+  "lizards": {
+    "name": "Lizards",
+    "icon": "🦎",
+    "image": "images/species/lizard.png",
+    "complexFood": ["Jerky", "Pickled Goods", "Pie", "Skewers"],
+    "services": ["Leisure", "Brawling", "Religion"],
+    "clothing": ["Boots"]
+  },
+  "harpies": {
+    "name": "Harpies",
+    "icon": "🦅",
+    "image": "images/species/harpy.png",
+    "complexFood": ["Jerky", "Pie", "Skewers"],
+    "services": ["Cleanliness", "Religion", "Education"],
+    "clothing": ["Coats"]
+  },
+  "foxes": {
+    "name": "Foxes",
+    "icon": "🦊",
+    "image": "images/species/fox.png",
+    "complexFood": ["Biscuits", "Jerky", "Skewers"],
+    "services": ["Cleanliness", "Brawling", "Education"],
+    "clothing": ["Boots"]
+  },
+  "frogs": {
+    "name": "Frogs",
+    "icon": "🐸",
+    "image": "images/species/frog.png",
+    "complexFood": ["Porridge", "Paste", "Pie"],
+    "services": ["Brawling", "Luxury", "Religion", "Education"],
+    "clothing": ["Boots"]
+  },
+  "bats": {
+    "name": "Bats",
+    "icon": "🦇",
+    "image": "images/species/bat.png",
+    "complexFood": ["Biscuits", "Paste", "Skewers"],
+    "services": ["Brawling", "Education"],
+    "clothing": ["Coats"]
+  }
+}
