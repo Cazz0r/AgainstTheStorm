@@ -53,12 +53,7 @@ AgainstTheStorm/
 ├── README.md          # This file
 └── images/            # Game assets and icons
     ├── species/       # Species icons
-    ├── goods/         # Resource and item icons
-    ├── food/          # Food item icons
-    ├── clothing/      # Clothing item icons
-    ├── services/      # Service icons
-    ├── buildings/     # Building icons
-    └── ingredients/   # Ingredient icons
+    └── goods/         # Resource and item icons (includes food, clothing, ingredients, etc.)
 ```
 
 ## 🎯 Game Information
