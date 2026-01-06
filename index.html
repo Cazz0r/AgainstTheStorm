@@ -1244,7 +1244,22 @@
 
         // Map need item names to their icon paths
         function getNeedIconPath(needName, category) {
-            // Reuse the existing getGoodIconPath function which already handles camelCase conversion
+            // Services have their own directory
+            if (category === 'services') {
+                // Convert service name to camelCase filename
+                const filename = needName
+                    .split(' ')
+                    .map((word, index) => {
+                        if (index === 0) {
+                            return word.toLowerCase();
+                        }
+                        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                    })
+                    .join('');
+                
+                return `images/services/${filename}.png`;
+            }
+            // For goods/food/clothing, use the existing function
             return getGoodIconPath(needName);
         }
 
@@ -1252,12 +1267,6 @@
         function renderNeedWithIcon(needName, category) {
             const escapedAlt = needName.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             const escapedNeed = needName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            
-            // Services don't have their own image files, so skip image loading for them
-            // This prevents onerror events from firing and causing layout shifts
-            if (category === 'services') {
-                return escapedNeed;
-            }
             
             let iconPath = getNeedIconPath(needName, category);
             // Sanitize path: ensure it starts with images/ and contains only safe characters
