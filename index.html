@@ -579,6 +579,47 @@
             color: var(--text-primary);
         }
 
+        .ingredient-option {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 0.1rem;
+        }
+
+        .ingredient-option:hover {
+            border-color: var(--accent-color);
+            background-color: var(--bg-tertiary);
+        }
+
+        .ingredient-option.selected {
+            border-color: var(--accent-color);
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .ingredient-option.selected img {
+            filter: brightness(0) invert(1);
+        }
+
+        .ingredient-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .ingredient-separator {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            padding: 0 0.25rem;
+        }
+
         .ingredient-chain {
             margin-top: 0.75rem;
             padding-top: 0.75rem;
@@ -965,7 +1006,8 @@
         // State Management
         const state = {
             selectedSpecies: [],
-            maxSelection: 3
+            maxSelection: 3,
+            selectedIngredients: {} // Track selected ingredients per recipe: { recipeId: { ingredientIndex: selectedOption } }
         };
 
         // Helper function to create image element with emoji fallback
@@ -1013,36 +1055,61 @@
             return `images/goods/${filename}.webp`;
         }
 
-        // Render an ingredient with icon(s)
-        function renderIngredientWithIcons(ingredientString) {
+        // Render an ingredient with icon(s) - now with selection support
+        function renderIngredientWithIcons(ingredientString, recipeId = null, ingredientIndex = null) {
             // Check if ingredient has "or" options
             if (ingredientString.includes(' or ')) {
                 // Split by "or" and render each option with its icon
                 const options = ingredientString.split(' or ').map(opt => opt.trim());
-                const renderedOptions = options.map(option => {
-                    let iconPath = getGoodIconPath(option);
-                    // Sanitize path: ensure it starts with images/ and contains only safe characters
-                    iconPath = iconPath.replace(/[^a-zA-Z0-9\/_.-]/g, '');
-                    if (!iconPath.startsWith('images/')) {
-                        iconPath = ''; // Invalid path, don't display image
-                    }
-                    const escapedAlt = option.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                    const escapedOption = option.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                    if (iconPath) {
-                        return `<img src="${iconPath}" alt="${escapedAlt}" title="${option}" onerror="this.style.display='none';" /> ${escapedOption}`;
-                    } else {
-                        return escapedOption;
-                    }
-                }).join(' <span style="color: var(--text-secondary);">or</span> ');
                 
-                return renderedOptions;
+                // If we have a recipeId and ingredientIndex, make options clickable
+                if (recipeId !== null && ingredientIndex !== null) {
+                    // Check if we have a selected ingredient for this recipe/index
+                    const selectedOption = state.selectedIngredients[recipeId]?.[ingredientIndex];
+                    
+                    const renderedOptions = options.map((option, optionIndex) => {
+                        let iconPath = getGoodIconPath(option);
+                        iconPath = iconPath.replace(/[^a-zA-Z0-9\/_.-]/g, '');
+                        if (!iconPath.startsWith('images/')) {
+                            iconPath = '';
+                        }
+                        const escapedAlt = option.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        const escapedOption = option.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        
+                        const isSelected = selectedOption !== undefined ? selectedOption === optionIndex : false;
+                        const selectedClass = isSelected ? ' selected' : '';
+                        
+                        const imgHtml = iconPath ? `<img src="${iconPath}" alt="${escapedAlt}" title="${option}" onerror="this.style.display='none';" /> ` : '';
+                        
+                        return `<span class="ingredient-option${selectedClass}" data-recipe-id="${recipeId}" data-ingredient-index="${ingredientIndex}" data-option-index="${optionIndex}">${imgHtml}${escapedOption}</span>`;
+                    }).join('<span class="ingredient-separator">or</span>');
+                    
+                    return `<span class="ingredient-group">${renderedOptions}</span>`;
+                } else {
+                    // Non-clickable version (for ingredient chains)
+                    const renderedOptions = options.map(option => {
+                        let iconPath = getGoodIconPath(option);
+                        iconPath = iconPath.replace(/[^a-zA-Z0-9\/_.-]/g, '');
+                        if (!iconPath.startsWith('images/')) {
+                            iconPath = '';
+                        }
+                        const escapedAlt = option.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        const escapedOption = option.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        if (iconPath) {
+                            return `<img src="${iconPath}" alt="${escapedAlt}" title="${option}" onerror="this.style.display='none';" /> ${escapedOption}`;
+                        } else {
+                            return escapedOption;
+                        }
+                    }).join(' <span style="color: var(--text-secondary);">or</span> ');
+                    
+                    return renderedOptions;
+                }
             } else {
                 // Single ingredient, render with icon
                 let iconPath = getGoodIconPath(ingredientString);
-                // Sanitize path: ensure it starts with images/ and contains only safe characters
                 iconPath = iconPath.replace(/[^a-zA-Z0-9\/_.-]/g, '');
                 if (!iconPath.startsWith('images/')) {
-                    iconPath = ''; // Invalid path, don't display image
+                    iconPath = '';
                 }
                 const escapedAlt = ingredientString.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 const escapedIngredient = ingredientString.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -1430,12 +1497,17 @@
                 `;
 
                 // Render each unique recipe
+                let groupIndex = 0;
                 Object.values(recipeGroups).forEach(group => {
+                    // Create a unique recipe ID based on need and group index
+                    const recipeId = `${need.replace(/\s+/g, '-')}-${groupIndex}`;
+                    groupIndex++;
+                    
                     // Sort buildings within group by star rating (descending)
                     group.buildings.sort((a, b) => b.stars - a.stars);
                     
                     html += `
-                        <div class="building-card">
+                        <div class="building-card" data-recipe-id="${recipeId}">
                             <div class="building-header" style="display: block;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
                                     <span class="building-name" style="font-size: 1rem;">Recipe</span>
@@ -1465,10 +1537,10 @@
                     `;
 
                     group.ingredients.forEach((ingredient, index) => {
-                        if (index > 0) {
-                            html += `<div style="color: var(--text-secondary); padding: 0.25rem 0; text-align: center; font-weight: bold;">+</div>`;
-                        }
-                        html += `<div style="padding: 0.25rem 0;"><span class="ingredient-tag">${renderIngredientWithIcons(ingredient)}</span></div>`;
+                        // Check if ingredient has "or" options - if yes, don't wrap in ingredient-tag
+                        const renderedIngredient = renderIngredientWithIcons(ingredient, recipeId, index);
+                        const wrapperClass = ingredient.includes(' or ') ? '' : 'ingredient-tag';
+                        html += `<div style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-tertiary);"><span class="${wrapperClass}">${renderedIngredient}</span></div>`;
                     });
 
                     html += `
@@ -1482,7 +1554,7 @@
                     }
 
                     // Add ingredient chains for complex ingredients
-                    const ingredientChains = getIngredientChains(group.ingredients);
+                    const ingredientChains = getIngredientChains(group.ingredients, recipeId);
                     if (ingredientChains.length > 0) {
                         html += `
                             <div class="ingredient-chain">
@@ -1526,15 +1598,23 @@
         }
 
         // Get ingredient chains (buildings needed to produce ingredients)
-        function getIngredientChains(ingredients) {
+        function getIngredientChains(ingredients, recipeId) {
             const chains = [];
             
-            ingredients.forEach(ingredientOptions => {
+            ingredients.forEach((ingredientOptions, ingredientIndex) => {
+                // Check if user has selected a specific ingredient for this recipe
+                const selectedOption = state.selectedIngredients[recipeId]?.[ingredientIndex];
+                
                 // Parse ingredient options (e.g., "Flour", "Meat or Insects")
                 const baseIngredients = ingredientOptions.split(' or ').map(i => i.trim());
                 
+                // If a specific option is selected, only use that one
+                const ingredientsToProcess = selectedOption !== undefined 
+                    ? [baseIngredients[selectedOption]]
+                    : baseIngredients;
+                
                 // For each base ingredient, check if it has a recipe
-                baseIngredients.forEach(ingredient => {
+                ingredientsToProcess.forEach(ingredient => {
                     if (ingredientRecipes[ingredient]) {
                         // Use the first (best) recipe for this ingredient
                         const recipe = ingredientRecipes[ingredient][0];
@@ -1583,6 +1663,36 @@
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
+
+            // Event delegation for ingredient selection
+            document.addEventListener('click', (e) => {
+                const ingredientOption = e.target.closest('.ingredient-option');
+                if (ingredientOption) {
+                    handleIngredientSelection(ingredientOption);
+                }
+            });
+        }
+
+        // Handle ingredient selection
+        function handleIngredientSelection(optionElement) {
+            const recipeId = optionElement.dataset.recipeId;
+            const ingredientIndex = parseInt(optionElement.dataset.ingredientIndex);
+            const optionIndex = parseInt(optionElement.dataset.optionIndex);
+
+            // Initialize recipe state if needed
+            if (!state.selectedIngredients[recipeId]) {
+                state.selectedIngredients[recipeId] = {};
+            }
+
+            // Toggle selection: if already selected, deselect it
+            if (state.selectedIngredients[recipeId][ingredientIndex] === optionIndex) {
+                delete state.selectedIngredients[recipeId][ingredientIndex];
+            } else {
+                state.selectedIngredients[recipeId][ingredientIndex] = optionIndex;
+            }
+
+            // Re-render results to update the ingredient chains
+            updateResults();
         }
 
         // Start the app
