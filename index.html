@@ -1439,9 +1439,9 @@
 
                     group.ingredients.forEach((ingredient, index) => {
                         if (index > 0) {
-                            html += `<span style="color: var(--text-secondary); padding: 0 0.5rem;">+</span>`;
+                            html += `<div style="color: var(--text-secondary); padding: 0.25rem 0; text-align: center; font-weight: bold;">+</div>`;
                         }
-                        html += `<span class="ingredient-tag">${renderIngredientWithIcons(ingredient)}</span>`;
+                        html += `<div style="padding: 0.25rem 0;"><span class="ingredient-tag">${renderIngredientWithIcons(ingredient)}</span></div>`;
                     });
 
                     html += `
@@ -1467,8 +1467,8 @@
                                     <div class="sub-building-name">${chain.ingredient} → ${chain.building}</div>
                                     <div class="ingredient-list" style="margin-top: 0.25rem;">
                                         ${chain.ingredients.map((ing, index) => {
-                                            const separator = index > 0 ? '<span style="color: var(--text-secondary); padding: 0 0.5rem;">+</span>' : '';
-                                            return `${separator}<span class="ingredient-tag">${renderIngredientWithIcons(ing)}</span>`;
+                                            const separator = index > 0 ? '<div style="color: var(--text-secondary); padding: 0.25rem 0; text-align: center; font-weight: bold;">+</div>' : '';
+                                            return `${separator}<div style="padding: 0.25rem 0;"><span class="ingredient-tag">${renderIngredientWithIcons(ing)}</span></div>`;
                                         }).join('')}
                                     </div>
                                 </div>
