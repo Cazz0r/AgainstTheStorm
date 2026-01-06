@@ -2,6 +2,8 @@
 
 An unofficial fan-made web tool for analyzing species needs and building requirements in the game **Against the Storm**.
 
+**🌐 [Try it live on GitHub Pages](https://cazz0r.github.io/AgainstTheStorm/)**
+
 ## 🎮 About
 
 This interactive tool helps players of **Against the Storm** make informed decisions when selecting species for their settlements. By selecting any three species, players can instantly see:
