@@ -1150,7 +1150,7 @@
                     }
                 }
                 
-                const escapedAlt = altText.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                const escapedAlt = escapeHtml(altText);
                 return `<img src="${sanitizedPath}" alt="${escapedAlt}" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='block';" />
                         <span class="emoji-fallback">${emoji}</span>`;
             }
@@ -1168,6 +1168,15 @@
                     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
                 })
                 .join('');
+        }
+
+        // Utility function to escape HTML special characters
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
         }
 
         // Map ingredient names to their icon paths
@@ -1199,8 +1208,8 @@
                         if (!iconPath.startsWith('images/')) {
                             iconPath = '';
                         }
-                        const escapedAlt = option.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                        const escapedOption = option.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        const escapedAlt = escapeHtml(option);
+                        const escapedOption = escapeHtml(option);
                         
                         const isSelected = selectedOption !== undefined ? selectedOption === optionIndex : false;
                         const selectedClass = isSelected ? ' selected' : '';
@@ -1219,8 +1228,8 @@
                         if (!iconPath.startsWith('images/')) {
                             iconPath = '';
                         }
-                        const escapedAlt = option.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                        const escapedOption = option.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        const escapedAlt = escapeHtml(option);
+                        const escapedOption = escapeHtml(option);
                         if (iconPath) {
                             return `<img src="${iconPath}" alt="${escapedAlt}" title="${option}" onerror="this.style.display='none';" /> ${escapedOption}`;
                         } else {
@@ -1237,8 +1246,8 @@
                 if (!iconPath.startsWith('images/')) {
                     iconPath = '';
                 }
-                const escapedAlt = ingredientString.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                const escapedIngredient = ingredientString.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                const escapedAlt = escapeHtml(ingredientString);
+                const escapedIngredient = escapeHtml(ingredientString);
                 if (iconPath) {
                     return `<img src="${iconPath}" alt="${escapedAlt}" title="${ingredientString}" onerror="this.style.display='none';" /> ${escapedIngredient}`;
                 } else {
@@ -1261,8 +1270,8 @@
 
         // Render a need item (food/clothing/service) with icon
         function renderNeedWithIcon(needName, category) {
-            const escapedAlt = needName.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            const escapedNeed = needName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const escapedAlt = escapeHtml(needName);
+            const escapedNeed = escapeHtml(needName);
             
             let iconPath = getNeedIconPath(needName, category);
             // Sanitize path: ensure it starts with images/ and contains only safe characters
