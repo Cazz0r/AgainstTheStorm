@@ -1161,6 +1161,7 @@
         function toCamelCase(name) {
             return name
                 .split(' ')
+                .filter(word => word.length > 0) // Filter out empty strings
                 .map((word, index) => {
                     if (index === 0) {
                         return word.toLowerCase();
@@ -1171,6 +1172,8 @@
         }
 
         // Utility function to escape HTML special characters
+        // Note: This is for display purposes only. Input text is assumed to be plain text,
+        // not already-escaped HTML. Double escaping is avoided by treating input as raw text.
         function escapeHtml(text) {
             return text
                 .replace(/&/g, '&amp;')
