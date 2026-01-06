@@ -984,7 +984,10 @@
                 { building: 'Brewery', stars: 3, ingredients: ['Berries or Reed or Grain', 'Pottery or Barrels or Waterskins'] }
             ],
             'Pottery': [
-                { building: 'Kiln', stars: 3, ingredients: ['Clay', 'Wood or Oil or Coal'] }
+                { building: 'Kiln', stars: 3, ingredients: ['Clay', 'Wood or Oil or Coal'] },
+                { building: 'Brick Oven', stars: 2, ingredients: ['Clay', 'Wood or Oil or Coal'] },
+                { building: 'Smelter', stars: 2, ingredients: ['Clay', 'Wood or Oil or Coal'] },
+                { building: 'Furnace', stars: 1, ingredients: ['Clay', 'Wood or Oil or Coal'] }
             ],
             'Barrels': [
                 { building: 'Cooperage', stars: 3, ingredients: ['Planks or Copper Bars'] }
@@ -1563,7 +1566,28 @@
                         ingredientChains.forEach(chain => {
                             html += `
                                 <div class="sub-building">
-                                    <div class="sub-building-name">${chain.ingredient} → ${chain.building}</div>
+                                    <div class="sub-building-name" style="margin-bottom: 0.5rem;">
+                                        <strong>${chain.ingredient}</strong>
+                                    </div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+                            `;
+                            
+                            // List all buildings for this ingredient with star ratings
+                            chain.buildings.forEach((building, index) => {
+                                const starIcons = '⭐'.repeat(building.stars);
+                                const starClass = `stars-${building.stars}`;
+                                if (index > 0) {
+                                    html += `<span style="color: var(--text-secondary);">•</span>`;
+                                }
+                                html += `<span style="display: flex; align-items: center; gap: 0.25rem;">
+                                            <span style="font-weight: 600; font-size: 0.9rem;">${building.name}</span>
+                                            <span class="star-rating ${starClass}" style="font-size: 0.85rem;" title="${building.stars} stars">${starIcons}</span>
+                                        </span>`;
+                            });
+                            
+                            html += `
+                                    </div>
+                                    <div class="ingredient-label" style="margin-top: 0.5rem;">Required Ingredients:</div>
                                     <div class="ingredient-list" style="margin-top: 0.25rem;">
                                         ${chain.ingredients.map((ing, index) => {
                                             const separator = index > 0 ? '<div style="color: var(--text-secondary); padding: 0.25rem 0; text-align: center; font-weight: bold;">+</div>' : '';
@@ -1616,12 +1640,18 @@
                 // For each base ingredient, check if it has a recipe
                 ingredientsToProcess.forEach(ingredient => {
                     if (ingredientRecipes[ingredient]) {
-                        // Use the first (best) recipe for this ingredient
-                        const recipe = ingredientRecipes[ingredient][0];
+                        // Use all recipes for this ingredient
+                        const recipes = ingredientRecipes[ingredient];
+                        // Sort recipes by stars (descending) - most stars to least stars
+                        const sortedRecipes = [...recipes].sort((a, b) => b.stars - a.stars);
+                        
                         chains.push({
                             ingredient: ingredient,
-                            building: recipe.building,
-                            ingredients: recipe.ingredients
+                            buildings: sortedRecipes.map(recipe => ({
+                                name: recipe.building,
+                                stars: recipe.stars
+                            })),
+                            ingredients: sortedRecipes[0].ingredients // All recipes have same ingredients
                         });
                     }
                 });
