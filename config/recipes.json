@@ -69,11 +69,6 @@
     { "building": "Temple", "stars": 2, "ingredients": ["Scrolls"], "workerRequired": true },
     { "building": "Explorer's Lodge", "stars": 2, "ingredients": ["Scrolls"], "workerRequired": true }
   ],
-  "Cleanliness": [
-    { "building": "Bath House", "stars": 3, "ingredients": ["Cosmetics or Tea"], "workerRequired": true },
-    { "building": "Tea Doctor", "stars": 2, "ingredients": ["Cosmetics or Tea"], "workerRequired": true },
-    { "building": "Holy Market", "stars": 2, "ingredients": ["Cosmetics or Tea"], "workerRequired": true }
-  ],
   "Brawling": [
     { "building": "Clan Hall", "stars": 3, "ingredients": ["Training Gear"], "workerRequired": true },
     { "building": "Explorer's Lodge", "stars": 2, "ingredients": ["Training Gear"], "workerRequired": true },
