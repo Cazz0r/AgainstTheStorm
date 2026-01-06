@@ -417,50 +417,36 @@
         }
 
         .pairwise-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 1.5rem;
         }
 
-        .pairwise-category {
-            background-color: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 1rem;
-        }
-
-        .pairwise-category h3 {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
         .pairwise-item {
-            background-color: var(--bg-tertiary);
-            padding: 0.75rem;
-            margin-bottom: 0.75rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: border-color 0.2s, background-color 0.2s, transform 0.2s;
-            border: 2px solid transparent;
-        }
-
-        .pairwise-item:hover {
-            border-color: var(--accent-color);
-            background-color: var(--bg-secondary);
-            transform: translateX(2px);
+            background-color: var(--bg-primary);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
         }
 
         .pairwise-item:last-child {
             margin-bottom: 0;
         }
 
+        .pairwise-need-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
         .pairwise-need-name {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            font-size: 0.95rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
         }
 
         .pairwise-species-list {
@@ -469,7 +455,13 @@
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin-top: 0.25rem;
+            align-items: center;
+        }
+
+        .pairwise-species-label {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-right: 0.5rem;
         }
 
         .species-tag {
@@ -1404,78 +1396,198 @@
                         <div class="pairwise-grid">
                 `;
 
+                // Collect all pairwise needs with their species info
+                const pairwiseNeedsList = [];
+                
                 // Complex Food
-                if (Object.keys(pairwiseData.complexFood).length > 0) {
-                    html += `
-                        <div class="pairwise-category">
-                            <h3>Complex Food</h3>
-                    `;
-                    Object.entries(pairwiseData.complexFood).forEach(([need, species]) => {
-                        html += `
-                            <div class="pairwise-item" data-need-name="${escapeHtml(need)}">
-                                <div class="pairwise-need-name">${renderNeedWithIcon(need, 'complexFood')}</div>
-                                <div class="pairwise-species-list">
-                                    ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
-                                </div>
-                            </div>
-                        `;
+                Object.entries(pairwiseData.complexFood).forEach(([need, species]) => {
+                    pairwiseNeedsList.push({
+                        need: need,
+                        category: 'complexFood',
+                        categoryLabel: 'Complex Food',
+                        species: species
                     });
-                    html += `</div>`;
-                }
-
+                });
+                
                 // Clothing
-                if (Object.keys(pairwiseData.clothing).length > 0) {
-                    html += `
-                        <div class="pairwise-category">
-                            <h3>Clothing</h3>
-                    `;
-                    Object.entries(pairwiseData.clothing).forEach(([need, species]) => {
-                        html += `
-                            <div class="pairwise-item" data-need-name="${escapeHtml(need)}">
-                                <div class="pairwise-need-name">${renderNeedWithIcon(need, 'clothing')}</div>
-                                <div class="pairwise-species-list">
-                                    ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
-                                </div>
-                            </div>
-                        `;
+                Object.entries(pairwiseData.clothing).forEach(([need, species]) => {
+                    pairwiseNeedsList.push({
+                        need: need,
+                        category: 'clothing',
+                        categoryLabel: 'Clothing',
+                        species: species
                     });
-                    html += `</div>`;
-                }
-
+                });
+                
                 // Services
-                if (Object.keys(pairwiseData.services).length > 0) {
+                Object.entries(pairwiseData.services).forEach(([need, species]) => {
+                    pairwiseNeedsList.push({
+                        need: need,
+                        category: 'services',
+                        categoryLabel: 'Service',
+                        species: species
+                    });
+                });
+
+                // Render each pairwise need with its building requirements
+                pairwiseNeedsList.forEach(item => {
+                    const recipe = recipesData[item.need];
+                    if (!recipe) return;
+
+                    // With the new structure, recipes are already grouped
+                    const recipeGroups = {
+                        [recipe.ingredients.join('||')]: {
+                            ingredients: recipe.ingredients,
+                            buildings: recipe.buildings.map(b => ({
+                                name: b.building,
+                                stars: b.stars
+                            })),
+                            workerRequired: recipe.workerRequired
+                        }
+                    };
+
                     html += `
-                        <div class="pairwise-category">
-                            <h3>Services</h3>
+                        <div class="pairwise-item">
+                            <div class="pairwise-need-header">
+                                <h3 class="pairwise-need-name">${renderNeedWithIcon(item.need, item.category)}</h3>
+                                <span class="need-category">${item.categoryLabel}</span>
+                            </div>
+                            <div class="pairwise-species-list">
+                                <span class="pairwise-species-label">Shared by:</span>
+                                ${item.species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
+                            </div>
+                            <div class="buildings-grid" style="margin-top: 1rem;">
                     `;
-                    Object.entries(pairwiseData.services).forEach(([need, species]) => {
+
+                    // Render each unique recipe
+                    let groupIndex = 0;
+                    Object.values(recipeGroups).forEach(group => {
+                        // Create a unique recipe ID based on need and group index
+                        const recipeId = `pairwise-${item.need.replace(/\s+/g, '-')}-${groupIndex}`;
+                        groupIndex++;
+                        
+                        // Sort buildings within group by star rating (descending)
+                        group.buildings.sort((a, b) => b.stars - a.stars);
+                        
                         html += `
-                            <div class="pairwise-item" data-need-name="${escapeHtml(need)}">
-                                <div class="pairwise-need-name">${renderNeedWithIcon(need, 'services')}</div>
-                                <div class="pairwise-species-list">
-                                    ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
+                            <div class="building-card" data-recipe-id="${recipeId}">
+                                <div class="building-header" style="display: block;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                                        <span class="building-name" style="font-size: 1rem;">Recipe</span>
+                                    </div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+                        `;
+                        
+                        // List all buildings for this recipe grouped by star rating
+                        group.buildings.forEach((building, index) => {
+                            const starIcons = '⭐'.repeat(building.stars);
+                            const starClass = `stars-${building.stars}`;
+                            const isSelected = state.selectedBuildings[building.name] || false;
+                            const selectedClass = isSelected ? ' selected' : '';
+                            
+                            if (index > 0) {
+                                html += `<span style="color: var(--text-secondary);">•</span>`;
+                            }
+                            html += `<span class="building-item${selectedClass}" data-building-name="${building.name}">
+                                        <span class="building-item-name">${building.name}</span>
+                                        <span class="star-rating ${starClass}" style="font-size: 0.9rem;" title="${building.stars} stars">${starIcons}</span>
+                                        <span class="building-item-status">${isSelected ? 'Blueprint Obtained' : 'Blueprint Obtained'}</span>
+                                    </span>`;
+                        });
+                        
+                        html += `
+                                    </div>
                                 </div>
+                                <div class="building-ingredients">
+                                    <div class="ingredient-label">Required Ingredients:</div>
+                                    <div class="ingredient-list">
+                        `;
+
+                        group.ingredients.forEach((ingredient, index) => {
+                            // Check if ingredient has "or" options - if yes, don't wrap in ingredient-tag
+                            const renderedIngredient = renderIngredientWithIcons(ingredient, recipeId, index);
+                            const wrapperClass = ingredient.includes(' or ') ? '' : 'ingredient-tag';
+                            html += `<div style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-tertiary);"><span class="${wrapperClass}">${renderedIngredient}</span></div>`;
+                        });
+
+                        html += `
+                                    </div>
+                                </div>
+                        `;
+
+                        // Check if this has worker requirement
+                        if (group.workerRequired) {
+                            html += `<div class="worker-note">⚠️ Requires at least one worker assigned</div>`;
+                        }
+
+                        // Add ingredient chains for complex ingredients
+                        const ingredientChains = getIngredientChains(group.ingredients, recipeId);
+                        if (ingredientChains.length > 0) {
+                            html += `
+                                <div class="ingredient-chain">
+                                    <div class="chain-label">🔗 Buildings for Ingredients:</div>
+                            `;
+                            ingredientChains.forEach(chain => {
+                                html += `
+                                    <div class="sub-building">
+                                        <div class="sub-building-name" style="margin-bottom: 0.5rem;">
+                                            <strong>${renderIngredientWithIcons(chain.ingredient)}</strong>
+                                        </div>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+                                `;
+                                
+                                // List all buildings for this ingredient with star ratings
+                                chain.buildings.forEach((building, index) => {
+                                    const starIcons = '⭐'.repeat(building.stars);
+                                    const starClass = `stars-${building.stars}`;
+                                    const isSelected = state.selectedBuildings[building.name] || false;
+                                    const selectedClass = isSelected ? ' selected' : '';
+                                    
+                                    if (index > 0) {
+                                        html += `<span style="color: var(--text-secondary);">•</span>`;
+                                    }
+                                    html += `<span class="building-item${selectedClass}" data-building-name="${building.name}">
+                                                <span class="building-item-name">${building.name}</span>
+                                                <span class="star-rating ${starClass}" style="font-size: 0.85rem;" title="${building.stars} stars">${starIcons}</span>
+                                                <span class="building-item-status">${isSelected ? 'Blueprint Obtained' : 'Blueprint Obtained'}</span>
+                                            </span>`;
+                                });
+                                
+                                html += `
+                                        </div>
+                                        <div class="ingredient-label" style="margin-top: 0.5rem;">Required Ingredients:</div>
+                                        <div class="ingredient-list" style="margin-top: 0.25rem;">
+                                            ${chain.ingredients.map((ing, index) => {
+                                                const separator = index > 0 ? '<div style="color: var(--text-secondary); padding: 0.25rem 0; text-align: center; font-weight: bold;">+</div>' : '';
+                                                return `${separator}<div style="padding: 0.25rem 0;"><span class="ingredient-tag">${renderIngredientWithIcons(ing)}</span></div>`;
+                                            }).join('')}
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                            html += `
+                                </div>
+                            `;
+                        }
+
+                        html += `
                             </div>
                         `;
                     });
-                    html += `</div>`;
-                }
+
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                });
 
                 html += `
                         </div>
                     </div>
                 `;
-                
-                // Add a container for displaying selected pairwise need's building requirements
-                html += `<div id="pairwise-building-requirements"></div>`;
             }
 
             resultsContainer.innerHTML = html;
-            
-            // Attach event listeners to pairwise items only if they exist
-            if (hasPairwiseNeeds) {
-                attachPairwiseClickHandlers();
-            }
         }
 
         // Render building requirements for shared needs
