@@ -442,6 +442,15 @@
             padding: 0.75rem;
             margin-bottom: 0.75rem;
             border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .pairwise-item:hover {
+            border-color: var(--accent-color);
+            background-color: var(--bg-secondary);
+            transform: translateX(2px);
         }
 
         .pairwise-item:last-child {
@@ -1403,7 +1412,7 @@
                     `;
                     Object.entries(pairwiseData.complexFood).forEach(([need, species]) => {
                         html += `
-                            <div class="pairwise-item">
+                            <div class="pairwise-item" data-need-name="${escapeHtml(need)}" data-need-category="complexFood">
                                 <div class="pairwise-need-name">${renderNeedWithIcon(need, 'complexFood')}</div>
                                 <div class="pairwise-species-list">
                                     ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
@@ -1422,7 +1431,7 @@
                     `;
                     Object.entries(pairwiseData.clothing).forEach(([need, species]) => {
                         html += `
-                            <div class="pairwise-item">
+                            <div class="pairwise-item" data-need-name="${escapeHtml(need)}" data-need-category="clothing">
                                 <div class="pairwise-need-name">${renderNeedWithIcon(need, 'clothing')}</div>
                                 <div class="pairwise-species-list">
                                     ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
@@ -1441,7 +1450,7 @@
                     `;
                     Object.entries(pairwiseData.services).forEach(([need, species]) => {
                         html += `
-                            <div class="pairwise-item">
+                            <div class="pairwise-item" data-need-name="${escapeHtml(need)}" data-need-category="services">
                                 <div class="pairwise-need-name">${renderNeedWithIcon(need, 'services')}</div>
                                 <div class="pairwise-species-list">
                                     ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
@@ -1456,9 +1465,15 @@
                         </div>
                     </div>
                 `;
+                
+                // Add a container for displaying selected pairwise need's building requirements
+                html += `<div id="pairwise-building-requirements"></div>`;
             }
 
             resultsContainer.innerHTML = html;
+            
+            // Attach event listeners to pairwise items
+            attachPairwiseClickHandlers();
         }
 
         // Render building requirements for shared needs
@@ -1697,6 +1712,33 @@
             });
 
             return uniqueChains;
+        }
+
+        // Attach click handlers to pairwise need items
+        function attachPairwiseClickHandlers() {
+            const pairwiseItems = document.querySelectorAll('.pairwise-item');
+            pairwiseItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const needName = item.dataset.needName;
+                    const needCategory = item.dataset.needCategory;
+                    handlePairwiseNeedClick(needName, needCategory);
+                });
+            });
+        }
+
+        // Handle click on pairwise need item
+        function handlePairwiseNeedClick(needName, needCategory) {
+            const container = document.getElementById('pairwise-building-requirements');
+            if (!container) return;
+
+            // Generate the building requirements HTML for this single need
+            const html = renderBuildingRequirements([needName]);
+            container.innerHTML = html;
+
+            // Scroll to the requirements section smoothly
+            setTimeout(() => {
+                container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
         }
 
         // Update results display
