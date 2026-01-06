@@ -1056,22 +1056,17 @@
 
         // Map need item names to their icon paths
         function getNeedIconPath(needName, category) {
-            // Convert need name to kebab-case filename
-            const filename = needName
-                .toLowerCase()
-                .replace(/\s+/g, '-');
+            // Convert need name to camelCase filename (matching existing goods naming convention)
+            const words = needName.split(' ');
+            const filename = words.map((word, index) => {
+                if (index === 0) {
+                    return word.toLowerCase();
+                }
+                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+            }).join('');
             
-            // Determine which subdirectory based on category
-            let subdirectory = 'goods'; // default fallback
-            if (category === 'complexFood') {
-                subdirectory = 'food';
-            } else if (category === 'clothing') {
-                subdirectory = 'clothing';
-            } else if (category === 'services') {
-                subdirectory = 'services';
-            }
-            
-            return `images/${subdirectory}/${filename}.png`;
+            // All icons are in the goods directory with .webp extension
+            return `images/goods/${filename}.webp`;
         }
 
         // Render a need item (food/clothing/service) with icon
