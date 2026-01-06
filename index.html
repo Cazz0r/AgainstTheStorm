@@ -1456,23 +1456,6 @@
                 const recipes = recipesData[need];
                 if (!recipes || recipes.length === 0) return;
 
-                // Group recipes by ingredient signature (same ingredients = same recipe)
-                const recipeGroups = {};
-                recipes.forEach(recipe => {
-                    const ingredientKey = recipe.ingredients.join('||');
-                    if (!recipeGroups[ingredientKey]) {
-                        recipeGroups[ingredientKey] = {
-                            ingredients: recipe.ingredients,
-                            buildings: [],
-                            workerRequired: recipe.workerRequired
-                        };
-                    }
-                    recipeGroups[ingredientKey].buildings.push({
-                        name: recipe.building,
-                        stars: recipe.stars
-                    });
-                });
-
                 // Determine category
                 let category = 'Unknown';
                 let categoryKey = 'complexFood'; // default for icon rendering
@@ -1496,51 +1479,33 @@
                         <div class="buildings-grid">
                 `;
 
-                // Render each unique recipe
-                let groupIndex = 0;
-                Object.values(recipeGroups).forEach(group => {
-                    // Create a unique recipe ID based on need and group index
-                    const recipeId = `${need.replace(/\s+/g, '-')}-${groupIndex}`;
-                    groupIndex++;
+                // Render each recipe as a separate card
+                recipes.forEach((recipe, recipeIndex) => {
+                    // Create a unique recipe ID based on need and recipe index
+                    const recipeId = `${need.replace(/\s+/g, '-')}-${recipeIndex}`;
                     
-                    // Sort buildings within group by star rating (descending)
-                    group.buildings.sort((a, b) => b.stars - a.stars);
+                    const starIcons = '⭐'.repeat(recipe.stars);
+                    const starClass = `stars-${recipe.stars}`;
                     
                     html += `
                         <div class="building-card" data-recipe-id="${recipeId}">
-                            <div class="building-header" style="display: block;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                                    <span class="building-name" style="font-size: 1rem;">Recipe</span>
-                                </div>
-                                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
-                    `;
-                    
-                    // List all buildings for this recipe grouped by star rating
-                    group.buildings.forEach((building, index) => {
-                        const starIcons = '⭐'.repeat(building.stars);
-                        const starClass = `stars-${building.stars}`;
-                        if (index > 0) {
-                            html += `<span style="color: var(--text-secondary);">•</span>`;
-                        }
-                        html += `<span style="display: flex; align-items: center; gap: 0.25rem;">
-                                    <span style="font-weight: 600; font-size: 0.95rem;">${building.name}</span>
-                                    <span class="star-rating ${starClass}" style="font-size: 0.9rem;" title="${building.stars} stars">${starIcons}</span>
-                                </span>`;
-                    });
-                    
-                    html += `
-                                </div>
+                            <div class="building-header">
+                                <span class="building-name">${recipe.building}</span>
+                                <span class="star-rating ${starClass}" title="${recipe.stars} stars">${starIcons}</span>
                             </div>
                             <div class="building-ingredients">
                                 <div class="ingredient-label">Required Ingredients:</div>
                                 <div class="ingredient-list">
                     `;
 
-                    group.ingredients.forEach((ingredient, index) => {
+                    recipe.ingredients.forEach((ingredient, index) => {
                         if (index > 0) {
                             html += `<div style="color: var(--text-secondary); padding: 0.25rem 0; text-align: center; font-weight: bold;">+</div>`;
                         }
-                        html += `<div style="padding: 0.25rem 0;"><span class="ingredient-tag">${renderIngredientWithIcons(ingredient, recipeId, index)}</span></div>`;
+                        // Check if ingredient has "or" options - if yes, don't wrap in ingredient-tag
+                        const renderedIngredient = renderIngredientWithIcons(ingredient, recipeId, index);
+                        const wrapperClass = ingredient.includes(' or ') ? '' : 'ingredient-tag';
+                        html += `<div style="padding: 0.25rem 0;"><span class="${wrapperClass}">${renderedIngredient}</span></div>`;
                     });
 
                     html += `
@@ -1549,12 +1514,12 @@
                     `;
 
                     // Check if this has worker requirement
-                    if (group.workerRequired) {
+                    if (recipe.workerRequired) {
                         html += `<div class="worker-note">⚠️ Requires at least one worker assigned</div>`;
                     }
 
                     // Add ingredient chains for complex ingredients
-                    const ingredientChains = getIngredientChains(group.ingredients, recipeId);
+                    const ingredientChains = getIngredientChains(recipe.ingredients, recipeId);
                     if (ingredientChains.length > 0) {
                         html += `
                             <div class="ingredient-chain">
