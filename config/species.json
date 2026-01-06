@@ -3,40 +3,40 @@
     "name": "Humans",
     "icon": "👤",
     "image": "images/species/human.png",
-    "complexFood": ["Biscuits", "Jerky", "Pickled Goods", "Pie"],
-    "services": ["Leisure", "Religion", "Education"],
+    "complexFood": ["Biscuits", "Pie", "Porridge"],
+    "services": ["Leisure", "Religion"],
     "clothing": ["Coats"]
   },
   "beavers": {
     "name": "Beavers",
     "icon": "🦫",
     "image": "images/species/beaver.png",
-    "complexFood": ["Biscuits", "Jerky", "Pickled Goods"],
-    "services": ["Leisure", "Education", "Cleanliness"],
+    "complexFood": ["Biscuits", "Pickled Goods"],
+    "services": ["Education", "Leisure", "Luxury"],
     "clothing": ["Coats"]
   },
   "lizards": {
     "name": "Lizards",
     "icon": "🦎",
     "image": "images/species/lizard.png",
-    "complexFood": ["Jerky", "Pickled Goods", "Pie", "Skewers"],
-    "services": ["Leisure", "Brawling", "Religion"],
+    "complexFood": ["Pie", "Jerky", "Pickled Goods", "Skewers"],
+    "services": ["Brawling"],
     "clothing": ["Boots"]
   },
   "harpies": {
     "name": "Harpies",
     "icon": "🦅",
     "image": "images/species/harpy.png",
-    "complexFood": ["Jerky", "Pie", "Skewers"],
-    "services": ["Cleanliness", "Religion", "Education"],
-    "clothing": ["Coats"]
+    "complexFood": ["Paste", "Jerky"],
+    "services": ["Education", "Treatment"],
+    "clothing": ["Coats", "Boots"]
   },
   "foxes": {
     "name": "Foxes",
     "icon": "🦊",
     "image": "images/species/fox.png",
-    "complexFood": ["Biscuits", "Jerky", "Skewers"],
-    "services": ["Cleanliness", "Brawling", "Education"],
+    "complexFood": ["Pickled Goods", "Porridge", "Skewers"],
+    "services": ["Religion", "Treatment"],
     "clothing": ["Boots"]
   },
   "frogs": {
@@ -44,7 +44,7 @@
     "icon": "🐸",
     "image": "images/species/frog.png",
     "complexFood": ["Porridge", "Paste", "Pie"],
-    "services": ["Brawling", "Luxury", "Religion", "Education"],
+    "services": ["Brawling", "Religion", "Luxury"],
     "clothing": ["Boots"]
   },
   "bats": {
