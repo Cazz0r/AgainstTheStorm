@@ -994,6 +994,46 @@
             return emoji;
         }
 
+        // Map ingredient names to their icon paths
+        function getGoodIconPath(goodName) {
+            // Clean up the good name (remove parenthetical notes like "(from trees)")
+            const cleanName = goodName.replace(/\s*\(.*?\)\s*$/g, '').trim();
+            
+            // Convert good name to camelCase filename
+            const filename = cleanName
+                .split(' ')
+                .map((word, index) => {
+                    if (index === 0) {
+                        return word.toLowerCase();
+                    }
+                    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                })
+                .join('');
+            
+            return `images/goods/${filename}.webp`;
+        }
+
+        // Render an ingredient with icon(s)
+        function renderIngredientWithIcons(ingredientString) {
+            // Check if ingredient has "or" options
+            if (ingredientString.includes(' or ')) {
+                // Split by "or" and render each option with its icon
+                const options = ingredientString.split(' or ').map(opt => opt.trim());
+                const renderedOptions = options.map(option => {
+                    const iconPath = getGoodIconPath(option);
+                    const escapedAlt = option.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    return `<img src="${iconPath}" alt="${escapedAlt}" title="${option}" onerror="this.style.display='none';" /> ${option}`;
+                }).join(' <span style="color: var(--text-secondary);">or</span> ');
+                
+                return renderedOptions;
+            } else {
+                // Single ingredient, render with icon
+                const iconPath = getGoodIconPath(ingredientString);
+                const escapedAlt = ingredientString.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                return `<img src="${iconPath}" alt="${escapedAlt}" title="${ingredientString}" onerror="this.style.display='none';" /> ${ingredientString}`;
+            }
+        }
+
         // Initialize the app
         function init() {
             renderSpeciesGrid();
@@ -1344,7 +1384,7 @@
                     `;
 
                     recipe.ingredients.forEach(ingredient => {
-                        html += `<span class="ingredient-tag">${ingredient}</span>`;
+                        html += `<span class="ingredient-tag">${renderIngredientWithIcons(ingredient)}</span>`;
                     });
 
                     html += `
@@ -1369,7 +1409,7 @@
                                 <div class="sub-building">
                                     <div class="sub-building-name">${chain.ingredient} → ${chain.building}</div>
                                     <div class="ingredient-list" style="margin-top: 0.25rem;">
-                                        ${chain.ingredients.map(ing => `<span class="ingredient-tag">${ing}</span>`).join('')}
+                                        ${chain.ingredients.map(ing => `<span class="ingredient-tag">${renderIngredientWithIcons(ing)}</span>`).join('')}
                                     </div>
                                 </div>
                             `;
