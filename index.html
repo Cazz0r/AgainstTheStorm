@@ -271,14 +271,18 @@
 
         .needs-list {
             list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         .needs-list li {
-            padding: 0.5rem;
+            padding: 0.5rem 0.75rem;
             background-color: var(--bg-tertiary);
-            margin-bottom: 0.25rem;
             border-radius: 4px;
             font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
         }
 
         .shared-needs {
