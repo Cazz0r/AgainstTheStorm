@@ -1538,7 +1538,7 @@
 
                     group.ingredients.forEach((ingredient, index) => {
                         if (index > 0) {
-                            html += `<div style="color: var(--text-secondary); padding: 0.25rem 0; text-align: center; font-weight: bold;">+</div>`;
+                            html += `<div style="width: 100%; color: var(--text-secondary); padding: 0.25rem 0; text-align: center; font-weight: bold;">+</div>`;
                         }
                         // Check if ingredient has "or" options - if yes, don't wrap in ingredient-tag
                         const renderedIngredient = renderIngredientWithIcons(ingredient, recipeId, index);
