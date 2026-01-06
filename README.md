@@ -58,7 +58,7 @@ AgainstTheStorm/
 
 ## 🎯 Game Information
 
-**Against the Storm** is a roguelite city-builder set in a fantasy world where you must rebuild civilization in the face of an apocalyptic storm. The game features:
+**Against the Storm** is a 2023 roguelite city-builder set in a fantasy world where you must rebuild civilization in the face of an apocalyptic storm. The game features:
 
 - Multiple playable species with unique needs and preferences
 - Complex production chains and resource management
@@ -67,13 +67,14 @@ AgainstTheStorm/
 
 **Official Links:**
 - Developer: [Eremite Games](https://eremitegames.com/)
+- Publisher: [Hooded Horse](https://hoodedhorse.com/)
 - Steam: [Against the Storm on Steam](https://store.steampowered.com/app/1336490/Against_the_Storm/)
 
 ## 📜 Copyright & Attribution
 
 ### Game Content
 
-**Against the Storm** is developed by **Eremite Games**.
+**Against the Storm** is a 2023 city-building video game developed by **Eremite Games** and published by **Hooded Horse**.
 
 All game content, including but not limited to:
 - Game mechanics and balance data
@@ -82,7 +83,7 @@ All game content, including but not limited to:
 - Building names and recipes
 - Item and resource names
 
-...are the intellectual property of **Eremite Games** and are used here for informational purposes only.
+...are the intellectual property of **Eremite Games** and **Hooded Horse** and are used here for informational purposes only.
 
 ### Tool Development
 
@@ -92,7 +93,7 @@ Repository: https://github.com/Cazz0r/AgainstTheStorm
 
 ### Disclaimer
 
-This is an **unofficial** fan-made tool created to help players with species selection and settlement planning. It is **not affiliated with, endorsed by, or sponsored by Eremite Games**. All game content and assets remain the intellectual property of their respective owners.
+This is an **unofficial** fan-made tool created to help players with species selection and settlement planning. It is **not affiliated with, endorsed by, or sponsored by Eremite Games or Hooded Horse**. All game content and assets remain the intellectual property of their respective owners.
 
 ## 🤝 Contributing
 
@@ -113,13 +114,14 @@ Contributions are welcome! If you'd like to improve this tool:
 
 ## 📝 License
 
-This project is an unofficial fan work. While the tool code is provided as-is for community use, all **Against the Storm** game content, assets, and intellectual property belong to **Eremite Games**.
+This project is an unofficial fan work. While the tool code is provided as-is for community use, all **Against the Storm** game content, assets, and intellectual property belong to **Eremite Games** and **Hooded Horse**.
 
-If you are a representative of Eremite Games and have concerns about this project, please contact the repository owner.
+If you are a representative of Eremite Games or Hooded Horse and have concerns about this project, please contact the repository owner.
 
 ## 🙏 Acknowledgments
 
-- **Eremite Games** - for creating the amazing game **Against the Storm**
+- **Eremite Games** - for developing the amazing game **Against the Storm**
+- **Hooded Horse** - for publishing **Against the Storm**
 - The **Against the Storm** community - for inspiration and feedback
 - All contributors to this repository
 

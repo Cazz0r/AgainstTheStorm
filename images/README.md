@@ -93,7 +93,7 @@ Alternatively, you can download icons from the wiki and store them in the `image
 
 All game assets are property of **Eremite Games** and **Hooded Horse** (publisher) and are used for fan-made tools to enhance the gaming experience. 
 
-**Against the Storm** is developed by Eremite Games and published by Hooded Horse.
+**Against the Storm** is a 2023 city-building video game developed by **Eremite Games** and published by **Hooded Horse**.
 - Official Wiki: https://wiki.hoodedhorse.com/Against_the_Storm/Against_the_Storm_Official_Wiki
 - Developer Website: https://eremitegames.com/
 - Publisher Website: https://hoodedhorse.com/
