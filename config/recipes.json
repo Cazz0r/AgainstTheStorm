@@ -1,17 +1,17 @@
 {
   "Biscuits": [
-    { "building": "Bakery", "stars": 3, "ingredients": ["Flour", "Herbs or Berries or Roots"] },
-    { "building": "Cookhouse", "stars": 2, "ingredients": ["Flour", "Herbs or Berries or Roots"] },
-    { "building": "Field Kitchen", "stars": 1, "ingredients": ["Flour", "Herbs or Berries or Roots"] },
-    { "building": "Apothecary", "stars": 1, "ingredients": ["Flour", "Herbs or Berries or Roots"] },
-    { "building": "Smelter", "stars": 1, "ingredients": ["Flour", "Herbs or Berries or Roots"] }
+    { "building": "Bakery", "stars": 3, "ingredients": ["Flour", "Herbs or Berries or Roots or Eggs or Salt"] },
+    { "building": "Cookhouse", "stars": 2, "ingredients": ["Flour", "Herbs or Berries or Roots or Eggs or Salt"] },
+    { "building": "Field Kitchen", "stars": 1, "ingredients": ["Flour", "Herbs or Berries or Roots or Eggs or Salt"] },
+    { "building": "Apothecary", "stars": 1, "ingredients": ["Flour", "Herbs or Berries or Roots or Eggs or Salt"] },
+    { "building": "Smelter", "stars": 1, "ingredients": ["Flour", "Herbs or Berries or Roots or Eggs or Salt"] }
   ],
   "Jerky": [
-    { "building": "Smokehouse", "stars": 3, "ingredients": ["Meat or Insects", "Wood or Oil or Coal"] },
-    { "building": "Butcher", "stars": 2, "ingredients": ["Meat or Insects", "Wood or Oil or Coal"] },
-    { "building": "Kiln", "stars": 2, "ingredients": ["Meat or Insects", "Wood or Oil or Coal"] },
-    { "building": "Field Kitchen", "stars": 1, "ingredients": ["Meat or Insects", "Wood or Oil or Coal"] },
-    { "building": "Cellar", "stars": 1, "ingredients": ["Meat or Insects", "Wood or Oil or Coal"] }
+    { "building": "Smokehouse", "stars": 3, "ingredients": ["Meat or Insects", "Wood or Oil or Coal or Salt or Sea Marrow"] },
+    { "building": "Butcher", "stars": 2, "ingredients": ["Meat or Insects", "Wood or Oil or Coal or Salt or Sea Marrow"] },
+    { "building": "Kiln", "stars": 2, "ingredients": ["Meat or Insects", "Wood or Oil or Coal or Salt or Sea Marrow"] },
+    { "building": "Field Kitchen", "stars": 1, "ingredients": ["Meat or Insects", "Wood or Oil or Coal or Salt or Sea Marrow"] },
+    { "building": "Cellar", "stars": 1, "ingredients": ["Meat or Insects", "Wood or Oil or Coal or Salt or Sea Marrow"] }
   ],
   "Pickled Goods": [
     { "building": "Cellar", "stars": 3, "ingredients": ["Vegetables or Mushrooms or Roots or Berries or Eggs", "Pottery or Barrels or Waterskins"] },
@@ -21,36 +21,36 @@
     { "building": "Field Kitchen", "stars": 1, "ingredients": ["Vegetables or Mushrooms or Roots or Berries or Eggs", "Pottery or Barrels or Waterskins"] }
   ],
   "Pie": [
-    { "building": "Bakery", "stars": 3, "ingredients": ["Flour", "Meat or Berries or Insects or Eggs or Herbs"] },
-    { "building": "Brick Oven", "stars": 2, "ingredients": ["Flour", "Meat or Berries or Insects or Eggs or Herbs"] },
-    { "building": "Furnace", "stars": 1, "ingredients": ["Flour", "Meat or Berries or Insects or Eggs or Herbs"] }
+    { "building": "Bakery", "stars": 3, "ingredients": ["Flour", "Meat or Berries or Insects or Fish or Herbs"] },
+    { "building": "Brick Oven", "stars": 2, "ingredients": ["Flour", "Meat or Berries or Insects or Fish or Herbs"] },
+    { "building": "Furnace", "stars": 1, "ingredients": ["Flour", "Meat or Berries or Insects or Fish or Herbs"] }
   ],
   "Skewers": [
-    { "building": "Grill", "stars": 3, "ingredients": ["Meat or Mushrooms or Jerky or Insects", "Roots or Berries or Eggs or Vegetables"] },
-    { "building": "Butcher", "stars": 2, "ingredients": ["Meat or Mushrooms or Jerky or Insects", "Roots or Berries or Eggs or Vegetables"] },
-    { "building": "Cookhouse", "stars": 2, "ingredients": ["Meat or Mushrooms or Jerky or Insects", "Roots or Berries or Eggs or Vegetables"] }
+    { "building": "Grill", "stars": 3, "ingredients": ["Meat or Mushrooms or Jerky or Insects or Fish", "Roots or Berries or Eggs or Vegetables"] },
+    { "building": "Butcher", "stars": 2, "ingredients": ["Meat or Mushrooms or Jerky or Insects or Fish", "Roots or Berries or Eggs or Vegetables"] },
+    { "building": "Cookhouse", "stars": 2, "ingredients": ["Meat or Mushrooms or Jerky or Insects or Fish", "Roots or Berries or Eggs or Vegetables"] }
   ],
   "Porridge": [
-    { "building": "Beanery", "stars": 3, "ingredients": ["Berries or Reeds or Mushrooms", "Pottery or Waterskins or Barrels"] },
-    { "building": "Field Kitchen", "stars": 2, "ingredients": ["Berries or Reeds or Mushrooms", "Pottery or Waterskins or Barrels"] },
-    { "building": "Teahouse", "stars": 2, "ingredients": ["Berries or Reeds or Mushrooms", "Pottery or Waterskins or Barrels"] },
-    { "building": "Distillery", "stars": 1, "ingredients": ["Berries or Reeds or Mushrooms", "Pottery or Waterskins or Barrels"] }
+    { "building": "Beanery", "stars": 3, "ingredients": ["Grain or Vegetables or Mushrooms or Herbs or Fish", "Drizzle Water or Clearance Water or Storm Water"] },
+    { "building": "Field Kitchen", "stars": 2, "ingredients": ["Grain or Vegetables or Mushrooms or Herbs or Fish", "Drizzle Water or Clearance Water or Storm Water"] },
+    { "building": "Teahouse", "stars": 2, "ingredients": ["Grain or Vegetables or Mushrooms or Herbs or Fish", "Drizzle Water or Clearance Water or Storm Water"] },
+    { "building": "Distillery", "stars": 1, "ingredients": ["Grain or Vegetables or Mushrooms or Herbs or Fish", "Drizzle Water or Clearance Water or Storm Water"] }
   ],
   "Paste": [
-    { "building": "Apothecary", "stars": 3, "ingredients": ["Berries or Insects or Reeds", "Pottery or Barrels or Waterskins"] },
-    { "building": "Cookhouse", "stars": 2, "ingredients": ["Berries or Insects or Reeds", "Pottery or Barrels or Waterskins"] },
-    { "building": "Field Kitchen", "stars": 1, "ingredients": ["Berries or Insects or Reeds", "Pottery or Barrels or Waterskins"] }
+    { "building": "Apothecary", "stars": 3, "ingredients": ["Dye or Salt", "Eggs or Fish or Meat"] },
+    { "building": "Cookhouse", "stars": 2, "ingredients": ["Dye or Salt", "Eggs or Fish or Meat"] },
+    { "building": "Field Kitchen", "stars": 1, "ingredients": ["Dye or Salt", "Eggs or Fish or Meat"] }
   ],
   "Coats": [
-    { "building": "Clothier", "stars": 3, "ingredients": ["Fabric", "Leather", "Dye", "Resin"] },
-    { "building": "Artisan", "stars": 2, "ingredients": ["Fabric", "Leather", "Dye", "Resin"] },
-    { "building": "Cooperage", "stars": 2, "ingredients": ["Fabric", "Leather", "Dye", "Resin"] },
-    { "building": "Druid's Hut", "stars": 1, "ingredients": ["Fabric", "Leather", "Dye", "Resin"] }
+    { "building": "Clothier", "stars": 3, "ingredients": ["Fabric or Leather", "Dye or Resin"] },
+    { "building": "Artisan", "stars": 2, "ingredients": ["Fabric or Leather", "Dye or Resin"] },
+    { "building": "Cooperage", "stars": 2, "ingredients": ["Fabric or Leather", "Dye or Resin"] },
+    { "building": "Druid's Hut", "stars": 1, "ingredients": ["Fabric or Leather", "Dye or Resin"] }
   ],
   "Boots": [
-    { "building": "Clothier", "stars": 3, "ingredients": ["Leather", "Scales", "Fabric"] },
-    { "building": "Artisan", "stars": 2, "ingredients": ["Leather", "Scales", "Fabric"] },
-    { "building": "Leatherworker", "stars": 1, "ingredients": ["Leather", "Scales", "Fabric"] }
+    { "building": "Cobbler", "stars": 3, "ingredients": ["Leather or Scales"] },
+    { "building": "Leatherworker", "stars": 2, "ingredients": ["Leather or Scales"] },
+    { "building": "Weaver", "stars": 1, "ingredients": ["Leather or Scales"] }
   ],
   "Leisure": [
     { "building": "Tavern", "stars": 3, "ingredients": ["Ale"], "workerRequired": true },
