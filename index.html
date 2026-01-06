@@ -1150,21 +1150,23 @@
                     }
                 }
                 
-                const escapedAlt = altText.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                const escapedAlt = escapeHtml(altText);
                 return `<img src="${sanitizedPath}" alt="${escapedAlt}" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='block';" />
                         <span class="emoji-fallback">${emoji}</span>`;
             }
             return emoji;
         }
 
-        // Map ingredient names to their icon paths
-        function getGoodIconPath(goodName) {
-            // Clean up the good name (remove parenthetical notes like "(from trees)")
-            const cleanName = goodName.replace(/\s*\(.*?\)\s*$/g, '').trim();
-            
-            // Convert good name to camelCase filename
-            const filename = cleanName
+        // Utility function to convert a name to camelCase filename
+        function toCamelCase(name) {
+            // Only check for null/undefined, convert other types to string
+            if (name == null) {
+                return '';
+            }
+            const str = String(name);
+            return str
                 .split(' ')
+                .filter(word => word.length > 0) // Filter out empty strings
                 .map((word, index) => {
                     if (index === 0) {
                         return word.toLowerCase();
@@ -1172,6 +1174,31 @@
                     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
                 })
                 .join('');
+        }
+
+        // Utility function to escape HTML special characters
+        // Note: This is for display purposes only. Input text is assumed to be plain text,
+        // not already-escaped HTML. Double escaping is avoided by treating input as raw text.
+        function escapeHtml(text) {
+            // Only check for null/undefined, convert other types to string
+            if (text == null) {
+                return '';
+            }
+            const str = String(text);
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        // Map ingredient names to their icon paths
+        function getGoodIconPath(goodName) {
+            // Clean up the good name (remove parenthetical notes like "(from trees)")
+            const cleanName = goodName.replace(/\s*\(.*?\)\s*$/g, '').trim();
+            
+            // Convert good name to camelCase filename and use .webp format for goods
+            const filename = toCamelCase(cleanName);
             
             return `images/goods/${filename}.webp`;
         }
@@ -1194,8 +1221,8 @@
                         if (!iconPath.startsWith('images/')) {
                             iconPath = '';
                         }
-                        const escapedAlt = option.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                        const escapedOption = option.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        const escapedAlt = escapeHtml(option);
+                        const escapedOption = escapeHtml(option);
                         
                         const isSelected = selectedOption !== undefined ? selectedOption === optionIndex : false;
                         const selectedClass = isSelected ? ' selected' : '';
@@ -1214,8 +1241,8 @@
                         if (!iconPath.startsWith('images/')) {
                             iconPath = '';
                         }
-                        const escapedAlt = option.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                        const escapedOption = option.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        const escapedAlt = escapeHtml(option);
+                        const escapedOption = escapeHtml(option);
                         if (iconPath) {
                             return `<img src="${iconPath}" alt="${escapedAlt}" title="${option}" onerror="this.style.display='none';" /> ${escapedOption}`;
                         } else {
@@ -1232,8 +1259,8 @@
                 if (!iconPath.startsWith('images/')) {
                     iconPath = '';
                 }
-                const escapedAlt = ingredientString.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                const escapedIngredient = ingredientString.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                const escapedAlt = escapeHtml(ingredientString);
+                const escapedIngredient = escapeHtml(ingredientString);
                 if (iconPath) {
                     return `<img src="${iconPath}" alt="${escapedAlt}" title="${ingredientString}" onerror="this.style.display='none';" /> ${escapedIngredient}`;
                 } else {
@@ -1244,20 +1271,28 @@
 
         // Map need item names to their icon paths
         function getNeedIconPath(needName, category) {
-            // Reuse the existing getGoodIconPath function which already handles camelCase conversion
+            // Services have their own directory and use .png format
+            // (Species use .png, goods use .webp, services use .png for consistency with species assets)
+            if (category === 'services') {
+                const filename = toCamelCase(needName);
+                return `images/services/${filename}.png`;
+            }
+            // For goods/food/clothing, use the existing function (returns .webp format)
             return getGoodIconPath(needName);
         }
 
         // Render a need item (food/clothing/service) with icon
         function renderNeedWithIcon(needName, category) {
+            const escapedAlt = escapeHtml(needName);
+            const escapedNeed = escapeHtml(needName);
+            
             let iconPath = getNeedIconPath(needName, category);
             // Sanitize path: ensure it starts with images/ and contains only safe characters
             iconPath = iconPath.replace(/[^a-zA-Z0-9\/_.-]/g, '');
             if (!iconPath.startsWith('images/')) {
                 iconPath = ''; // Invalid path, don't display image
             }
-            const escapedAlt = needName.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            const escapedNeed = needName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
             if (iconPath) {
                 return `<img src="${iconPath}" alt="${escapedAlt}" class="item-icon" title="${escapedAlt}" onerror="this.style.display='none';" /> ${escapedNeed}`;
             } else {
