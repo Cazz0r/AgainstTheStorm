@@ -1054,6 +1054,43 @@
             }
         }
 
+        // Map need item names to their icon paths
+        function getNeedIconPath(needName, category) {
+            // Convert need name to kebab-case filename
+            const filename = needName
+                .toLowerCase()
+                .replace(/\s+/g, '-');
+            
+            // Determine which subdirectory based on category
+            let subdirectory = 'goods'; // default fallback
+            if (category === 'complexFood') {
+                subdirectory = 'food';
+            } else if (category === 'clothing') {
+                subdirectory = 'clothing';
+            } else if (category === 'services') {
+                subdirectory = 'services';
+            }
+            
+            return `images/${subdirectory}/${filename}.png`;
+        }
+
+        // Render a need item (food/clothing/service) with icon
+        function renderNeedWithIcon(needName, category) {
+            let iconPath = getNeedIconPath(needName, category);
+            // Sanitize path: ensure it starts with images/ and contains only safe characters
+            iconPath = iconPath.replace(/[^a-zA-Z0-9\/_.-]/g, '');
+            if (!iconPath.startsWith('images/')) {
+                iconPath = ''; // Invalid path, don't display image
+            }
+            const escapedAlt = needName.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const escapedNeed = needName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            if (iconPath) {
+                return `<img src="${iconPath}" alt="${escapedAlt}" class="item-icon" title="${needName}" onerror="this.style.display='none';" /> ${escapedNeed}`;
+            } else {
+                return escapedNeed;
+            }
+        }
+
         // Initialize the app
         function init() {
             renderSpeciesGrid();
@@ -1201,19 +1238,19 @@
                         <div class="needs-section">
                             <h4>Complex Food</h4>
                             <ul class="needs-list">
-                                ${species.complexFood.map(item => `<li>${item}</li>`).join('')}
+                                ${species.complexFood.map(item => `<li>${renderNeedWithIcon(item, 'complexFood')}</li>`).join('')}
                             </ul>
                         </div>
                         <div class="needs-section">
                             <h4>Clothing</h4>
                             <ul class="needs-list">
-                                ${species.clothing.map(item => `<li>${item}</li>`).join('')}
+                                ${species.clothing.map(item => `<li>${renderNeedWithIcon(item, 'clothing')}</li>`).join('')}
                             </ul>
                         </div>
                         <div class="needs-section">
                             <h4>Services</h4>
                             <ul class="needs-list">
-                                ${species.services.map(item => `<li>${item}</li>`).join('')}
+                                ${species.services.map(item => `<li>${renderNeedWithIcon(item, 'services')}</li>`).join('')}
                             </ul>
                         </div>
                     </div>
@@ -1236,7 +1273,7 @@
                                 <div>
                                     <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.875rem;">COMPLEX FOOD</h4>
                                     <ul class="needs-list">
-                                        ${sharedComplexFood.map(item => `<li>${item}</li>`).join('')}
+                                        ${sharedComplexFood.map(item => `<li>${renderNeedWithIcon(item, 'complexFood')}</li>`).join('')}
                                     </ul>
                                 </div>
                             ` : ''}
@@ -1244,7 +1281,7 @@
                                 <div>
                                     <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.875rem;">CLOTHING</h4>
                                     <ul class="needs-list">
-                                        ${sharedClothing.map(item => `<li>${item}</li>`).join('')}
+                                        ${sharedClothing.map(item => `<li>${renderNeedWithIcon(item, 'clothing')}</li>`).join('')}
                                     </ul>
                                 </div>
                             ` : ''}
@@ -1252,7 +1289,7 @@
                                 <div>
                                     <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.875rem;">SERVICES</h4>
                                     <ul class="needs-list">
-                                        ${sharedServices.map(item => `<li>${item}</li>`).join('')}
+                                        ${sharedServices.map(item => `<li>${renderNeedWithIcon(item, 'services')}</li>`).join('')}
                                     </ul>
                                 </div>
                             ` : ''}
@@ -1293,7 +1330,7 @@
                     Object.entries(pairwiseData.complexFood).forEach(([need, species]) => {
                         html += `
                             <div class="pairwise-item">
-                                <div class="pairwise-need-name">${need}</div>
+                                <div class="pairwise-need-name">${renderNeedWithIcon(need, 'complexFood')}</div>
                                 <div class="pairwise-species-list">
                                     ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
                                 </div>
@@ -1312,7 +1349,7 @@
                     Object.entries(pairwiseData.clothing).forEach(([need, species]) => {
                         html += `
                             <div class="pairwise-item">
-                                <div class="pairwise-need-name">${need}</div>
+                                <div class="pairwise-need-name">${renderNeedWithIcon(need, 'clothing')}</div>
                                 <div class="pairwise-species-list">
                                     ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
                                 </div>
@@ -1331,7 +1368,7 @@
                     Object.entries(pairwiseData.services).forEach(([need, species]) => {
                         html += `
                             <div class="pairwise-item">
-                                <div class="pairwise-need-name">${need}</div>
+                                <div class="pairwise-need-name">${renderNeedWithIcon(need, 'services')}</div>
                                 <div class="pairwise-species-list">
                                     ${species.map(s => `<span class="species-tag">${createIconElement(s.image, s.icon, s.name)} ${s.name}</span>`).join('')}
                                 </div>
@@ -1385,18 +1422,22 @@
 
                 // Determine category
                 let category = 'Unknown';
+                let categoryKey = 'complexFood'; // default for icon rendering
                 if (['Biscuits', 'Jerky', 'Pickled Goods', 'Pie', 'Skewers', 'Porridge', 'Paste'].includes(need)) {
                     category = 'Complex Food';
+                    categoryKey = 'complexFood';
                 } else if (['Coats', 'Boots'].includes(need)) {
                     category = 'Clothing';
+                    categoryKey = 'clothing';
                 } else {
                     category = 'Service';
+                    categoryKey = 'services';
                 }
 
                 html += `
                     <div class="need-buildings-item">
                         <div class="need-buildings-header">
-                            <h3 class="need-name">${need}</h3>
+                            <h3 class="need-name">${renderNeedWithIcon(need, categoryKey)}</h3>
                             <span class="need-category">${category}</span>
                         </div>
                         <div class="buildings-grid">
