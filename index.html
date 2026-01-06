@@ -1334,103 +1334,117 @@
 
             html += '</div>';
 
-            // Add shared needs section
+            // Add shared needs section with building requirements inline
             const hasSharedNeeds = sharedComplexFood.length > 0 || 
                                    sharedServices.length > 0 || 
                                    sharedClothing.length > 0;
 
-            html += `
-                <div class="shared-needs">
-                    <h2>🎯 Shared Needs (All 3 Species)</h2>
-                    ${hasSharedNeeds ? `
-                        <div class="shared-grid">
-                            ${sharedComplexFood.length > 0 ? `
-                                <div>
-                                    <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.875rem;">COMPLEX FOOD</h4>
-                                    <ul class="needs-list">
-                                        ${sharedComplexFood.map(item => `<li>${renderNeedWithIcon(item, 'complexFood')}</li>`).join('')}
-                                    </ul>
-                                </div>
-                            ` : ''}
-                            ${sharedClothing.length > 0 ? `
-                                <div>
-                                    <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.875rem;">CLOTHING</h4>
-                                    <ul class="needs-list">
-                                        ${sharedClothing.map(item => `<li>${renderNeedWithIcon(item, 'clothing')}</li>`).join('')}
-                                    </ul>
-                                </div>
-                            ` : ''}
-                            ${sharedServices.length > 0 ? `
-                                <div>
-                                    <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.875rem;">SERVICES</h4>
-                                    <ul class="needs-list">
-                                        ${sharedServices.map(item => `<li>${renderNeedWithIcon(item, 'services')}</li>`).join('')}
-                                    </ul>
-                                </div>
-                            ` : ''}
-                        </div>
-                    ` : `
-                        <p style="text-align: center; color: var(--text-secondary); padding: 2rem;">
-                            These species have no needs in common. Try a different combination!
-                        </p>
-                    `}
-                </div>
-            `;
-
-            // Add building requirements for shared needs
-            if (hasSharedNeeds) {
-                const allSharedNeeds = [...sharedComplexFood, ...sharedClothing, ...sharedServices];
-                html += renderBuildingRequirements(allSharedNeeds);
-            }
-
-            // Add pairwise shared needs section
+            // Calculate pairwise shared needs
             const pairwiseData = calculatePairwiseNeeds(selectedData);
-            const hasPairwiseNeeds = Object.values(pairwiseData).some(category => 
-                Object.keys(category).length > 0
-            );
-
-            if (hasPairwiseNeeds) {
-                html += `
-                    <div class="pairwise-needs">
-                        <h2>🔗 Shared Needs (Any 2 Species)</h2>
-                        <div class="pairwise-grid">
-                `;
-
-                // Collect all pairwise needs with their species info
-                const pairwiseNeedsList = [];
-                
-                // Complex Food
-                Object.entries(pairwiseData.complexFood).forEach(([need, species]) => {
-                    pairwiseNeedsList.push({
+            
+            // Create sets of shared needs for filtering
+            const allSharedNeeds = new Set([...sharedComplexFood, ...sharedClothing, ...sharedServices]);
+            
+            // Collect all needs (3-shared and 2-shared) with their species info
+            const consolidatedNeedsList = [];
+            
+            // First, add 3-shared needs (all 3 species)
+            sharedComplexFood.forEach(need => {
+                consolidatedNeedsList.push({
+                    need: need,
+                    category: 'complexFood',
+                    categoryLabel: 'Complex Food',
+                    species: selectedData.map(s => ({
+                        name: s.name,
+                        icon: s.icon,
+                        image: s.image
+                    })),
+                    sharedCount: 3
+                });
+            });
+            
+            sharedClothing.forEach(need => {
+                consolidatedNeedsList.push({
+                    need: need,
+                    category: 'clothing',
+                    categoryLabel: 'Clothing',
+                    species: selectedData.map(s => ({
+                        name: s.name,
+                        icon: s.icon,
+                        image: s.image
+                    })),
+                    sharedCount: 3
+                });
+            });
+            
+            sharedServices.forEach(need => {
+                consolidatedNeedsList.push({
+                    need: need,
+                    category: 'services',
+                    categoryLabel: 'Service',
+                    species: selectedData.map(s => ({
+                        name: s.name,
+                        icon: s.icon,
+                        image: s.image
+                    })),
+                    sharedCount: 3
+                });
+            });
+            
+            // Then, add 2-shared needs (only those NOT in the 3-shared list)
+            // Complex Food
+            Object.entries(pairwiseData.complexFood).forEach(([need, species]) => {
+                if (!allSharedNeeds.has(need)) {
+                    consolidatedNeedsList.push({
                         need: need,
                         category: 'complexFood',
                         categoryLabel: 'Complex Food',
-                        species: species
+                        species: species,
+                        sharedCount: species.length
                     });
-                });
-                
-                // Clothing
-                Object.entries(pairwiseData.clothing).forEach(([need, species]) => {
-                    pairwiseNeedsList.push({
+                }
+            });
+            
+            // Clothing
+            Object.entries(pairwiseData.clothing).forEach(([need, species]) => {
+                if (!allSharedNeeds.has(need)) {
+                    consolidatedNeedsList.push({
                         need: need,
                         category: 'clothing',
                         categoryLabel: 'Clothing',
-                        species: species
+                        species: species,
+                        sharedCount: species.length
                     });
-                });
-                
-                // Services
-                Object.entries(pairwiseData.services).forEach(([need, species]) => {
-                    pairwiseNeedsList.push({
+                }
+            });
+            
+            // Services
+            Object.entries(pairwiseData.services).forEach(([need, species]) => {
+                if (!allSharedNeeds.has(need)) {
+                    consolidatedNeedsList.push({
                         need: need,
                         category: 'services',
                         categoryLabel: 'Service',
-                        species: species
+                        species: species,
+                        sharedCount: species.length
                     });
-                });
+                }
+            });
 
-                // Render each pairwise need with its building requirements
-                pairwiseNeedsList.forEach(item => {
+            const hasConsolidatedNeeds = consolidatedNeedsList.length > 0;
+
+            html += `
+                <div class="pairwise-needs">
+                    <h2>🎯 Shared Needs & How to Provide Them</h2>
+            `;
+
+            if (hasConsolidatedNeeds) {
+                html += `
+                        <div class="pairwise-grid">
+                `;
+
+                // Render each need with its building requirements
+                consolidatedNeedsList.forEach(item => {
                     const recipe = recipesData[item.need];
                     if (!recipe) return;
 
@@ -1446,10 +1460,18 @@
                         }
                     };
 
+                    // Determine the badge text based on shared count
+                    const sharedBadge = item.sharedCount === 3 
+                        ? '<span style="background-color: var(--accent-color); color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;">All 3 Species</span>' 
+                        : '<span style="background-color: var(--bg-tertiary); color: var(--text-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;">Any 2 Species</span>';
+
                     html += `
                         <div class="pairwise-item">
                             <div class="pairwise-need-header">
-                                <h3 class="pairwise-need-name">${renderNeedWithIcon(item.need, item.category)}</h3>
+                                <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                                    <h3 class="pairwise-need-name" style="margin: 0;">${renderNeedWithIcon(item.need, item.category)}</h3>
+                                    ${sharedBadge}
+                                </div>
                                 <span class="need-category">${item.categoryLabel}</span>
                             </div>
                             <div class="pairwise-species-list">
@@ -1463,7 +1485,7 @@
                     let groupIndex = 0;
                     Object.values(recipeGroups).forEach(group => {
                         // Create a unique recipe ID based on need and group index
-                        const recipeId = `pairwise-${item.need.replace(/\s+/g, '-')}-${groupIndex}`;
+                        const recipeId = `consolidated-${item.need.replace(/\s+/g, '-')}-${groupIndex}`;
                         groupIndex++;
                         
                         // Sort buildings within group by star rating (descending)
@@ -1583,9 +1605,18 @@
 
                 html += `
                         </div>
-                    </div>
+                `;
+            } else {
+                html += `
+                        <p style="text-align: center; color: var(--text-secondary); padding: 2rem;">
+                            These species have no needs in common. Try a different combination!
+                        </p>
                 `;
             }
+            
+            html += `
+                    </div>
+            `;
 
             resultsContainer.innerHTML = html;
         }
