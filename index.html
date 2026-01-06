@@ -1250,14 +1250,22 @@
 
         // Render a need item (food/clothing/service) with icon
         function renderNeedWithIcon(needName, category) {
+            const escapedAlt = needName.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const escapedNeed = needName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            // Services don't have their own image files, so skip image loading for them
+            // This prevents onerror events from firing and causing layout shifts
+            if (category === 'services') {
+                return escapedNeed;
+            }
+            
             let iconPath = getNeedIconPath(needName, category);
             // Sanitize path: ensure it starts with images/ and contains only safe characters
             iconPath = iconPath.replace(/[^a-zA-Z0-9\/_.-]/g, '');
             if (!iconPath.startsWith('images/')) {
                 iconPath = ''; // Invalid path, don't display image
             }
-            const escapedAlt = needName.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            const escapedNeed = needName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
             if (iconPath) {
                 return `<img src="${iconPath}" alt="${escapedAlt}" class="item-icon" title="${escapedAlt}" onerror="this.style.display='none';" /> ${escapedNeed}`;
             } else {
