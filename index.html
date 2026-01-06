@@ -707,7 +707,6 @@
         .sub-building-name strong {
             display: flex;
             align-items: center;
-            gap: 0.25rem;
         }
 
         .worker-note {
@@ -1222,7 +1221,7 @@
                         } else {
                             return escapedOption;
                         }
-                    }).join(' <span style="color: var(--text-secondary);">or</span> ');
+                    }).join(' <span style="color: var(--text-secondary); padding: 0 0.25rem;">or</span> ');
                     
                     return renderedOptions;
                 }
