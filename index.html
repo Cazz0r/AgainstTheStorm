@@ -1606,20 +1606,24 @@
                 // For each base ingredient, check if it has a recipe
                 ingredientsToProcess.forEach(ingredient => {
                     if (ingredientRecipes[ingredient]) {
-                        // Use all recipes for this ingredient
-                        const recipes = ingredientRecipes[ingredient];
-                        // Sort recipes by stars (descending) - most stars to least stars
-                        const sortedRecipes = [...recipes].sort((a, b) => b.stars - a.stars);
+                        const recipeData = ingredientRecipes[ingredient];
                         
-                        // Use the first recipe's ingredients as the canonical set
-                        // In practice, all recipes for the same ingredient should have the same ingredient requirements
-                        chains.push({
-                            ingredient: ingredient,
-                            buildings: sortedRecipes.map(recipe => ({
-                                name: recipe.building,
-                                stars: recipe.stars
-                            })),
-                            ingredients: sortedRecipes[0].ingredients
+                        // Handle both object (single recipe group) and array (multiple recipe groups) formats
+                        const recipeGroups = Array.isArray(recipeData) ? recipeData : [recipeData];
+                        
+                        // Process each recipe group (usually just one, but Pottery has multiple)
+                        recipeGroups.forEach(recipeGroup => {
+                            // Sort buildings by stars (descending)
+                            const sortedBuildings = [...recipeGroup.buildings].sort((a, b) => b.stars - a.stars);
+                            
+                            chains.push({
+                                ingredient: ingredient,
+                                buildings: sortedBuildings.map(building => ({
+                                    name: building.building,
+                                    stars: building.stars
+                                })),
+                                ingredients: recipeGroup.ingredients
+                            });
                         });
                     }
                 });

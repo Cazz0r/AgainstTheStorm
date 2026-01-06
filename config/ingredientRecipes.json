@@ -1,59 +1,226 @@
 {
-  "Flour": [
-    { "building": "Mill", "stars": 3, "ingredients": ["Grain or Roots or Mushrooms"] }
-  ],
-  "Fabric": [
-    { "building": "Weaver", "stars": 3, "ingredients": ["Plant Fiber or Reed or Leather"] }
-  ],
-  "Leather": [
-    { "building": "Leatherworker", "stars": 3, "ingredients": ["Meat or Insects"] }
-  ],
-  "Ale": [
-    { "building": "Brewery", "stars": 3, "ingredients": ["Grain or Roots", "Pottery or Barrels or Waterskins"] }
-  ],
-  "Incense": [
-    { "building": "Apothecary", "stars": 3, "ingredients": ["Herbs or Reeds or Roots", "Wood or Oil or Coal"] }
-  ],
-  "Scrolls": [
-    { "building": "Scribe", "stars": 3, "ingredients": ["Leather or Reed or Wood", "Dye or Oil"] }
-  ],
-  "Cosmetics": [
-    { "building": "Apothecary", "stars": 3, "ingredients": ["Herbs or Berries or Crystalized Dew"] }
-  ],
-  "Tea": [
-    { "building": "Teahouse", "stars": 3, "ingredients": ["Herbs or Reeds or Roots", "Pottery or Barrels or Waterskins"] }
-  ],
-  "Training Gear": [
-    { "building": "Smithy", "stars": 3, "ingredients": ["Copper Bars or Crystalized Dew", "Planks or Reed"] }
-  ],
-  "Wine": [
-    { "building": "Brewery", "stars": 3, "ingredients": ["Berries or Reed or Grain", "Pottery or Barrels or Waterskins"] }
-  ],
-  "Pottery": [
-    { "building": "Brickyard", "stars": 3, "ingredients": ["Clay", "Wood or Oil or Coal or Sea Marrow"] },
-    { "building": "Bakery", "stars": 2, "ingredients": ["Clay", "Wood or Oil or Coal"] },
-    { "building": "Smokehouse", "stars": 2, "ingredients": ["Clay", "Wood or Oil or Coal"] }
-  ],
-  "Barrels": [
-    { "building": "Cooperage", "stars": 3, "ingredients": ["Copper Bars or Crystalized Dew", "Planks"] },
-    { "building": "Flawless Cooperage", "stars": 3, "ingredients": ["Copper Bars or Crystalized Dew", "Planks"] },
-    { "building": "Toolshop", "stars": 2, "ingredients": ["Copper Bars or Crystalized Dew", "Planks"] },
-    { "building": "Provisioner", "stars": 2, "ingredients": ["Copper Bars or Crystalized Dew", "Planks"] },
-    { "building": "Artisan", "stars": 2, "ingredients": ["Copper Bars or Crystalized Dew", "Planks"] },
-    { "building": "Distillery", "stars": 1, "ingredients": ["Copper Bars or Crystalized Dew", "Planks"] }
-  ],
-  "Waterskins": [
-    { "building": "Leatherworker", "stars": 3, "ingredients": ["Leather", "Plant Fiber", "Pigment"] },
-    { "building": "Tannery", "stars": 2, "ingredients": ["Leather", "Plant Fiber", "Pigment"] },
-    { "building": "Supplier", "stars": 2, "ingredients": ["Leather", "Plant Fiber", "Pigment"] }
-  ],
-  "Dye": [
-    { "building": "Tinctury", "stars": 3, "ingredients": ["Roots or Pigment or Mushrooms or Insects"] }
-  ],
-  "Resin": [
-    { "building": "Forester's Hut", "stars": 3, "ingredients": ["Wood (from trees)"], "isGathered": true }
-  ],
-  "Scales": [
-    { "building": "Lizard Post", "stars": 3, "ingredients": ["Leather (from lizards)"], "isGathered": true }
-  ]
+  "Flour": {
+    "ingredients": [
+      "Grain or Roots or Mushrooms"
+    ],
+    "buildings": [
+      {
+        "building": "Mill",
+        "stars": 3
+      }
+    ]
+  },
+  "Fabric": {
+    "ingredients": [
+      "Plant Fiber or Reed or Leather"
+    ],
+    "buildings": [
+      {
+        "building": "Weaver",
+        "stars": 3
+      }
+    ]
+  },
+  "Leather": {
+    "ingredients": [
+      "Meat or Insects"
+    ],
+    "buildings": [
+      {
+        "building": "Leatherworker",
+        "stars": 3
+      }
+    ]
+  },
+  "Ale": {
+    "ingredients": [
+      "Grain or Roots",
+      "Pottery or Barrels or Waterskins"
+    ],
+    "buildings": [
+      {
+        "building": "Brewery",
+        "stars": 3
+      }
+    ]
+  },
+  "Incense": {
+    "ingredients": [
+      "Herbs or Reeds or Roots",
+      "Wood or Oil or Coal"
+    ],
+    "buildings": [
+      {
+        "building": "Apothecary",
+        "stars": 3
+      }
+    ]
+  },
+  "Scrolls": {
+    "ingredients": [
+      "Leather or Reed or Wood",
+      "Dye or Oil"
+    ],
+    "buildings": [
+      {
+        "building": "Scribe",
+        "stars": 3
+      }
+    ]
+  },
+  "Cosmetics": {
+    "ingredients": [
+      "Herbs or Berries or Crystalized Dew"
+    ],
+    "buildings": [
+      {
+        "building": "Apothecary",
+        "stars": 3
+      }
+    ]
+  },
+  "Tea": {
+    "ingredients": [
+      "Herbs or Reeds or Roots",
+      "Pottery or Barrels or Waterskins"
+    ],
+    "buildings": [
+      {
+        "building": "Teahouse",
+        "stars": 3
+      }
+    ]
+  },
+  "Training Gear": {
+    "ingredients": [
+      "Copper Bars or Crystalized Dew",
+      "Planks or Reed"
+    ],
+    "buildings": [
+      {
+        "building": "Smithy",
+        "stars": 3
+      }
+    ]
+  },
+  "Wine": {
+    "ingredients": [
+      "Berries or Reed or Grain",
+      "Pottery or Barrels or Waterskins"
+    ],
+    "buildings": [
+      {
+        "building": "Brewery",
+        "stars": 3
+      }
+    ]
+  },
+  "Pottery": {
+    "ingredients": [
+      "Clay",
+      "Wood or Oil or Coal or Sea Marrow"
+    ],
+    "buildings": [
+      {
+        "building": "Brickyard",
+        "stars": 3
+      },
+      {
+        "building": "Bakery",
+        "stars": 2
+      },
+      {
+        "building": "Smokehouse",
+        "stars": 2
+      }
+    ]
+  },
+  "Barrels": {
+    "ingredients": [
+      "Copper Bars or Crystalized Dew",
+      "Planks"
+    ],
+    "buildings": [
+      {
+        "building": "Cooperage",
+        "stars": 3
+      },
+      {
+        "building": "Flawless Cooperage",
+        "stars": 3
+      },
+      {
+        "building": "Toolshop",
+        "stars": 2
+      },
+      {
+        "building": "Provisioner",
+        "stars": 2
+      },
+      {
+        "building": "Artisan",
+        "stars": 2
+      },
+      {
+        "building": "Distillery",
+        "stars": 1
+      }
+    ]
+  },
+  "Waterskins": {
+    "ingredients": [
+      "Leather",
+      "Plant Fiber",
+      "Pigment"
+    ],
+    "buildings": [
+      {
+        "building": "Leatherworker",
+        "stars": 3
+      },
+      {
+        "building": "Tannery",
+        "stars": 2
+      },
+      {
+        "building": "Supplier",
+        "stars": 2
+      }
+    ]
+  },
+  "Dye": {
+    "ingredients": [
+      "Roots or Pigment or Mushrooms or Insects"
+    ],
+    "buildings": [
+      {
+        "building": "Tinctury",
+        "stars": 3
+      }
+    ]
+  },
+  "Resin": {
+    "ingredients": [
+      "Wood (from trees)"
+    ],
+    "buildings": [
+      {
+        "building": "Forester's Hut",
+        "stars": 3
+      }
+    ],
+    "isGathered": true
+  },
+  "Scales": {
+    "ingredients": [
+      "Leather (from lizards)"
+    ],
+    "buildings": [
+      {
+        "building": "Lizard Post",
+        "stars": 3
+      }
+    ],
+    "isGathered": true
+  }
 }
