@@ -1020,17 +1020,37 @@
                 // Split by "or" and render each option with its icon
                 const options = ingredientString.split(' or ').map(opt => opt.trim());
                 const renderedOptions = options.map(option => {
-                    const iconPath = getGoodIconPath(option);
+                    let iconPath = getGoodIconPath(option);
+                    // Sanitize path: ensure it starts with images/ and contains only safe characters
+                    iconPath = iconPath.replace(/[^a-zA-Z0-9\/_.-]/g, '');
+                    if (!iconPath.startsWith('images/')) {
+                        iconPath = ''; // Invalid path, don't display image
+                    }
                     const escapedAlt = option.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                    return `<img src="${iconPath}" alt="${escapedAlt}" title="${option}" onerror="this.style.display='none';" /> ${option}`;
+                    const escapedOption = option.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    if (iconPath) {
+                        return `<img src="${iconPath}" alt="${escapedAlt}" title="${option}" onerror="this.style.display='none';" /> ${escapedOption}`;
+                    } else {
+                        return escapedOption;
+                    }
                 }).join(' <span style="color: var(--text-secondary);">or</span> ');
                 
                 return renderedOptions;
             } else {
                 // Single ingredient, render with icon
-                const iconPath = getGoodIconPath(ingredientString);
+                let iconPath = getGoodIconPath(ingredientString);
+                // Sanitize path: ensure it starts with images/ and contains only safe characters
+                iconPath = iconPath.replace(/[^a-zA-Z0-9\/_.-]/g, '');
+                if (!iconPath.startsWith('images/')) {
+                    iconPath = ''; // Invalid path, don't display image
+                }
                 const escapedAlt = ingredientString.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                return `<img src="${iconPath}" alt="${escapedAlt}" title="${ingredientString}" onerror="this.style.display='none';" /> ${ingredientString}`;
+                const escapedIngredient = ingredientString.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                if (iconPath) {
+                    return `<img src="${iconPath}" alt="${escapedAlt}" title="${ingredientString}" onerror="this.style.display='none';" /> ${escapedIngredient}`;
+                } else {
+                    return escapedIngredient;
+                }
             }
         }
 
@@ -1346,8 +1366,22 @@
                 const recipes = recipesData[need];
                 if (!recipes || recipes.length === 0) return;
 
-                // Sort buildings by star rating (descending)
-                const sortedRecipes = [...recipes].sort((a, b) => b.stars - a.stars);
+                // Group recipes by ingredient signature (same ingredients = same recipe)
+                const recipeGroups = {};
+                recipes.forEach(recipe => {
+                    const ingredientKey = recipe.ingredients.join('||');
+                    if (!recipeGroups[ingredientKey]) {
+                        recipeGroups[ingredientKey] = {
+                            ingredients: recipe.ingredients,
+                            buildings: [],
+                            workerRequired: recipe.workerRequired
+                        };
+                    }
+                    recipeGroups[ingredientKey].buildings.push({
+                        name: recipe.building,
+                        stars: recipe.stars
+                    });
+                });
 
                 // Determine category
                 let category = 'Unknown';
@@ -1368,22 +1402,45 @@
                         <div class="buildings-grid">
                 `;
 
-                sortedRecipes.forEach(recipe => {
-                    const starIcons = '⭐'.repeat(recipe.stars);
-                    const starClass = `stars-${recipe.stars}`;
+                // Render each unique recipe
+                Object.values(recipeGroups).forEach(group => {
+                    // Sort buildings within group by star rating (descending)
+                    group.buildings.sort((a, b) => b.stars - a.stars);
                     
                     html += `
                         <div class="building-card">
-                            <div class="building-header">
-                                <span class="building-name">${recipe.building}</span>
-                                <span class="star-rating ${starClass}" title="${recipe.stars} stars">${starIcons}</span>
+                            <div class="building-header" style="display: block;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                                    <span class="building-name" style="font-size: 1rem;">Recipe</span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+                    `;
+                    
+                    // List all buildings for this recipe grouped by star rating
+                    group.buildings.forEach((building, index) => {
+                        const starIcons = '⭐'.repeat(building.stars);
+                        const starClass = `stars-${building.stars}`;
+                        if (index > 0) {
+                            html += `<span style="color: var(--text-secondary);">•</span>`;
+                        }
+                        html += `<span style="display: flex; align-items: center; gap: 0.25rem;">
+                                    <span style="font-weight: 600; font-size: 0.95rem;">${building.name}</span>
+                                    <span class="star-rating ${starClass}" style="font-size: 0.9rem;" title="${building.stars} stars">${starIcons}</span>
+                                </span>`;
+                    });
+                    
+                    html += `
+                                </div>
                             </div>
                             <div class="building-ingredients">
                                 <div class="ingredient-label">Required Ingredients:</div>
                                 <div class="ingredient-list">
                     `;
 
-                    recipe.ingredients.forEach(ingredient => {
+                    group.ingredients.forEach((ingredient, index) => {
+                        if (index > 0) {
+                            html += `<span style="color: var(--text-secondary); padding: 0 0.5rem;">+</span>`;
+                        }
                         html += `<span class="ingredient-tag">${renderIngredientWithIcons(ingredient)}</span>`;
                     });
 
@@ -1393,12 +1450,12 @@
                     `;
 
                     // Check if this has worker requirement
-                    if (recipe.workerRequired) {
+                    if (group.workerRequired) {
                         html += `<div class="worker-note">⚠️ Requires at least one worker assigned</div>`;
                     }
 
                     // Add ingredient chains for complex ingredients
-                    const ingredientChains = getIngredientChains(recipe.ingredients);
+                    const ingredientChains = getIngredientChains(group.ingredients);
                     if (ingredientChains.length > 0) {
                         html += `
                             <div class="ingredient-chain">
@@ -1409,7 +1466,10 @@
                                 <div class="sub-building">
                                     <div class="sub-building-name">${chain.ingredient} → ${chain.building}</div>
                                     <div class="ingredient-list" style="margin-top: 0.25rem;">
-                                        ${chain.ingredients.map(ing => `<span class="ingredient-tag">${renderIngredientWithIcons(ing)}</span>`).join('')}
+                                        ${chain.ingredients.map((ing, index) => {
+                                            const separator = index > 0 ? '<span style="color: var(--text-secondary); padding: 0 0.5rem;">+</span>' : '';
+                                            return `${separator}<span class="ingredient-tag">${renderIngredientWithIcons(ing)}</span>`;
+                                        }).join('')}
                                     </div>
                                 </div>
                             `;
