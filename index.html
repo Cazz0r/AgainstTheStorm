@@ -1426,25 +1426,21 @@
             `;
 
             sharedNeeds.forEach(need => {
-                const recipes = recipesData[need];
-                if (!recipes || recipes.length === 0) return;
+                const recipe = recipesData[need];
+                if (!recipe) return;
 
-                // Group recipes by ingredient signature (same ingredients = same recipe)
-                const recipeGroups = {};
-                recipes.forEach(recipe => {
-                    const ingredientKey = recipe.ingredients.join('||');
-                    if (!recipeGroups[ingredientKey]) {
-                        recipeGroups[ingredientKey] = {
-                            ingredients: recipe.ingredients,
-                            buildings: [],
-                            workerRequired: recipe.workerRequired
-                        };
+                // With the new structure, recipes are already grouped
+                // Convert to the format expected by the rendering code
+                const recipeGroups = {
+                    [recipe.ingredients.join('||')]: {
+                        ingredients: recipe.ingredients,
+                        buildings: recipe.buildings.map(b => ({
+                            name: b.building,
+                            stars: b.stars
+                        })),
+                        workerRequired: recipe.workerRequired
                     }
-                    recipeGroups[ingredientKey].buildings.push({
-                        name: recipe.building,
-                        stars: recipe.stars
-                    });
-                });
+                };
 
                 // Determine category
                 let category = 'Unknown';

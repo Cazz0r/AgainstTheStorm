@@ -1,84 +1,329 @@
 {
-  "Biscuits": [
-    { "building": "Bakery", "stars": 3, "ingredients": ["Flour", "Herbs or Berries or Roots or Eggs or Salt"] },
-    { "building": "Cookhouse", "stars": 2, "ingredients": ["Flour", "Herbs or Berries or Roots or Eggs or Salt"] },
-    { "building": "Field Kitchen", "stars": 1, "ingredients": ["Flour", "Herbs or Berries or Roots or Eggs or Salt"] },
-    { "building": "Apothecary", "stars": 1, "ingredients": ["Flour", "Herbs or Berries or Roots or Eggs or Salt"] },
-    { "building": "Smelter", "stars": 1, "ingredients": ["Flour", "Herbs or Berries or Roots or Eggs or Salt"] }
-  ],
-  "Jerky": [
-    { "building": "Smokehouse", "stars": 3, "ingredients": ["Meat or Insects", "Wood or Oil or Coal or Salt or Sea Marrow"] },
-    { "building": "Butcher", "stars": 2, "ingredients": ["Meat or Insects", "Wood or Oil or Coal or Salt or Sea Marrow"] },
-    { "building": "Kiln", "stars": 2, "ingredients": ["Meat or Insects", "Wood or Oil or Coal or Salt or Sea Marrow"] },
-    { "building": "Field Kitchen", "stars": 1, "ingredients": ["Meat or Insects", "Wood or Oil or Coal or Salt or Sea Marrow"] },
-    { "building": "Cellar", "stars": 1, "ingredients": ["Meat or Insects", "Wood or Oil or Coal or Salt or Sea Marrow"] }
-  ],
-  "Pickled Goods": [
-    { "building": "Cellar", "stars": 3, "ingredients": ["Vegetables or Mushrooms or Roots or Berries or Eggs", "Pottery or Barrels or Waterskins"] },
-    { "building": "Brewery", "stars": 2, "ingredients": ["Vegetables or Mushrooms or Roots or Berries or Eggs", "Pottery or Barrels or Waterskins"] },
-    { "building": "Beanery", "stars": 2, "ingredients": ["Vegetables or Mushrooms or Roots or Berries or Eggs", "Pottery or Barrels or Waterskins"] },
-    { "building": "Granary", "stars": 1, "ingredients": ["Vegetables or Mushrooms or Roots or Berries or Eggs", "Pottery or Barrels or Waterskins"] },
-    { "building": "Field Kitchen", "stars": 1, "ingredients": ["Vegetables or Mushrooms or Roots or Berries or Eggs", "Pottery or Barrels or Waterskins"] }
-  ],
-  "Pie": [
-    { "building": "Bakery", "stars": 3, "ingredients": ["Flour", "Meat or Berries or Insects or Fish or Herbs"] },
-    { "building": "Brick Oven", "stars": 2, "ingredients": ["Flour", "Meat or Berries or Insects or Fish or Herbs"] },
-    { "building": "Furnace", "stars": 1, "ingredients": ["Flour", "Meat or Berries or Insects or Fish or Herbs"] }
-  ],
-  "Skewers": [
-    { "building": "Grill", "stars": 3, "ingredients": ["Meat or Mushrooms or Jerky or Insects or Fish", "Roots or Berries or Eggs or Vegetables"] },
-    { "building": "Butcher", "stars": 2, "ingredients": ["Meat or Mushrooms or Jerky or Insects or Fish", "Roots or Berries or Eggs or Vegetables"] },
-    { "building": "Cookhouse", "stars": 2, "ingredients": ["Meat or Mushrooms or Jerky or Insects or Fish", "Roots or Berries or Eggs or Vegetables"] }
-  ],
-  "Porridge": [
-    { "building": "Beanery", "stars": 3, "ingredients": ["Grain or Vegetables or Mushrooms or Herbs or Fish", "Drizzle Water or Clearance Water or Storm Water"] },
-    { "building": "Field Kitchen", "stars": 2, "ingredients": ["Grain or Vegetables or Mushrooms or Herbs or Fish", "Drizzle Water or Clearance Water or Storm Water"] },
-    { "building": "Teahouse", "stars": 2, "ingredients": ["Grain or Vegetables or Mushrooms or Herbs or Fish", "Drizzle Water or Clearance Water or Storm Water"] },
-    { "building": "Distillery", "stars": 1, "ingredients": ["Grain or Vegetables or Mushrooms or Herbs or Fish", "Drizzle Water or Clearance Water or Storm Water"] }
-  ],
-  "Paste": [
-    { "building": "Apothecary", "stars": 3, "ingredients": ["Dye or Salt", "Eggs or Fish or Meat"] },
-    { "building": "Cookhouse", "stars": 2, "ingredients": ["Dye or Salt", "Eggs or Fish or Meat"] },
-    { "building": "Field Kitchen", "stars": 1, "ingredients": ["Dye or Salt", "Eggs or Fish or Meat"] }
-  ],
-  "Coats": [
-    { "building": "Clothier", "stars": 3, "ingredients": ["Fabric or Leather", "Dye or Resin"] },
-    { "building": "Artisan", "stars": 2, "ingredients": ["Fabric or Leather", "Dye or Resin"] },
-    { "building": "Cooperage", "stars": 2, "ingredients": ["Fabric or Leather", "Dye or Resin"] },
-    { "building": "Druid's Hut", "stars": 1, "ingredients": ["Fabric or Leather", "Dye or Resin"] }
-  ],
-  "Boots": [
-    { "building": "Cobbler", "stars": 3, "ingredients": ["Leather or Scales"] },
-    { "building": "Leatherworker", "stars": 2, "ingredients": ["Leather or Scales"] },
-    { "building": "Weaver", "stars": 1, "ingredients": ["Leather or Scales"] }
-  ],
-  "Leisure": [
-    { "building": "Tavern", "stars": 3, "ingredients": ["Ale"], "workerRequired": true },
-    { "building": "Forum", "stars": 2, "ingredients": ["Ale"], "workerRequired": true },
-    { "building": "Monastery", "stars": 2, "ingredients": ["Ale"], "workerRequired": true }
-  ],
-  "Religion": [
-    { "building": "Temple", "stars": 3, "ingredients": ["Incense"], "workerRequired": true },
-    { "building": "Holy Temple", "stars": 3, "ingredients": ["Incense"], "workerRequired": true },
-    { "building": "Monastery", "stars": 2, "ingredients": ["Incense"], "workerRequired": true },
-    { "building": "Clan Hall", "stars": 2, "ingredients": ["Incense"], "workerRequired": true }
-  ],
-  "Education": [
-    { "building": "Academy", "stars": 3, "ingredients": ["Scrolls"], "workerRequired": true },
-    { "building": "Forum", "stars": 2, "ingredients": ["Scrolls"], "workerRequired": true },
-    { "building": "Temple", "stars": 2, "ingredients": ["Scrolls"], "workerRequired": true },
-    { "building": "Explorer's Lodge", "stars": 2, "ingredients": ["Scrolls"], "workerRequired": true }
-  ],
-  "Brawling": [
-    { "building": "Clan Hall", "stars": 3, "ingredients": ["Training Gear"], "workerRequired": true },
-    { "building": "Explorer's Lodge", "stars": 2, "ingredients": ["Training Gear"], "workerRequired": true },
-    { "building": "Tea Doctor", "stars": 2, "ingredients": ["Training Gear"], "workerRequired": true },
-    { "building": "Tavern", "stars": 2, "ingredients": ["Training Gear"], "workerRequired": true }
-  ],
-  "Luxury": [
-    { "building": "Market", "stars": 3, "ingredients": ["Wine"], "workerRequired": true },
-    { "building": "Tavern", "stars": 2, "ingredients": ["Wine"], "workerRequired": true },
-    { "building": "Guild House", "stars": 2, "ingredients": ["Wine"], "workerRequired": true },
-    { "building": "Holy Market", "stars": 2, "ingredients": ["Wine"], "workerRequired": true }
-  ]
+  "Biscuits": {
+    "ingredients": [
+      "Flour",
+      "Herbs or Berries or Roots or Eggs or Salt"
+    ],
+    "buildings": [
+      {
+        "building": "Bakery",
+        "stars": 3
+      },
+      {
+        "building": "Cookhouse",
+        "stars": 2
+      },
+      {
+        "building": "Field Kitchen",
+        "stars": 1
+      },
+      {
+        "building": "Apothecary",
+        "stars": 1
+      },
+      {
+        "building": "Smelter",
+        "stars": 1
+      }
+    ]
+  },
+  "Jerky": {
+    "ingredients": [
+      "Meat or Insects",
+      "Wood or Oil or Coal or Salt or Sea Marrow"
+    ],
+    "buildings": [
+      {
+        "building": "Smokehouse",
+        "stars": 3
+      },
+      {
+        "building": "Butcher",
+        "stars": 2
+      },
+      {
+        "building": "Kiln",
+        "stars": 2
+      },
+      {
+        "building": "Field Kitchen",
+        "stars": 1
+      },
+      {
+        "building": "Cellar",
+        "stars": 1
+      }
+    ]
+  },
+  "Pickled Goods": {
+    "ingredients": [
+      "Vegetables or Mushrooms or Roots or Berries or Eggs",
+      "Pottery or Barrels or Waterskins"
+    ],
+    "buildings": [
+      {
+        "building": "Cellar",
+        "stars": 3
+      },
+      {
+        "building": "Brewery",
+        "stars": 2
+      },
+      {
+        "building": "Beanery",
+        "stars": 2
+      },
+      {
+        "building": "Granary",
+        "stars": 1
+      },
+      {
+        "building": "Field Kitchen",
+        "stars": 1
+      }
+    ]
+  },
+  "Pie": {
+    "ingredients": [
+      "Flour",
+      "Meat or Berries or Insects or Fish or Herbs"
+    ],
+    "buildings": [
+      {
+        "building": "Bakery",
+        "stars": 3
+      },
+      {
+        "building": "Brick Oven",
+        "stars": 2
+      },
+      {
+        "building": "Furnace",
+        "stars": 1
+      }
+    ]
+  },
+  "Skewers": {
+    "ingredients": [
+      "Meat or Mushrooms or Jerky or Insects or Fish",
+      "Roots or Berries or Eggs or Vegetables"
+    ],
+    "buildings": [
+      {
+        "building": "Grill",
+        "stars": 3
+      },
+      {
+        "building": "Butcher",
+        "stars": 2
+      },
+      {
+        "building": "Cookhouse",
+        "stars": 2
+      }
+    ]
+  },
+  "Porridge": {
+    "ingredients": [
+      "Grain or Vegetables or Mushrooms or Herbs or Fish",
+      "Drizzle Water or Clearance Water or Storm Water"
+    ],
+    "buildings": [
+      {
+        "building": "Beanery",
+        "stars": 3
+      },
+      {
+        "building": "Field Kitchen",
+        "stars": 2
+      },
+      {
+        "building": "Teahouse",
+        "stars": 2
+      },
+      {
+        "building": "Distillery",
+        "stars": 1
+      }
+    ]
+  },
+  "Paste": {
+    "ingredients": [
+      "Dye or Salt",
+      "Eggs or Fish or Meat"
+    ],
+    "buildings": [
+      {
+        "building": "Apothecary",
+        "stars": 3
+      },
+      {
+        "building": "Cookhouse",
+        "stars": 2
+      },
+      {
+        "building": "Field Kitchen",
+        "stars": 1
+      }
+    ]
+  },
+  "Coats": {
+    "ingredients": [
+      "Fabric or Leather",
+      "Dye or Resin"
+    ],
+    "buildings": [
+      {
+        "building": "Clothier",
+        "stars": 3
+      },
+      {
+        "building": "Artisan",
+        "stars": 2
+      },
+      {
+        "building": "Cooperage",
+        "stars": 2
+      },
+      {
+        "building": "Druid's Hut",
+        "stars": 1
+      }
+    ]
+  },
+  "Boots": {
+    "ingredients": [
+      "Leather or Scales"
+    ],
+    "buildings": [
+      {
+        "building": "Cobbler",
+        "stars": 3
+      },
+      {
+        "building": "Leatherworker",
+        "stars": 2
+      },
+      {
+        "building": "Weaver",
+        "stars": 1
+      }
+    ]
+  },
+  "Leisure": {
+    "ingredients": [
+      "Ale"
+    ],
+    "buildings": [
+      {
+        "building": "Tavern",
+        "stars": 3
+      },
+      {
+        "building": "Forum",
+        "stars": 2
+      },
+      {
+        "building": "Monastery",
+        "stars": 2
+      }
+    ],
+    "workerRequired": true
+  },
+  "Religion": {
+    "ingredients": [
+      "Incense"
+    ],
+    "buildings": [
+      {
+        "building": "Temple",
+        "stars": 3
+      },
+      {
+        "building": "Holy Temple",
+        "stars": 3
+      },
+      {
+        "building": "Monastery",
+        "stars": 2
+      },
+      {
+        "building": "Clan Hall",
+        "stars": 2
+      }
+    ],
+    "workerRequired": true
+  },
+  "Education": {
+    "ingredients": [
+      "Scrolls"
+    ],
+    "buildings": [
+      {
+        "building": "Academy",
+        "stars": 3
+      },
+      {
+        "building": "Forum",
+        "stars": 2
+      },
+      {
+        "building": "Temple",
+        "stars": 2
+      },
+      {
+        "building": "Explorer's Lodge",
+        "stars": 2
+      }
+    ],
+    "workerRequired": true
+  },
+  "Brawling": {
+    "ingredients": [
+      "Training Gear"
+    ],
+    "buildings": [
+      {
+        "building": "Clan Hall",
+        "stars": 3
+      },
+      {
+        "building": "Explorer's Lodge",
+        "stars": 2
+      },
+      {
+        "building": "Tea Doctor",
+        "stars": 2
+      },
+      {
+        "building": "Tavern",
+        "stars": 2
+      }
+    ],
+    "workerRequired": true
+  },
+  "Luxury": {
+    "ingredients": [
+      "Wine"
+    ],
+    "buildings": [
+      {
+        "building": "Market",
+        "stars": 3
+      },
+      {
+        "building": "Tavern",
+        "stars": 2
+      },
+      {
+        "building": "Guild House",
+        "stars": 2
+      },
+      {
+        "building": "Holy Market",
+        "stars": 2
+      }
+    ],
+    "workerRequired": true
+  }
 }
