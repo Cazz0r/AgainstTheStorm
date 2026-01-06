@@ -1426,25 +1426,21 @@
             `;
 
             sharedNeeds.forEach(need => {
-                const recipes = recipesData[need];
-                if (!recipes || recipes.length === 0) return;
+                const recipe = recipesData[need];
+                if (!recipe) return;
 
-                // Group recipes by ingredient signature (same ingredients = same recipe)
-                const recipeGroups = {};
-                recipes.forEach(recipe => {
-                    const ingredientKey = recipe.ingredients.join('||');
-                    if (!recipeGroups[ingredientKey]) {
-                        recipeGroups[ingredientKey] = {
-                            ingredients: recipe.ingredients,
-                            buildings: [],
-                            workerRequired: recipe.workerRequired
-                        };
+                // With the new structure, recipes are already grouped
+                // Convert to the format expected by the rendering code
+                const recipeGroups = {
+                    [recipe.ingredients.join('||')]: {
+                        ingredients: recipe.ingredients,
+                        buildings: recipe.buildings.map(b => ({
+                            name: b.building,
+                            stars: b.stars
+                        })),
+                        workerRequired: recipe.workerRequired
                     }
-                    recipeGroups[ingredientKey].buildings.push({
-                        name: recipe.building,
-                        stars: recipe.stars
-                    });
-                });
+                };
 
                 // Determine category
                 let category = 'Unknown';
@@ -1610,20 +1606,24 @@
                 // For each base ingredient, check if it has a recipe
                 ingredientsToProcess.forEach(ingredient => {
                     if (ingredientRecipes[ingredient]) {
-                        // Use all recipes for this ingredient
-                        const recipes = ingredientRecipes[ingredient];
-                        // Sort recipes by stars (descending) - most stars to least stars
-                        const sortedRecipes = [...recipes].sort((a, b) => b.stars - a.stars);
+                        const recipeData = ingredientRecipes[ingredient];
                         
-                        // Use the first recipe's ingredients as the canonical set
-                        // In practice, all recipes for the same ingredient should have the same ingredient requirements
-                        chains.push({
-                            ingredient: ingredient,
-                            buildings: sortedRecipes.map(recipe => ({
-                                name: recipe.building,
-                                stars: recipe.stars
-                            })),
-                            ingredients: sortedRecipes[0].ingredients
+                        // Handle both object (single recipe group) and array (multiple recipe groups) formats
+                        const recipeGroups = Array.isArray(recipeData) ? recipeData : [recipeData];
+                        
+                        // Process each recipe group (usually just one, but Pottery has multiple)
+                        recipeGroups.forEach(recipeGroup => {
+                            // Sort buildings by stars (descending)
+                            const sortedBuildings = [...recipeGroup.buildings].sort((a, b) => b.stars - a.stars);
+                            
+                            chains.push({
+                                ingredient: ingredient,
+                                buildings: sortedBuildings.map(building => ({
+                                    name: building.building,
+                                    stars: building.stars
+                                })),
+                                ingredients: recipeGroup.ingredients
+                            });
                         });
                     }
                 });
