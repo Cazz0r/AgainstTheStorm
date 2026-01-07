@@ -137,6 +137,36 @@
             align-items: center;
         }
 
+        /* Reset Button */
+        .reset-button {
+            background-color: #ef4444;
+            border: 2px solid #dc2626;
+            border-radius: 20px;
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            color: white;
+            font-weight: 500;
+            margin-top: 1rem;
+            width: fit-content;
+        }
+
+        .reset-button:hover {
+            background-color: #dc2626;
+            border-color: #b91c1c;
+            transform: scale(1.05);
+        }
+
+        .reset-button-icon {
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
         /* Hamburger Menu */
         .hamburger {
             display: none;
@@ -982,6 +1012,11 @@
                     <div class="no-blueprints">No blueprints obtained yet</div>
                 </div>
             </div>
+            
+            <button class="reset-button" id="resetButton" aria-label="Reset all selections">
+                <span class="reset-button-icon">🔄</span>
+                <span>Reset All</span>
+            </button>
             
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
                 <span class="theme-toggle-icon" id="themeIcon">🌙</span>
@@ -2265,11 +2300,46 @@
             });
         }
 
+        // Reset all states except default buildings
+        function resetAllStates() {
+            // Clear selected species
+            state.selectedSpecies = [];
+            
+            // Clear selected ingredients
+            state.selectedIngredients = {};
+            
+            // Clear selected ingredient names
+            state.selectedIngredientNames.clear();
+            
+            // Reset selected buildings to only default buildings
+            state.selectedBuildings = {
+                "Woodcutters' Camp": true,
+                "Stonecutters' Camp": true,
+                "Harvesters' Camp": true,
+                "Small Fishing Hut": true,
+                "Small Foragers' Camp": true,
+                "Small Herbalists' Camp": true,
+                "Small Trappers' Camp": true,
+                "Crude Workstation": true
+            };
+            
+            // Clear building obtain order
+            state.buildingObtainOrder = [];
+            
+            // Re-render the UI
+            renderSpeciesGrid();
+            updateBlueprintList();
+        }
+
         // Update results display
         function setupEventListeners() {
             // Theme toggle button
             const themeToggle = document.getElementById('themeToggle');
             themeToggle.addEventListener('click', toggleTheme);
+
+            // Reset button
+            const resetButton = document.getElementById('resetButton');
+            resetButton.addEventListener('click', resetAllStates);
 
             // Sidebar toggle for mobile
             const sidebar = document.getElementById('sidebar');
