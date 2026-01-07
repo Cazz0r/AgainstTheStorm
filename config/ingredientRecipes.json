@@ -170,6 +170,161 @@
       }
     ]
   },
+  "Salt": {
+    "ingredients": [
+      ""
+    ],
+    "buildings": [
+      {
+        "building": "Brineworks",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Mine",
+        "stars": 2,
+        "isGathered": true
+      }
+    ]
+  },
+  "Insects": {
+    "ingredients": [
+      ""
+    ],
+    "buildings": [
+      {
+        "building": "Trappers' Camp",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Brineworks",
+        "stars": 1,
+        "isGathered": true
+      },
+      {
+        "building": "Small Trappers' Camp",
+        "stars": 1,
+        "isGathered": true
+      }
+    ]
+  },
+  "Meat": {
+    "ingredients": [
+      "Plant Fiber or Reed or Algae or Grain or Vegetables"
+    ],
+    "buildings": [
+      {
+        "building": "Trappers' Camp",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Ranch",
+        "stars": 1
+      },
+      {
+        "building": "Small Trappers' Camp",
+        "stars": 1,
+        "isGathered": true
+      }
+    ]
+  },
+  "Wood": {
+    "ingredients": [
+      ""
+    ],
+    "buildings": [
+      {
+        "building": "Woodcutters' Camp",
+        "stars": 1,
+        "isGathered": true
+      }
+    ]
+  },
+  "Oil": {
+    "ingredients": [
+      "Grain or Meat or Vegetables or Plant Fiber or Fish"
+    ],
+    "buildings": [
+      {
+        "building": "Druid's Hut",
+        "stars": 3
+      },
+      {
+        "building": "Press",
+        "stars": 3
+      },
+      {
+        "building": "Butcher",
+        "stars": 2
+      }
+    ]
+  },
+  "Coal": {
+    "ingredients": [
+      "Wood or Algae"
+    ],
+    "buildings": [
+      {
+        "building": "Kiln",
+        "stars": 3
+      },
+      {
+        "building": "Mine",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Brick Oven",
+        "stars": 1
+      }
+    ]
+  },
+  "Sea Marrow": {
+    "ingredients": [
+      ""
+    ],
+    "buildings": [
+      {
+        "building": "Stonecutters' Camp",
+        "stars": 2,
+        "isGathered": true
+      }
+    ]
+  },
+  "Vegetables": {
+    "ingredients": [
+      ""
+    ],
+    "buildings": [
+      {
+        "building": "Hallowed Small Farm",
+        "stars": 3,
+        "isGathered": true
+      },
+      {
+        "building": "Homestead",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Foragers' Camp",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Small Farm",
+        "stars": 1,
+        "isGathered": true
+      },
+      {
+        "building": "Small Foragers' Camp",
+        "stars": 1,
+        "isGathered": true
+      }
+    ]
+  },
   "Flour": {
     "ingredients": [
       "Grain or Mushrooms or Roots or Algae"
