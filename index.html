@@ -2150,6 +2150,12 @@
                 // Parse ingredient options (e.g., "Flour", "Meat or Insects")
                 const baseIngredients = ingredientOptions.split(' or ').map(i => i.trim());
                 
+                // If there are multiple options and none is selected, skip this ingredient
+                // (don't show ingredient chains until user selects one)
+                if (baseIngredients.length > 1 && selectedOption === undefined) {
+                    return; // Skip this ingredient
+                }
+                
                 // If a specific option is selected, only use that one
                 const ingredientsToProcess = selectedOption !== undefined 
                     ? [baseIngredients[selectedOption]]
