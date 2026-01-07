@@ -1866,15 +1866,18 @@
                             // Sort buildings by stars (descending)
                             const sortedBuildings = [...recipeGroup.buildings].sort((a, b) => b.stars - a.stars);
                             
+                            // If the recipe is gathered, mark all buildings as gathered (unless they have their own flag)
+                            const recipeIsGathered = recipeGroup.isGathered || false;
+                            
                             chains.push({
                                 ingredient: ingredient,
                                 buildings: sortedBuildings.map(building => ({
                                     name: building.building,
                                     stars: building.stars,
-                                    isGathered: building.isGathered || false
+                                    isGathered: building.isGathered !== undefined ? building.isGathered : recipeIsGathered
                                 })),
                                 ingredients: recipeGroup.ingredients,
-                                isGathered: recipeGroup.isGathered || false
+                                isGathered: recipeIsGathered
                             });
                         });
                     }
