@@ -1953,7 +1953,18 @@
                 }
             });
 
-            return uniqueChains;
+            // Filter out chains where all buildings are gathering AND there are no actual recipe ingredients
+            const filteredChains = uniqueChains.filter(chain => {
+                const allBuildingsAreGathering = chain.buildings.every(b => b.isGathered);
+                const hasNoIngredients = !chain.ingredients || 
+                                        chain.ingredients.length === 0 || 
+                                        chain.ingredients.every(ing => !ing || ing.trim() === '');
+                
+                // Only include this chain if it's NOT (all gathering AND no ingredients)
+                return !(allBuildingsAreGathering && hasNoIngredients);
+            });
+
+            return filteredChains;
         }
 
         // Attach click handlers to pairwise need items
