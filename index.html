@@ -714,13 +714,14 @@
 
         .ingredient-tag {
             background-color: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            padding: 0.25rem 0.75rem;
+            border: 2px solid var(--border-color);
+            padding: 0.25rem 0.5rem;
             border-radius: 4px;
             font-size: 0.85rem;
             color: var(--text-primary);
             display: inline-flex;
             align-items: center;
+            margin: 0.1rem;
         }
 
         .ingredient-option {
@@ -1282,10 +1283,22 @@
                 }
                 const escapedAlt = escapeHtml(ingredientString);
                 const escapedIngredient = escapeHtml(ingredientString);
-                if (iconPath) {
-                    return `<img src="${iconPath}" alt="${escapedAlt}" title="${ingredientString}" onerror="this.style.display='none';" /> ${escapedIngredient}`;
+                
+                // If we have a recipeId and ingredientIndex, render as a selected ingredient-option
+                // (unclickable, always selected to show building info)
+                if (recipeId !== null && ingredientIndex !== null) {
+                    const imgHtml = iconPath ? `<img src="${iconPath}" alt="${escapedAlt}" title="${ingredientString}" onerror="this.style.display='none';" /> ` : '';
+                    // Add to selectedIngredientNames so it shows building info
+                    state.selectedIngredientNames.add(ingredientString);
+                    // Use ingredient-option selected class but without data attributes to make it unclickable
+                    return `<span class="ingredient-option selected" style="cursor: default;">${imgHtml}${escapedIngredient}</span>`;
                 } else {
-                    return escapedIngredient;
+                    // Non-clickable version (for ingredient chains)
+                    if (iconPath) {
+                        return `<img src="${iconPath}" alt="${escapedAlt}" title="${ingredientString}" onerror="this.style.display='none';" /> ${escapedIngredient}`;
+                    } else {
+                        return escapedIngredient;
+                    }
                 }
             }
         }
@@ -1825,10 +1838,14 @@
                         `;
 
                         group.ingredients.forEach((ingredient, index) => {
-                            // Check if ingredient has "or" options - if yes, don't wrap in ingredient-tag
                             const renderedIngredient = renderIngredientWithIcons(ingredient, recipeId, index);
-                            const wrapperClass = ingredient.includes(' or ') ? '' : 'ingredient-tag';
-                            html += `<div style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-tertiary);"><span class="${wrapperClass}">${renderedIngredient}</span></div>`;
+                            // Check if ingredient has "or" options - wrap differently
+                            if (ingredient.includes(' or ')) {
+                                html += `<div style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-tertiary);">${renderedIngredient}</div>`;
+                            } else {
+                                // Single ingredients are now rendered with ingredient-option class, no extra wrapper needed
+                                html += `<div style="padding: 0.5rem;">${renderedIngredient}</div>`;
+                            }
                         });
 
                         html += `
@@ -2071,10 +2088,14 @@
                     `;
 
                     group.ingredients.forEach((ingredient, index) => {
-                        // Check if ingredient has "or" options - if yes, don't wrap in ingredient-tag
                         const renderedIngredient = renderIngredientWithIcons(ingredient, recipeId, index);
-                        const wrapperClass = ingredient.includes(' or ') ? '' : 'ingredient-tag';
-                        html += `<div style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-tertiary);"><span class="${wrapperClass}">${renderedIngredient}</span></div>`;
+                        // Check if ingredient has "or" options - wrap differently
+                        if (ingredient.includes(' or ')) {
+                            html += `<div style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-tertiary);">${renderedIngredient}</div>`;
+                        } else {
+                            // Single ingredients are now rendered with ingredient-option class, no extra wrapper needed
+                            html += `<div style="padding: 0.5rem;">${renderedIngredient}</div>`;
+                        }
                     });
 
                     html += `
