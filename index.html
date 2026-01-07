@@ -69,12 +69,14 @@
             color: var(--text-primary);
             line-height: 1.6;
             transition: background-color var(--transition-speed);
+            overflow-x: hidden;
         }
 
         /* Layout */
         .container {
             display: flex;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* Sidebar */
@@ -188,6 +190,8 @@
             margin-left: var(--sidebar-width);
             padding: 2rem;
             transition: margin-left var(--transition-speed);
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         .main-content.expanded {
@@ -498,12 +502,15 @@
             margin-bottom: 1rem;
             padding-bottom: 0.75rem;
             border-bottom: 2px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         .pairwise-need-name {
             font-weight: 700;
             font-size: 1.25rem;
             color: var(--text-primary);
+            word-break: break-word;
         }
 
         .pairwise-species-list {
@@ -588,12 +595,15 @@
             margin-bottom: 1rem;
             padding-bottom: 0.75rem;
             border-bottom: 2px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         .need-name {
             font-size: 1.25rem;
             font-weight: 700;
             color: var(--text-primary);
+            word-break: break-word;
         }
 
         .need-category {
@@ -834,6 +844,32 @@
 
             .building-card {
                 padding: 0.875rem;
+            }
+
+            .pairwise-item {
+                padding: 1rem;
+            }
+
+            .building-item {
+                font-size: 0.85rem;
+            }
+
+            .pairwise-need-name {
+                font-size: 1.1rem;
+            }
+
+            .need-name {
+                font-size: 1.1rem;
+            }
+
+            /* Ensure building names wrap properly on mobile */
+            .building-item-name {
+                word-break: break-word;
+            }
+
+            /* Make sure inline flex items wrap on mobile */
+            .building-header > div {
+                flex-wrap: wrap !important;
             }
         }
 
