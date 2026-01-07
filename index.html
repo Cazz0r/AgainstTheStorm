@@ -858,6 +858,95 @@
             display: none;
             font-size: inherit;
         }
+
+        /* Blueprint Management Section */
+        .blueprint-management {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .blueprint-management h3 {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .blueprint-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .blueprint-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem;
+            background-color: var(--bg-tertiary);
+            border-radius: 4px;
+            font-size: 0.85rem;
+            transition: background-color 0.2s;
+        }
+
+        .blueprint-item:hover {
+            background-color: var(--bg-primary);
+        }
+
+        .blueprint-item.default {
+            opacity: 0.7;
+        }
+
+        .blueprint-item-name {
+            flex: 1;
+            color: var(--text-primary);
+        }
+
+        .blueprint-item-badge {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            background-color: var(--accent-color);
+            color: white;
+            margin-left: 0.5rem;
+            font-weight: 600;
+        }
+
+        .blueprint-item-badge.default {
+            background-color: var(--text-secondary);
+        }
+
+        .blueprint-remove-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem;
+            margin-left: 0.5rem;
+            font-size: 1rem;
+            transition: color 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .blueprint-remove-btn:hover {
+            color: #ef4444;
+            transform: scale(1.1);
+        }
+
+        .blueprint-item.default .blueprint-remove-btn {
+            display: none;
+        }
+
+        .no-blueprints {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            padding: 1rem;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -878,6 +967,13 @@
                 <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">
                     Select exactly 3 species to view their shared needs. The tool will show what Complex Food, Services, and Clothing all three species have in common.
                 </p>
+            </div>
+
+            <div class="blueprint-management" id="blueprintManagement">
+                <h3>📋 Blueprint Management</h3>
+                <div class="blueprint-list" id="blueprintList">
+                    <div class="no-blueprints">No blueprints obtained yet</div>
+                </div>
             </div>
             
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
@@ -1201,6 +1297,7 @@
             await loadConfigFiles();
             renderSpeciesGrid();
             setupEventListeners();
+            updateBlueprintList(); // Initialize the blueprint list on page load
         }
 
         // Render species selection grid
@@ -1261,6 +1358,72 @@
                 info.textContent = `Select ${remaining} More Species`;
                 info.classList.remove('complete');
             }
+        }
+
+        // Define default buildings that cannot be removed
+        const defaultBuildings = [
+            "Woodcutters' Camp",
+            "Stonecutters' Camp",
+            "Harvesters' Camp",
+            "Small Fishing Hut",
+            "Small Foragers' Camp",
+            "Small Herbalists' Camp",
+            "Small Trappers' Camp",
+            "Crude Workstation"
+        ];
+
+        // Update blueprint list in sidebar
+        function updateBlueprintList() {
+            const blueprintList = document.getElementById('blueprintList');
+            const selectedBuildings = Object.keys(state.selectedBuildings).filter(
+                building => state.selectedBuildings[building]
+            );
+
+            if (selectedBuildings.length === 0) {
+                blueprintList.innerHTML = '<div class="no-blueprints">No blueprints obtained yet</div>';
+                return;
+            }
+
+            // Sort: defaults first, then alphabetically
+            selectedBuildings.sort((a, b) => {
+                const aIsDefault = defaultBuildings.includes(a);
+                const bIsDefault = defaultBuildings.includes(b);
+                
+                if (aIsDefault && !bIsDefault) return -1;
+                if (!aIsDefault && bIsDefault) return 1;
+                return a.localeCompare(b);
+            });
+
+            const html = selectedBuildings.map(building => {
+                const isDefault = defaultBuildings.includes(building);
+                const escapedBuilding = escapeHtml(building);
+                const badgeClass = isDefault ? 'default' : '';
+                const badgeText = isDefault ? 'Default' : 'Obtained';
+                const itemClass = isDefault ? 'default' : '';
+                
+                return `
+                    <div class="blueprint-item ${itemClass}" data-building-name="${escapedBuilding}">
+                        <span class="blueprint-item-name">${escapedBuilding}</span>
+                        <span class="blueprint-item-badge ${badgeClass}">${badgeText}</span>
+                        <button class="blueprint-remove-btn" data-building-name="${escapedBuilding}" title="Remove blueprint" aria-label="Remove ${escapedBuilding} blueprint">✕</button>
+                    </div>
+                `;
+            }).join('');
+
+            blueprintList.innerHTML = html;
+
+            // Add event listeners to remove buttons
+            blueprintList.querySelectorAll('.blueprint-remove-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const buildingName = btn.dataset.buildingName;
+                    if (!defaultBuildings.includes(buildingName)) {
+                        delete state.selectedBuildings[buildingName];
+                        updateBlueprintList();
+                        updateResults();
+                    }
+                });
+            });
         }
 
         // Calculate intersection of arrays
@@ -1738,6 +1901,9 @@
             `;
 
             resultsContainer.innerHTML = html;
+            
+            // Update the blueprint list in the sidebar
+            updateBlueprintList();
         }
 
         // Render building requirements for shared needs
