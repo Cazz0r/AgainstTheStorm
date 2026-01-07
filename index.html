@@ -1622,12 +1622,13 @@
                                     const starClass = `stars-${building.stars}`;
                                     const isSelected = state.selectedBuildings[building.name] || false;
                                     const selectedClass = isSelected ? ' selected' : '';
+                                    const gatherBadge = building.isGathered ? ' <span style="font-size: 0.75rem; color: var(--accent-color);" title="Gathering building - no ingredients required">🌿</span>' : '';
                                     
                                     if (index > 0) {
                                         html += `<span style="color: var(--text-secondary);">•</span>`;
                                     }
                                     html += `<span class="building-item${selectedClass}" data-building-name="${building.name}">
-                                                <span class="building-item-name">${building.name}</span>
+                                                <span class="building-item-name">${building.name}${gatherBadge}</span>
                                                 <span class="star-rating ${starClass}" style="font-size: 0.85rem;" title="${building.stars} stars">${starIcons}</span>
                                                 <span class="building-item-status">${isSelected ? 'Blueprint Obtained' : 'Blueprint Obtained'}</span>
                                             </span>`;
@@ -1635,6 +1636,12 @@
                                 
                                 html += `
                                         </div>
+                                `;
+                                
+                                // Only show Required Ingredients if not all buildings are gathering or if the recipe itself requires ingredients
+                                const hasNonGatheringBuilding = chain.buildings.some(b => !b.isGathered);
+                                if ((hasNonGatheringBuilding || !chain.isGathered) && chain.ingredients && chain.ingredients.length > 0) {
+                                    html += `
                                         <div class="ingredient-label" style="margin-top: 0.5rem;">Required Ingredients:</div>
                                         <div class="ingredient-list" style="margin-top: 0.25rem;">
                                             ${chain.ingredients.map((ing, index) => {
@@ -1642,6 +1649,16 @@
                                                 return `${separator}<div style="padding: 0.25rem 0;"><span class="ingredient-tag">${renderIngredientWithIcons(ing)}</span></div>`;
                                             }).join('')}
                                         </div>
+                                    `;
+                                } else if (chain.isGathered || chain.buildings.every(b => b.isGathered)) {
+                                    html += `
+                                        <div style="margin-top: 0.5rem; color: var(--text-secondary); font-style: italic; font-size: 0.9rem;">
+                                            ℹ️ Gathering building - no ingredients required
+                                        </div>
+                                    `;
+                                }
+                                
+                                html += `
                                     </div>
                                 `;
                             });
@@ -1814,12 +1831,13 @@
                                 const starClass = `stars-${building.stars}`;
                                 const isSelected = state.selectedBuildings[building.name] || false;
                                 const selectedClass = isSelected ? ' selected' : '';
+                                const gatherBadge = building.isGathered ? ' <span style="font-size: 0.75rem; color: var(--accent-color);" title="Gathering building - no ingredients required">🌿</span>' : '';
                                 
                                 if (index > 0) {
                                     html += `<span style="color: var(--text-secondary);">•</span>`;
                                 }
                                 html += `<span class="building-item${selectedClass}" data-building-name="${building.name}">
-                                            <span class="building-item-name">${building.name}</span>
+                                            <span class="building-item-name">${building.name}${gatherBadge}</span>
                                             <span class="star-rating ${starClass}" style="font-size: 0.85rem;" title="${building.stars} stars">${starIcons}</span>
                                             <span class="building-item-status">${isSelected ? 'Blueprint Obtained' : 'Blueprint Obtained'}</span>
                                         </span>`;
@@ -1827,6 +1845,12 @@
                             
                             html += `
                                     </div>
+                            `;
+                            
+                            // Only show Required Ingredients if not all buildings are gathering or if the recipe itself requires ingredients
+                            const hasNonGatheringBuilding = chain.buildings.some(b => !b.isGathered);
+                            if ((hasNonGatheringBuilding || !chain.isGathered) && chain.ingredients && chain.ingredients.length > 0) {
+                                html += `
                                     <div class="ingredient-label" style="margin-top: 0.5rem;">Required Ingredients:</div>
                                     <div class="ingredient-list" style="margin-top: 0.25rem;">
                                         ${chain.ingredients.map((ing, index) => {
@@ -1834,6 +1858,16 @@
                                             return `${separator}<div style="padding: 0.25rem 0;"><span class="ingredient-tag">${renderIngredientWithIcons(ing)}</span></div>`;
                                         }).join('')}
                                     </div>
+                                `;
+                            } else if (chain.isGathered || chain.buildings.every(b => b.isGathered)) {
+                                html += `
+                                    <div style="margin-top: 0.5rem; color: var(--text-secondary); font-style: italic; font-size: 0.9rem;">
+                                        ℹ️ Gathering building - no ingredients required
+                                    </div>
+                                `;
+                            }
+                            
+                            html += `
                                 </div>
                             `;
                         });
@@ -1890,13 +1924,18 @@
                             // Sort buildings by stars (descending)
                             const sortedBuildings = [...recipeGroup.buildings].sort((a, b) => b.stars - a.stars);
                             
+                            // If the recipe is gathered, mark all buildings as gathered (unless they have their own flag)
+                            const recipeIsGathered = recipeGroup.isGathered || false;
+                            
                             chains.push({
                                 ingredient: ingredient,
                                 buildings: sortedBuildings.map(building => ({
                                     name: building.building,
-                                    stars: building.stars
+                                    stars: building.stars,
+                                    isGathered: building.isGathered !== undefined ? building.isGathered : recipeIsGathered
                                 })),
-                                ingredients: recipeGroup.ingredients
+                                ingredients: recipeGroup.ingredients,
+                                isGathered: recipeIsGathered
                             });
                         });
                     }

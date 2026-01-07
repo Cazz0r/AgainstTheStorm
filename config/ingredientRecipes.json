@@ -61,7 +61,8 @@
     "buildings": [
       {
         "building": "Harvesters' Camp",
-        "stars": 2
+        "stars": 2,
+        "isGathered": true
       },
       {
         "building": "Ranch",
@@ -113,17 +114,6 @@
     "buildings": [
       {
         "building": "Scribe",
-        "stars": 3
-      }
-    ]
-  },
-  "Cosmetics": {
-    "ingredients": [
-      "Herbs or Berries or Crystalized Dew"
-    ],
-    "buildings": [
-      {
-        "building": "Apothecary",
         "stars": 3
       }
     ]
@@ -250,26 +240,35 @@
   },
   "Resin": {
     "ingredients": [
-      "Wood (from trees)"
+      "Clearance Water"
     ],
     "buildings": [
       {
+        "building": "Clay Pit",
+        "stars": 2,
+      },
+      {
         "building": "Forester's Hut",
-        "stars": 3
+        "stars": 2,
+        "isGathered": true
       }
-    ],
-    "isGathered": true
+    ]
   },
   "Scales": {
     "ingredients": [
-      "Leather (from lizards)"
+      ""
     ],
     "buildings": [
       {
-        "building": "Lizard Post",
-        "stars": 3
+        "building": "Fishing Hut",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Small Fishing Hut",
+        "stars": 1,
+        "isGathered": true
       }
-    ],
-    "isGathered": true
+    ]
   }
 }
