@@ -1828,8 +1828,7 @@
                         group.ingredients.forEach((ingredient, index) => {
                             // Check if ingredient has "or" options - if yes, don't wrap in ingredient-tag
                             const renderedIngredient = renderIngredientWithIcons(ingredient, recipeId, index);
-                            const wrapperClass = ingredient.includes(' or ') ? '' : 'ingredient-tag';
-                            html += `<div style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-tertiary);"><span class="${wrapperClass}">${renderedIngredient}</span></div>`;
+                            html += `<div style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-tertiary);">${renderedIngredient}</div>`;
                         });
 
                         html += `
@@ -2074,8 +2073,7 @@
                     group.ingredients.forEach((ingredient, index) => {
                         // Check if ingredient has "or" options - if yes, don't wrap in ingredient-tag
                         const renderedIngredient = renderIngredientWithIcons(ingredient, recipeId, index);
-                        const wrapperClass = ingredient.includes(' or ') ? '' : 'ingredient-tag';
-                        html += `<div style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-tertiary);"><span class="${wrapperClass}">${renderedIngredient}</span></div>`;
+                        html += `<div style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-tertiary);">${renderedIngredient}</div>`;
                     });
 
                     html += `
