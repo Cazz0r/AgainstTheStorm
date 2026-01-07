@@ -21,6 +21,50 @@
       }
     ]
   },
+  "Clearance Water": {
+    "ingredients": [
+      "Drizzle Water"
+    ],
+    "buildings": [
+      {
+        "building": "Geyser Pump",
+        "stars": 3,
+        "isGathered": true
+      },
+      {
+        "building": "Advanced Rain Collector",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Rain Collector",
+        "stars": 1,
+        "isGathered": true
+      }
+    ]
+  },
+  "Storm Water": {
+    "ingredients": [
+      "Drizzle Water"
+    ],
+    "buildings": [
+      {
+        "building": "Geyser Pump",
+        "stars": 3,
+        "isGathered": true
+      },
+      {
+        "building": "Advanced Rain Collector",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Rain Collector",
+        "stars": 1,
+        "isGathered": true
+      }
+    ]
+  },
   "Herbs": {
     "ingredients": [
       "Drizzle Water"
@@ -38,7 +82,7 @@
       },
       {
         "building": "Greenhouse",
-        "stars": 2,
+        "stars": 2
       },
       {
         "building": "Herbalists' Camp",
@@ -53,6 +97,76 @@
       {
         "building": "Ranch",
         "stars": 1
+      }
+    ]
+  },
+  "Berries": {
+    "ingredients": [
+      ""
+    ],
+    "buildings": [
+      {
+        "building": "Plantation",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Herbalists' Camp",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Small Herbalists' Camp",
+        "stars": 1,
+        "isGathered": true
+      }
+    ]
+  },
+  "Roots": {
+    "ingredients": [
+      ""
+    ],
+    "buildings": [
+      {
+        "building": "Hallowed Herb Garden",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Foragers' Camp",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Herb Garden",
+        "stars": 1,
+        "isGathered": true
+      },
+      {
+        "building": "Small Herbalists' Camp",
+        "stars": 1,
+        "isGathered": true
+      }
+    ]
+  },
+  "Eggs": {
+    "ingredients": [
+      "Grain or Insects or Reed or Berries"
+    ],
+    "buildings": [
+      {
+        "building": "Trappers' Camp",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Ranch",
+        "stars": 1
+      },
+      {
+        "building": "Small Trappers' Camp",
+        "stars": 1,
+        "isGathered": true
       }
     ]
   },
