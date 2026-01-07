@@ -992,7 +992,17 @@
             selectedSpecies: [],
             maxSelection: 3,
             selectedIngredients: {}, // Track selected ingredients per recipe: { recipeId: { ingredientIndex: selectedOption } }
-            selectedBuildings: {} // Track selected buildings: { buildingName: true }
+            selectedBuildings: {
+                // Essential blueprints - already obtained by default
+                "Woodcutters' Camp": true,
+                "Stonecutters' Camp": true,
+                "Harvesters' Camp": true,
+                "Small Fishing Hut": true,
+                "Small Foragers' Camp": true,
+                "Small Herbalists' Camp": true,
+                "Small Trappers' Camp": true,
+                "Crude Workstation": true
+            }
         };
 
         // Helper function to create image element with emoji fallback
