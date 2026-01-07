@@ -717,6 +717,13 @@
             font-weight: 600;
         }
 
+        .ingredient-option.highlighted {
+            border-color: #fbbf24;
+            background-color: rgba(251, 191, 36, 0.2);
+            font-weight: 600;
+            box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.3);
+        }
+
         .ingredient-option img {
             width: 20px;
             height: 20px;
@@ -1088,6 +1095,7 @@
             selectedSpecies: [],
             maxSelection: 3,
             selectedIngredients: {}, // Track selected ingredients per recipe: { recipeId: { ingredientIndex: selectedOption } }
+            selectedIngredientNames: new Set(), // Track ingredient names that are selected anywhere
             selectedBuildings: {
                 // Essential blueprints - already obtained by default
                 "Woodcutters' Camp": true,
@@ -1195,11 +1203,18 @@
                         const escapedOption = escapeHtml(option);
                         
                         const isSelected = selectedOption !== undefined ? selectedOption === optionIndex : false;
-                        const selectedClass = isSelected ? ' selected' : '';
+                        const isHighlighted = !isSelected && state.selectedIngredientNames.has(option);
+                        
+                        let cssClasses = 'ingredient-option';
+                        if (isSelected) {
+                            cssClasses += ' selected';
+                        } else if (isHighlighted) {
+                            cssClasses += ' highlighted';
+                        }
                         
                         const imgHtml = iconPath ? `<img src="${iconPath}" alt="${escapedAlt}" title="${option}" onerror="this.style.display='none';" /> ` : '';
                         
-                        return `<span class="ingredient-option${selectedClass}" data-recipe-id="${recipeId}" data-ingredient-index="${ingredientIndex}" data-option-index="${optionIndex}">${imgHtml}${escapedOption}</span>`;
+                        return `<span class="${cssClasses}" data-recipe-id="${recipeId}" data-ingredient-index="${ingredientIndex}" data-option-index="${optionIndex}" data-ingredient-name="${escapedOption}">${imgHtml}${escapedOption}</span>`;
                     }).join('<span class="ingredient-separator">or</span>');
                     
                     return `<span class="ingredient-group">${renderedOptions}</span>`;
@@ -2294,20 +2309,52 @@
             const recipeId = optionElement.dataset.recipeId;
             const ingredientIndex = parseInt(optionElement.dataset.ingredientIndex);
             const optionIndex = parseInt(optionElement.dataset.optionIndex);
+            const ingredientName = optionElement.dataset.ingredientName;
 
             // Initialize recipe state if needed
             if (!state.selectedIngredients[recipeId]) {
                 state.selectedIngredients[recipeId] = {};
             }
 
+            // Check if this ingredient was already selected
+            const wasSelected = state.selectedIngredients[recipeId][ingredientIndex] === optionIndex;
+
+            // If it was selected, we need to remove it from selectedIngredientNames
+            if (wasSelected) {
+                const oldIngredientName = optionElement.dataset.ingredientName;
+                // Check if this ingredient is still selected in other recipes
+                let stillSelectedElsewhere = false;
+                Object.keys(state.selectedIngredients).forEach(otherId => {
+                    if (otherId === recipeId) return;
+                    Object.values(state.selectedIngredients[otherId]).forEach(() => {
+                        // We need to check the actual ingredient names, but we can't easily do this
+                        // without re-parsing all recipes. Instead, we'll rebuild the set completely.
+                    });
+                });
+            }
+
             // Toggle selection: if already selected, deselect it
-            if (state.selectedIngredients[recipeId][ingredientIndex] === optionIndex) {
+            if (wasSelected) {
                 delete state.selectedIngredients[recipeId][ingredientIndex];
             } else {
                 state.selectedIngredients[recipeId][ingredientIndex] = optionIndex;
             }
 
-            // Re-render results to update the ingredient chains
+            // Rebuild the selectedIngredientNames set from scratch
+            state.selectedIngredientNames.clear();
+            document.querySelectorAll('.ingredient-option.selected').forEach(el => {
+                const name = el.dataset.ingredientName;
+                if (name) {
+                    state.selectedIngredientNames.add(name);
+                }
+            });
+            
+            // Add the newly selected ingredient if it wasn't deselected
+            if (!wasSelected && ingredientName) {
+                state.selectedIngredientNames.add(ingredientName);
+            }
+
+            // Re-render results to update the ingredient chains and highlighting
             updateResults();
         }
 
