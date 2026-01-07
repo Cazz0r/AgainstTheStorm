@@ -2362,7 +2362,6 @@
             const recipeId = optionElement.dataset.recipeId;
             const ingredientIndex = parseInt(optionElement.dataset.ingredientIndex);
             const optionIndex = parseInt(optionElement.dataset.optionIndex);
-            const ingredientName = optionElement.dataset.ingredientName;
 
             // Initialize recipe state if needed
             if (!state.selectedIngredients[recipeId]) {
@@ -2372,16 +2371,12 @@
             // Toggle selection: if already selected, deselect it
             if (state.selectedIngredients[recipeId][ingredientIndex] === optionIndex) {
                 delete state.selectedIngredients[recipeId][ingredientIndex];
-                // Remove from selectedIngredientNames if no other instances are selected
-                state.selectedIngredientNames.delete(ingredientName);
             } else {
                 state.selectedIngredients[recipeId][ingredientIndex] = optionIndex;
-                // Add to selectedIngredientNames immediately
-                state.selectedIngredientNames.add(ingredientName);
             }
             
-            // Rebuild selectedIngredientNames to ensure consistency
-            // This handles the case where multiple recipes have the same ingredient
+            // Rebuild selectedIngredientNames to ensure consistency across all recipes
+            // This handles cases where the same ingredient appears in multiple recipes
             rebuildSelectedIngredientNames();
             
             // Re-render results to update the ingredient chains and highlighting
