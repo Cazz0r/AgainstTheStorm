@@ -23,6 +23,7 @@
             --text-secondary: #666666;
             --border-color: #d0d0d0;
             --accent-color: #2563eb;
+            --accent-color-light: rgba(37, 99, 235, 0.15);
             --accent-hover: #1d4ed8;
             --sidebar-width: 280px;
             --transition-speed: 0.3s;
@@ -38,6 +39,7 @@
                 --text-secondary: #a0a0a0;
                 --border-color: #404040;
                 --accent-color: #3b82f6;
+                --accent-color-light: rgba(59, 130, 246, 0.15);
                 --accent-hover: #60a5fa;
             }
         }
@@ -51,6 +53,7 @@
             --text-secondary: #a0a0a0;
             --border-color: #404040;
             --accent-color: #3b82f6;
+            --accent-color-light: rgba(59, 130, 246, 0.15);
             --accent-hover: #60a5fa;
         }
 
@@ -304,7 +307,7 @@
         }
 
         .needs-list li.shared-some {
-            background-color: rgba(37, 99, 235, 0.15);
+            background-color: var(--accent-color-light);
             border: 2px solid var(--accent-color);
             font-weight: 600;
         }
@@ -1334,7 +1337,7 @@
                         <span style="font-size: 0.9rem;">Shared by all 3 species</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="display: inline-block; width: 24px; height: 24px; background-color: rgba(37, 99, 235, 0.15); border-radius: 4px; border: 2px solid var(--accent-color);"></span>
+                        <span style="display: inline-block; width: 24px; height: 24px; background-color: var(--accent-color-light); border-radius: 4px; border: 2px solid var(--accent-color);"></span>
                         <span style="font-size: 0.9rem;">Shared by any 2 species</span>
                     </div>
                 </div>
