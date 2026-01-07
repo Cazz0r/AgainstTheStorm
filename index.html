@@ -1098,7 +1098,8 @@
                 "Small Herbalists' Camp": true,
                 "Small Trappers' Camp": true,
                 "Crude Workstation": true
-            }
+            },
+            buildingObtainOrder: [] // Track the order buildings are obtained (most recent at the end)
         };
 
         // Helper function to create image element with emoji fallback
@@ -1384,13 +1385,30 @@
                 return;
             }
 
-            // Sort: defaults first, then alphabetically
+            // Sort: defaults first (alphabetically), then non-defaults by most recently obtained first
             selectedBuildings.sort((a, b) => {
                 const aIsDefault = defaultBuildings.includes(a);
                 const bIsDefault = defaultBuildings.includes(b);
                 
+                // Both are defaults - sort alphabetically
+                if (aIsDefault && bIsDefault) {
+                    return a.localeCompare(b);
+                }
+                
+                // One is default, one is not - defaults come first
                 if (aIsDefault && !bIsDefault) return -1;
                 if (!aIsDefault && bIsDefault) return 1;
+                
+                // Both are non-defaults - sort by obtain order (most recent first)
+                const aIndex = state.buildingObtainOrder.indexOf(a);
+                const bIndex = state.buildingObtainOrder.indexOf(b);
+                
+                // If both are in the obtain order list, sort by reverse order (newest first)
+                if (aIndex !== -1 && bIndex !== -1) {
+                    return bIndex - aIndex; // Higher index (more recent) comes first
+                }
+                
+                // Fallback to alphabetical if not in order tracking
                 return a.localeCompare(b);
             });
 
@@ -2281,8 +2299,16 @@
             // Toggle selection
             if (state.selectedBuildings[buildingName]) {
                 delete state.selectedBuildings[buildingName];
+                // Remove from obtain order tracking
+                const index = state.buildingObtainOrder.indexOf(buildingName);
+                if (index > -1) {
+                    state.buildingObtainOrder.splice(index, 1);
+                }
             } else {
                 state.selectedBuildings[buildingName] = true;
+                // Track the order this building was obtained
+                // Add to the end (most recent)
+                state.buildingObtainOrder.push(buildingName);
             }
             
             // Re-render results to update the building states
