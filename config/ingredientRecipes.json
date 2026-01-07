@@ -118,17 +118,6 @@
       }
     ]
   },
-  "Cosmetics": {
-    "ingredients": [
-      "Herbs or Berries or Crystalized Dew"
-    ],
-    "buildings": [
-      {
-        "building": "Apothecary",
-        "stars": 3
-      }
-    ]
-  },
   "Tea": {
     "ingredients": [
       "Herbs or Reeds or Roots",
@@ -251,26 +240,35 @@
   },
   "Resin": {
     "ingredients": [
-      "Wood (from trees)"
+      "Clearance Water"
     ],
     "buildings": [
       {
+        "building": "Clay Pit",
+        "stars": 2,
+      },
+      {
         "building": "Forester's Hut",
-        "stars": 3
+        "stars": 2,
+        "isGathered": true
       }
-    ],
-    "isGathered": true
+    ]
   },
   "Scales": {
     "ingredients": [
-      "Leather (from lizards)"
+      ""
     ],
     "buildings": [
       {
-        "building": "Lizard Post",
-        "stars": 3
+        "building": "Fishing Hut",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Small Fishing Hut",
+        "stars": 1,
+        "isGathered": true
       }
-    ],
-    "isGathered": true
+    ]
   }
 }
