@@ -1385,7 +1385,7 @@
                 return;
             }
 
-            // Sort: defaults first (alphabetically), then non-defaults by most recently obtained first
+            // Sort: obtained blueprints first (newest first), then defaults at bottom (alphabetically)
             selectedBuildings.sort((a, b) => {
                 const aIsDefault = defaultBuildings.includes(a);
                 const bIsDefault = defaultBuildings.includes(b);
@@ -1395,9 +1395,9 @@
                     return a.localeCompare(b);
                 }
                 
-                // One is default, one is not - defaults come first
-                if (aIsDefault && !bIsDefault) return -1;
-                if (!aIsDefault && bIsDefault) return 1;
+                // One is default, one is not - non-defaults (obtained) come first
+                if (aIsDefault && !bIsDefault) return 1;
+                if (!aIsDefault && bIsDefault) return -1;
                 
                 // Both are non-defaults - sort by obtain order (most recent first)
                 const aIndex = state.buildingObtainOrder.indexOf(a);
