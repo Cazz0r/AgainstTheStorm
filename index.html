@@ -2330,11 +2330,39 @@
             updateResults();
         }
 
+        // Rebuild selectedIngredientNames from state.selectedIngredients
+        // This must be called before updateResults() to ensure highlighting works correctly
+        function rebuildSelectedIngredientNames() {
+            state.selectedIngredientNames.clear();
+            
+            // Iterate through all selected ingredients in the state
+            for (const recipeId in state.selectedIngredients) {
+                const recipeSelections = state.selectedIngredients[recipeId];
+                
+                for (const ingredientIndex in recipeSelections) {
+                    const optionIndex = recipeSelections[ingredientIndex];
+                    
+                    // We need to find the actual ingredient name from the DOM
+                    // Query for the specific ingredient option element
+                    const selector = `.ingredient-option[data-recipe-id="${recipeId}"][data-ingredient-index="${ingredientIndex}"][data-option-index="${optionIndex}"]`;
+                    const element = document.querySelector(selector);
+                    
+                    if (element) {
+                        const ingredientName = element.dataset.ingredientName;
+                        if (ingredientName) {
+                            state.selectedIngredientNames.add(ingredientName);
+                        }
+                    }
+                }
+            }
+        }
+
         // Handle ingredient selection
         function handleIngredientSelection(optionElement) {
             const recipeId = optionElement.dataset.recipeId;
             const ingredientIndex = parseInt(optionElement.dataset.ingredientIndex);
             const optionIndex = parseInt(optionElement.dataset.optionIndex);
+            const ingredientName = optionElement.dataset.ingredientName;
 
             // Initialize recipe state if needed
             if (!state.selectedIngredients[recipeId]) {
@@ -2344,25 +2372,20 @@
             // Toggle selection: if already selected, deselect it
             if (state.selectedIngredients[recipeId][ingredientIndex] === optionIndex) {
                 delete state.selectedIngredients[recipeId][ingredientIndex];
+                // Remove from selectedIngredientNames if no other instances are selected
+                state.selectedIngredientNames.delete(ingredientName);
             } else {
                 state.selectedIngredients[recipeId][ingredientIndex] = optionIndex;
+                // Add to selectedIngredientNames immediately
+                state.selectedIngredientNames.add(ingredientName);
             }
-
-            // Rebuild the selectedIngredientNames set from scratch by querying the DOM after state update
-            // Note: We need to re-render first, then rebuild the set
-            // For now, we'll rebuild from the current DOM state after the render
+            
+            // Rebuild selectedIngredientNames to ensure consistency
+            // This handles the case where multiple recipes have the same ingredient
+            rebuildSelectedIngredientNames();
             
             // Re-render results to update the ingredient chains and highlighting
             updateResults();
-            
-            // After render, rebuild the selectedIngredientNames set from the updated DOM
-            state.selectedIngredientNames.clear();
-            document.querySelectorAll('.ingredient-option.selected').forEach(el => {
-                const name = el.dataset.ingredientName;
-                if (name) {
-                    state.selectedIngredientNames.add(name);
-                }
-            });
         }
 
         // Start the app
