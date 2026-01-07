@@ -61,7 +61,8 @@
     "buildings": [
       {
         "building": "Harvesters' Camp",
-        "stars": 2
+        "stars": 2,
+        "isGathered": true
       },
       {
         "building": "Ranch",
