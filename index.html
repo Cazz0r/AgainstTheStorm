@@ -294,6 +294,21 @@
             align-items: center;
         }
 
+        /* Highlight shared needs */
+        .needs-list li.shared-all {
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: 600;
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+        }
+
+        .needs-list li.shared-some {
+            background-color: rgba(37, 99, 235, 0.15);
+            border: 2px solid var(--accent-color);
+            font-weight: 600;
+        }
+
         .shared-needs {
             background-color: var(--bg-secondary);
             border: 2px solid var(--accent-color);
@@ -1299,13 +1314,32 @@
             // Get selected species data
             const selectedData = state.selectedSpecies.map(id => speciesData[id]);
 
-            // Calculate intersections
+            // Calculate intersections (all 3 species)
             const sharedComplexFood = getIntersection(selectedData.map(s => s.complexFood));
             const sharedServices = getIntersection(selectedData.map(s => s.services));
             const sharedClothing = getIntersection(selectedData.map(s => s.clothing));
 
+            // Calculate pairwise shared needs to determine which needs are shared by at least 2 species
+            const pairwiseData = calculatePairwiseNeeds(selectedData);
+
             // Build results HTML
             let html = '<h2 style="margin-bottom: 1.5rem;">Individual Species Needs</h2>';
+            
+            // Add legend for highlighting
+            html += `
+                <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; padding: 1rem; background-color: var(--bg-secondary); border-radius: 8px; flex-wrap: wrap; align-items: center;">
+                    <div style="font-weight: 600; color: var(--text-primary);">Legend:</div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="display: inline-block; width: 24px; height: 24px; background-color: var(--accent-color); border-radius: 4px; border: 2px solid var(--accent-color);"></span>
+                        <span style="font-size: 0.9rem;">Shared by all 3 species</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="display: inline-block; width: 24px; height: 24px; background-color: rgba(37, 99, 235, 0.15); border-radius: 4px; border: 2px solid var(--accent-color);"></span>
+                        <span style="font-size: 0.9rem;">Shared by any 2 species</span>
+                    </div>
+                </div>
+            `;
+            
             html += '<div class="results-grid">';
 
             selectedData.forEach((species, index) => {
@@ -1316,19 +1350,43 @@
                         <div class="needs-section">
                             <h4>Complex Food</h4>
                             <ul class="needs-list">
-                                ${species.complexFood.map(item => `<li>${renderNeedWithIcon(item, 'complexFood')}</li>`).join('')}
+                                ${species.complexFood.map(item => {
+                                    let cssClass = '';
+                                    if (sharedComplexFood.includes(item)) {
+                                        cssClass = 'shared-all';
+                                    } else if (pairwiseData.complexFood[item]) {
+                                        cssClass = 'shared-some';
+                                    }
+                                    return `<li class="${cssClass}">${renderNeedWithIcon(item, 'complexFood')}</li>`;
+                                }).join('')}
                             </ul>
                         </div>
                         <div class="needs-section">
                             <h4>Clothing</h4>
                             <ul class="needs-list">
-                                ${species.clothing.map(item => `<li>${renderNeedWithIcon(item, 'clothing')}</li>`).join('')}
+                                ${species.clothing.map(item => {
+                                    let cssClass = '';
+                                    if (sharedClothing.includes(item)) {
+                                        cssClass = 'shared-all';
+                                    } else if (pairwiseData.clothing[item]) {
+                                        cssClass = 'shared-some';
+                                    }
+                                    return `<li class="${cssClass}">${renderNeedWithIcon(item, 'clothing')}</li>`;
+                                }).join('')}
                             </ul>
                         </div>
                         <div class="needs-section">
                             <h4>Services</h4>
                             <ul class="needs-list">
-                                ${species.services.map(item => `<li>${renderNeedWithIcon(item, 'services')}</li>`).join('')}
+                                ${species.services.map(item => {
+                                    let cssClass = '';
+                                    if (sharedServices.includes(item)) {
+                                        cssClass = 'shared-all';
+                                    } else if (pairwiseData.services[item]) {
+                                        cssClass = 'shared-some';
+                                    }
+                                    return `<li class="${cssClass}">${renderNeedWithIcon(item, 'services')}</li>`;
+                                }).join('')}
                             </ul>
                         </div>
                     </div>
@@ -1342,9 +1400,6 @@
                                    sharedServices.length > 0 || 
                                    sharedClothing.length > 0;
 
-            // Calculate pairwise shared needs
-            const pairwiseData = calculatePairwiseNeeds(selectedData);
-            
             // Create sets of shared needs for filtering
             const allSharedNeeds = new Set([...sharedComplexFood, ...sharedClothing, ...sharedServices]);
             
