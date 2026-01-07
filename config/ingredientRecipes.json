@@ -349,7 +349,7 @@
       {
         "building": "Homestead",
         "stars": 2,
-        "isGathered": true        
+        "isGathered": true
       },
       {
         "building": "Greenhouse",
@@ -358,12 +358,12 @@
       {
         "building": "Herbalists' Camp",
         "stars": 2,
-        "isGathered": true        
+        "isGathered": true
       },
       {
         "building": "Small Herbalists' Camp",
         "stars": 1,
-        "isGathered": true        
+        "isGathered": true
       }
     ]
   },
