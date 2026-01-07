@@ -325,6 +325,80 @@
       }
     ]
   },
+  "Reed": {
+    "ingredients": [
+      "Clearance Water"
+    ],
+    "buildings": [
+      {
+        "building": "Clay Pit",
+        "stars": 2
+      },
+      {
+        "building": "Harvesters' Camp",
+        "stars": 2,
+        "isGathered": true
+      }
+    ]
+  },
+  "Mushrooms": {
+    "ingredients": [
+      "Drizzle Water"
+    ],
+    "buildings": [
+      {
+        "building": "Homestead",
+        "stars": 2,
+        "isGathered": true        
+      },
+      {
+        "building": "Greenhouse",
+        "stars": 2
+      },
+      {
+        "building": "Herbalists' Camp",
+        "stars": 2,
+        "isGathered": true        
+      },
+      {
+        "building": "Small Herbalists' Camp",
+        "stars": 1,
+        "isGathered": true        
+      }
+    ]
+  },
+  "Grain": {
+    "ingredients": [
+      ""
+    ],
+    "buildings": [
+      {
+        "building": "Hallowed Small Farm",
+        "stars": 3,
+        "isGathered": true
+      },
+      {
+        "building": "Homestead",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Small Farm",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Foragers' Camp",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Small Foragers' Camp",
+        "stars": 1,
+        "isGathered": true
+      }
+    ]
+  },
   "Flour": {
     "ingredients": [
       "Grain or Mushrooms or Roots or Algae"
@@ -421,7 +495,7 @@
   },
   "Incense": {
     "ingredients": [
-      "Herbs or Reeds or Roots",
+      "Herbs or Reed or Roots",
       "Wood or Oil or Coal"
     ],
     "buildings": [
@@ -445,7 +519,7 @@
   },
   "Tea": {
     "ingredients": [
-      "Herbs or Reeds or Roots",
+      "Herbs or Reed or Roots",
       "Pottery or Barrels or Waterskins"
     ],
     "buildings": [
@@ -580,6 +654,23 @@
     ]
   },
   "Scales": {
+    "ingredients": [
+      ""
+    ],
+    "buildings": [
+      {
+        "building": "Fishing Hut",
+        "stars": 2,
+        "isGathered": true
+      },
+      {
+        "building": "Small Fishing Hut",
+        "stars": 1,
+        "isGathered": true
+      }
+    ]
+  },
+  "Algae": {
     "ingredients": [
       ""
     ],
