@@ -16,7 +16,6 @@
         "building": "Stamping Mill",
         "stars": 2
       },
-      
       {
         "building": "Supplier",
         "stars": 2
@@ -245,7 +244,7 @@
     "buildings": [
       {
         "building": "Clay Pit",
-        "stars": 2,
+        "stars": 2
       },
       {
         "building": "Forester's Hut",
