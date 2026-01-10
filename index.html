@@ -1059,13 +1059,13 @@
             </div>
             
             <div class="selection-info" id="selectionInfo">
-                Select 3 Species
+                Select Species
             </div>
 
             <div id="sidebarContent">
                 <h3 style="margin-bottom: 1rem; font-size: 1rem;">Instructions</h3>
                 <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">
-                    Select exactly 3 species to view their shared needs. The tool will show what Complex Food, Services, and Clothing all three species have in common.
+                    Select species to view their needs. With 2 or more species selected, you'll see what they have in common. With 3 species, you'll see needs shared by all three.
                 </p>
             </div>
 
@@ -1097,7 +1097,7 @@
         <main class="main-content" id="mainContent">
             <header class="header">
                 <h1>Against The Storm - Species Needs & Requirement Chain</h1>
-                <p>Select exactly 3 species to discover their shared needs</p>
+                <p>Select species to discover their needs and what they have in common</p>
             </header>
 
             <section class="species-selection">
@@ -1484,14 +1484,19 @@
         function updateSelectionInfo() {
             const info = document.getElementById('selectionInfo');
             const count = state.selectedSpecies.length;
-            const remaining = state.maxSelection - count;
 
-            if (count === state.maxSelection) {
-                info.textContent = `✓ ${count} Species Selected`;
-                info.classList.add('complete');
-            } else {
-                info.textContent = `Select ${remaining} More Species`;
+            if (count === 0) {
+                info.textContent = `Select Species`;
                 info.classList.remove('complete');
+            } else if (count === 1) {
+                info.textContent = `1 Species Selected`;
+                info.classList.remove('complete');
+            } else if (count === 2) {
+                info.textContent = `2 Species Selected`;
+                info.classList.remove('complete');
+            } else if (count === 3) {
+                info.textContent = `✓ 3 Species Selected`;
+                info.classList.add('complete');
             }
         }
 
@@ -1630,12 +1635,12 @@
         function updateResults() {
             const resultsContainer = document.getElementById('results');
 
-            if (state.selectedSpecies.length !== state.maxSelection) {
+            if (state.selectedSpecies.length === 0) {
                 resultsContainer.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">🔍</div>
-                        <h3>Select ${state.maxSelection} species to see their shared needs</h3>
-                        <p>Choose species from the grid above to discover what they have in common</p>
+                        <h3>Select species to see their needs</h3>
+                        <p>Choose species from the grid above to discover their needs and what they have in common</p>
                     </div>
                 `;
                 return;
@@ -1644,31 +1649,60 @@
             // Get selected species data
             const selectedData = state.selectedSpecies.map(id => speciesData[id]);
 
-            // Calculate intersections (all 3 species)
-            const sharedComplexFood = getIntersection(selectedData.map(s => s.complexFood));
-            const sharedServices = getIntersection(selectedData.map(s => s.services));
-            const sharedClothing = getIntersection(selectedData.map(s => s.clothing));
+            // Calculate intersections and pairwise data only if we have 2+ species
+            let sharedComplexFood = [];
+            let sharedServices = [];
+            let sharedClothing = [];
+            let pairwiseData = { complexFood: {}, services: {}, clothing: {} };
+            
+            if (selectedData.length >= 2) {
+                // Calculate intersections (all selected species)
+                sharedComplexFood = getIntersection(selectedData.map(s => s.complexFood));
+                sharedServices = getIntersection(selectedData.map(s => s.services));
+                sharedClothing = getIntersection(selectedData.map(s => s.clothing));
 
-            // Calculate pairwise shared needs to determine which needs are shared by at least 2 species
-            const pairwiseData = calculatePairwiseNeeds(selectedData);
+                // Calculate pairwise shared needs to determine which needs are shared by at least 2 species
+                pairwiseData = calculatePairwiseNeeds(selectedData);
+            }
 
             // Build results HTML
             let html = '<h2 style="margin-bottom: 1.5rem;">Individual Species Needs</h2>';
             
-            // Add legend for highlighting
-            html += `
-                <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; padding: 1rem; background-color: var(--bg-secondary); border-radius: 8px; flex-wrap: wrap; align-items: center;">
-                    <div style="font-weight: 600; color: var(--text-primary);">Legend:</div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="display: inline-block; width: 24px; height: 24px; background-color: var(--accent-color); border-radius: 4px; border: 2px solid var(--accent-color);"></span>
-                        <span style="font-size: 0.9rem;">Shared by all 3 species</span>
+            // Add legend for highlighting only if we have 2+ species
+            if (selectedData.length >= 2) {
+                const legendText = selectedData.length === 3 
+                    ? 'Shared by all 3 species' 
+                    : `Shared by both species`;
+                
+                html += `
+                    <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; padding: 1rem; background-color: var(--bg-secondary); border-radius: 8px; flex-wrap: wrap; align-items: center;">
+                        <div style="font-weight: 600; color: var(--text-primary);">Legend:</div>
+                `;
+                
+                if (selectedData.length === 3) {
+                    html += `
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="display: inline-block; width: 24px; height: 24px; background-color: var(--accent-color); border-radius: 4px; border: 2px solid var(--accent-color);"></span>
+                            <span style="font-size: 0.9rem;">Shared by all 3 species</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="display: inline-block; width: 24px; height: 24px; background-color: var(--accent-color-light); border-radius: 4px; border: 2px solid var(--accent-color);"></span>
+                            <span style="font-size: 0.9rem;">Shared by any 2 species</span>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="display: inline-block; width: 24px; height: 24px; background-color: var(--accent-color); border-radius: 4px; border: 2px solid var(--accent-color);"></span>
+                            <span style="font-size: 0.9rem;">Shared by both species</span>
+                        </div>
+                    `;
+                }
+                
+                html += `
                     </div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="display: inline-block; width: 24px; height: 24px; background-color: var(--accent-color-light); border-radius: 4px; border: 2px solid var(--accent-color);"></span>
-                        <span style="font-size: 0.9rem;">Shared by any 2 species</span>
-                    </div>
-                </div>
-            `;
+                `;
+            }
             
             html += '<div class="results-grid">';
 
@@ -1682,10 +1716,12 @@
                             <ul class="needs-list">
                                 ${species.complexFood.map(item => {
                                     let cssClass = '';
-                                    if (sharedComplexFood.includes(item)) {
-                                        cssClass = 'shared-all';
-                                    } else if (pairwiseData.complexFood[item]) {
-                                        cssClass = 'shared-some';
+                                    if (selectedData.length >= 2) {
+                                        if (sharedComplexFood.includes(item)) {
+                                            cssClass = 'shared-all';
+                                        } else if (pairwiseData.complexFood[item]) {
+                                            cssClass = 'shared-some';
+                                        }
                                     }
                                     return `<li class="${cssClass}">${renderNeedWithIcon(item, 'complexFood')}</li>`;
                                 }).join('')}
@@ -1696,10 +1732,12 @@
                             <ul class="needs-list">
                                 ${species.clothing.map(item => {
                                     let cssClass = '';
-                                    if (sharedClothing.includes(item)) {
-                                        cssClass = 'shared-all';
-                                    } else if (pairwiseData.clothing[item]) {
-                                        cssClass = 'shared-some';
+                                    if (selectedData.length >= 2) {
+                                        if (sharedClothing.includes(item)) {
+                                            cssClass = 'shared-all';
+                                        } else if (pairwiseData.clothing[item]) {
+                                            cssClass = 'shared-some';
+                                        }
                                     }
                                     return `<li class="${cssClass}">${renderNeedWithIcon(item, 'clothing')}</li>`;
                                 }).join('')}
@@ -1710,10 +1748,12 @@
                             <ul class="needs-list">
                                 ${species.services.map(item => {
                                     let cssClass = '';
-                                    if (sharedServices.includes(item)) {
-                                        cssClass = 'shared-all';
-                                    } else if (pairwiseData.services[item]) {
-                                        cssClass = 'shared-some';
+                                    if (selectedData.length >= 2) {
+                                        if (sharedServices.includes(item)) {
+                                            cssClass = 'shared-all';
+                                        } else if (pairwiseData.services[item]) {
+                                            cssClass = 'shared-some';
+                                        }
                                     }
                                     return `<li class="${cssClass}">${renderNeedWithIcon(item, 'services')}</li>`;
                                 }).join('')}
@@ -1725,99 +1765,103 @@
 
             html += '</div>';
 
-            // Add shared needs section with building requirements inline
-            const hasSharedNeeds = sharedComplexFood.length > 0 || 
-                                   sharedServices.length > 0 || 
-                                   sharedClothing.length > 0;
+            // Only show shared needs section if we have 2 or more species
+            if (selectedData.length >= 2) {
+                // Add shared needs section with building requirements inline
+                const hasSharedNeeds = sharedComplexFood.length > 0 || 
+                                       sharedServices.length > 0 || 
+                                       sharedClothing.length > 0;
 
-            // Create sets of shared needs for filtering
-            const allSharedNeeds = new Set([...sharedComplexFood, ...sharedClothing, ...sharedServices]);
-            
-            // Collect all needs (3-shared and 2-shared) with their species info
-            const consolidatedNeedsList = [];
-            
-            // First, add 3-shared needs (all 3 species)
-            sharedComplexFood.forEach(need => {
-                consolidatedNeedsList.push({
-                    need: need,
-                    category: 'complexFood',
-                    categoryLabel: 'Complex Food',
-                    species: selectedData.map(s => ({
-                        name: s.name,
-                        icon: s.icon,
-                        image: s.image
-                    })),
-                    sharedCount: 3
-                });
-            });
-            
-            sharedClothing.forEach(need => {
-                consolidatedNeedsList.push({
-                    need: need,
-                    category: 'clothing',
-                    categoryLabel: 'Clothing',
-                    species: selectedData.map(s => ({
-                        name: s.name,
-                        icon: s.icon,
-                        image: s.image
-                    })),
-                    sharedCount: 3
-                });
-            });
-            
-            sharedServices.forEach(need => {
-                consolidatedNeedsList.push({
-                    need: need,
-                    category: 'services',
-                    categoryLabel: 'Service',
-                    species: selectedData.map(s => ({
-                        name: s.name,
-                        icon: s.icon,
-                        image: s.image
-                    })),
-                    sharedCount: 3
-                });
-            });
-            
-            // Then, add 2-shared needs (only those NOT in the 3-shared list)
-            // Complex Food
-            Object.entries(pairwiseData.complexFood).forEach(([need, species]) => {
-                if (!allSharedNeeds.has(need)) {
+                // Create sets of shared needs for filtering
+                const allSharedNeeds = new Set([...sharedComplexFood, ...sharedClothing, ...sharedServices]);
+                
+                // Collect all needs (all-species-shared and 2-shared) with their species info
+                const consolidatedNeedsList = [];
+                
+                // First, add needs shared by ALL selected species
+                sharedComplexFood.forEach(need => {
                     consolidatedNeedsList.push({
                         need: need,
                         category: 'complexFood',
                         categoryLabel: 'Complex Food',
-                        species: species,
-                        sharedCount: species.length
+                        species: selectedData.map(s => ({
+                            name: s.name,
+                            icon: s.icon,
+                            image: s.image
+                        })),
+                        sharedCount: selectedData.length
                     });
-                }
-            });
-            
-            // Clothing
-            Object.entries(pairwiseData.clothing).forEach(([need, species]) => {
-                if (!allSharedNeeds.has(need)) {
+                });
+                
+                sharedClothing.forEach(need => {
                     consolidatedNeedsList.push({
                         need: need,
                         category: 'clothing',
                         categoryLabel: 'Clothing',
-                        species: species,
-                        sharedCount: species.length
+                        species: selectedData.map(s => ({
+                            name: s.name,
+                            icon: s.icon,
+                            image: s.image
+                        })),
+                        sharedCount: selectedData.length
                     });
-                }
-            });
-            
-            // Services
-            Object.entries(pairwiseData.services).forEach(([need, species]) => {
-                if (!allSharedNeeds.has(need)) {
+                });
+                
+                sharedServices.forEach(need => {
                     consolidatedNeedsList.push({
                         need: need,
                         category: 'services',
                         categoryLabel: 'Service',
-                        species: species,
-                        sharedCount: species.length
+                        species: selectedData.map(s => ({
+                            name: s.name,
+                            icon: s.icon,
+                            image: s.image
+                        })),
+                        sharedCount: selectedData.length
+                    });
+                });
+                
+                // Then, add 2-shared needs (only those NOT in the all-shared list) - only for 3 species
+                if (selectedData.length === 3) {
+                    // Complex Food
+                    Object.entries(pairwiseData.complexFood).forEach(([need, species]) => {
+                        if (!allSharedNeeds.has(need)) {
+                            consolidatedNeedsList.push({
+                                need: need,
+                                category: 'complexFood',
+                                categoryLabel: 'Complex Food',
+                                species: species,
+                                sharedCount: species.length
+                            });
+                        }
+                    });
+                    
+                    // Clothing
+                    Object.entries(pairwiseData.clothing).forEach(([need, species]) => {
+                        if (!allSharedNeeds.has(need)) {
+                            consolidatedNeedsList.push({
+                                need: need,
+                                category: 'clothing',
+                                categoryLabel: 'Clothing',
+                                species: species,
+                                sharedCount: species.length
+                            });
+                        }
+                    });
+                    
+                    // Services
+                    Object.entries(pairwiseData.services).forEach(([need, species]) => {
+                        if (!allSharedNeeds.has(need)) {
+                            consolidatedNeedsList.push({
+                                need: need,
+                                category: 'services',
+                                categoryLabel: 'Service',
+                                species: species,
+                                sharedCount: species.length
+                            });
+                        }
                     });
                 }
-            });
 
             // Sort the consolidated needs list:
             // 1. First by sharedCount (3-shared before 2-shared)
@@ -1884,9 +1928,14 @@
                     };
 
                     // Determine the badge text based on shared count
-                    const sharedBadge = item.sharedCount === 3 
-                        ? '<span style="background-color: var(--accent-color); color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;">All 3 Species</span>' 
-                        : '<span style="background-color: var(--bg-tertiary); color: var(--text-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;">Any 2 Species</span>';
+                    let sharedBadge;
+                    if (selectedData.length === 2) {
+                        sharedBadge = '<span style="background-color: var(--accent-color); color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;">Both Species</span>';
+                    } else if (item.sharedCount === 3) {
+                        sharedBadge = '<span style="background-color: var(--accent-color); color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;">All 3 Species</span>';
+                    } else {
+                        sharedBadge = '<span style="background-color: var(--bg-tertiary); color: var(--text-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;">Any 2 Species</span>';
+                    }
 
                     html += `
                         <div class="pairwise-item">
@@ -2092,6 +2141,7 @@
             html += `
                     </div>
             `;
+            } // End of if (selectedData.length >= 2)
 
             resultsContainer.innerHTML = html;
             
