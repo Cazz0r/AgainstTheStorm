@@ -1046,6 +1046,99 @@
             padding: 1rem;
             font-style: italic;
         }
+
+        .blueprint-item-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .blueprint-item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .blueprint-recipes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.35rem;
+            padding-left: 0.5rem;
+        }
+
+        .blueprint-recipe-tag {
+            position: relative;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            cursor: help;
+            transition: all 0.2s;
+        }
+
+        .blueprint-recipe-tag:hover {
+            border-color: var(--accent-color);
+            background-color: var(--accent-color-light);
+            transform: translateY(-1px);
+        }
+
+        .blueprint-recipe-tag .recipe-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 0.5rem;
+            background-color: var(--bg-primary);
+            border: 2px solid var(--accent-color);
+            border-radius: 6px;
+            padding: 0.5rem;
+            min-width: 200px;
+            max-width: 300px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: opacity 0.2s, visibility 0.2s;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        .blueprint-recipe-tag:hover .recipe-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .recipe-tooltip-title {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--accent-color);
+            margin-bottom: 0.35rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.25rem;
+        }
+
+        .recipe-tooltip-ingredients {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .recipe-tooltip-ingredient {
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .recipe-tooltip-ingredient::before {
+            content: '•';
+            color: var(--accent-color);
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -1513,6 +1606,20 @@
             "Mine"
         ];
 
+        // Helper function to find all recipes that a building can produce
+        function getRecipesForBuilding(buildingName) {
+            const recipes = [];
+            for (const [recipeName, recipeData] of Object.entries(recipesData)) {
+                if (recipeData.buildings && recipeData.buildings.some(b => b.building === buildingName)) {
+                    recipes.push({
+                        name: recipeName,
+                        ingredients: recipeData.ingredients
+                    });
+                }
+            }
+            return recipes;
+        }
+
         // Update blueprint list in sidebar
         function updateBlueprintList() {
             const blueprintList = document.getElementById('blueprintList');
@@ -1559,11 +1666,44 @@
                 const badgeText = isDefault ? 'Default' : 'Obtained';
                 const itemClass = isDefault ? 'default' : '';
                 
+                // Get recipes this building can produce
+                const recipes = getRecipesForBuilding(building);
+                
+                // Build recipes HTML with tooltips
+                let recipesHtml = '';
+                if (recipes.length > 0) {
+                    recipesHtml = `
+                        <div class="blueprint-recipes">
+                            ${recipes.map(recipe => {
+                                const escapedRecipeName = escapeHtml(recipe.name);
+                                const ingredientsHtml = recipe.ingredients.map(ing => 
+                                    `<div class="recipe-tooltip-ingredient">${escapeHtml(ing)}</div>`
+                                ).join('');
+                                
+                                return `
+                                    <div class="blueprint-recipe-tag">
+                                        ${escapedRecipeName}
+                                        <div class="recipe-tooltip">
+                                            <div class="recipe-tooltip-title">${escapedRecipeName}</div>
+                                            <div class="recipe-tooltip-ingredients">
+                                                ${ingredientsHtml}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                }
+                
                 return `
-                    <div class="blueprint-item ${itemClass}" data-building-name="${escapedBuilding}">
-                        <span class="blueprint-item-name">${escapedBuilding}</span>
-                        <span class="blueprint-item-badge ${badgeClass}">${badgeText}</span>
-                        <button class="blueprint-remove-btn" data-building-name="${escapedBuilding}" title="Remove blueprint" aria-label="Remove ${escapedBuilding} blueprint">✕</button>
+                    <div class="blueprint-item-container ${itemClass}">
+                        <div class="blueprint-item ${itemClass}" data-building-name="${escapedBuilding}">
+                            <span class="blueprint-item-name">${escapedBuilding}</span>
+                            <span class="blueprint-item-badge ${badgeClass}">${badgeText}</span>
+                            <button class="blueprint-remove-btn" data-building-name="${escapedBuilding}" title="Remove blueprint" aria-label="Remove ${escapedBuilding} blueprint">✕</button>
+                        </div>
+                        ${recipesHtml}
                     </div>
                 `;
             }).join('');
