@@ -607,9 +607,8 @@
   },
   "Waterskins": {
     "ingredients": [
-      "Leather",
-      "Plant Fiber",
-      "Pigment"
+      "Leather or Scales",
+      "Oil or Meat or Salt"
     ],
     "buildings": [
       {
@@ -617,12 +616,16 @@
         "stars": 3
       },
       {
-        "building": "Tannery",
+        "building": "Supplier",
         "stars": 2
       },
       {
-        "building": "Supplier",
-        "stars": 2
+        "building": "Clothier",
+        "stars": 1
+      },
+      {
+        "building": "Teahouse",
+        "stars": 1
       }
     ]
   },
