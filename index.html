@@ -1864,7 +1864,8 @@
 
             // Sort the consolidated needs list:
             // 1. First by sharedCount (3-shared before 2-shared)
-            // 2. For 2-shared recipes, sort by the earliest selected species
+            // 2. For 2-shared recipes, sort by species pair priority (1st+2nd > 1st+3rd > 2nd+3rd)
+            // 3. For tie-breaking within same pair, sort by category (food > clothing > services)
             consolidatedNeedsList.sort((a, b) => {
                 // First sort by sharedCount (descending) - 3-shared comes first
                 if (a.sharedCount !== b.sharedCount) {
@@ -1872,29 +1873,59 @@
                 }
                 
                 // For items with the same sharedCount (i.e., both are 2-shared)
-                // Find the earliest selected species for each need
-                const getEarliestSpeciesIndex = (item) => {
-                    let earliestIndex = state.maxSelection; // Start with max possible value
+                // Calculate pair priority based on which species are involved
+                const getPairPriority = (item) => {
+                    // Get the selection indices for the species in this item
+                    const indices = [];
                     item.species.forEach(speciesInfo => {
-                        // Find the species ID by matching the name
                         const speciesId = Object.keys(speciesData).find(
                             id => speciesData[id].name === speciesInfo.name
                         );
                         if (speciesId) {
                             const selectedIndex = state.selectedSpecies.indexOf(speciesId);
-                            if (selectedIndex !== -1 && selectedIndex < earliestIndex) {
-                                earliestIndex = selectedIndex;
+                            if (selectedIndex !== -1) {
+                                indices.push(selectedIndex);
                             }
                         }
                     });
-                    return earliestIndex;
+                    
+                    // Sort indices to get consistent pair representation
+                    indices.sort((x, y) => x - y);
+                    
+                    // For 3 species (indices 0, 1, 2):
+                    // - Pair (0, 1) = 1st + 2nd species -> priority 0 (highest)
+                    // - Pair (0, 2) = 1st + 3rd species -> priority 1
+                    // - Pair (1, 2) = 2nd + 3rd species -> priority 2 (lowest)
+                    if (indices.length === 2) {
+                        if (indices[0] === 0 && indices[1] === 1) return 0; // 1st + 2nd
+                        if (indices[0] === 0 && indices[1] === 2) return 1; // 1st + 3rd
+                        if (indices[0] === 1 && indices[1] === 2) return 2; // 2nd + 3rd
+                    }
+                    
+                    // Fallback for unexpected cases
+                    return 999;
                 };
                 
-                const aEarliestIndex = getEarliestSpeciesIndex(a);
-                const bEarliestIndex = getEarliestSpeciesIndex(b);
+                const aPairPriority = getPairPriority(a);
+                const bPairPriority = getPairPriority(b);
                 
-                // Sort by earliest species index (ascending) - earlier selections come first
-                return aEarliestIndex - bEarliestIndex;
+                // Sort by pair priority (ascending) - lower priority value comes first
+                if (aPairPriority !== bPairPriority) {
+                    return aPairPriority - bPairPriority;
+                }
+                
+                // Tie-breaker: sort by category (food > clothing > services)
+                const getCategoryPriority = (item) => {
+                    if (item.category === 'complexFood') return 0; // Food first
+                    if (item.category === 'clothing') return 1;    // Clothing second
+                    if (item.category === 'services') return 2;    // Services last
+                    return 999; // Fallback
+                };
+                
+                const aCategoryPriority = getCategoryPriority(a);
+                const bCategoryPriority = getCategoryPriority(b);
+                
+                return aCategoryPriority - bCategoryPriority;
             });
 
             const hasConsolidatedNeeds = consolidatedNeedsList.length > 0;
