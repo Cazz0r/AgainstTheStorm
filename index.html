@@ -250,6 +250,28 @@
             border-color: var(--border-color);
         }
 
+        .species-selection-order {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: var(--accent-color);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .species-card {
+            position: relative;
+        }
+
         .species-icon {
             font-size: 2rem;
             margin-bottom: 0.5rem;
@@ -1417,13 +1439,20 @@
                 card.className = 'species-card';
                 card.dataset.speciesId = speciesId;
 
-                if (state.selectedSpecies.includes(speciesId)) {
+                const selectionIndex = state.selectedSpecies.indexOf(speciesId);
+                const isSelected = selectionIndex > -1;
+
+                if (isSelected) {
                     card.classList.add('selected');
                 } else if (state.selectedSpecies.length >= state.maxSelection) {
                     card.classList.add('disabled');
                 }
 
+                // Add selection order badge if selected
+                const orderBadge = isSelected ? `<div class="species-selection-order">${selectionIndex + 1}</div>` : '';
+
                 card.innerHTML = `
+                    ${orderBadge}
                     <div class="species-icon">${createIconElement(species.image, species.icon, species.name)}</div>
                     <div class="species-name">${species.name}</div>
                 `;
@@ -1788,6 +1817,41 @@
                         sharedCount: species.length
                     });
                 }
+            });
+
+            // Sort the consolidated needs list:
+            // 1. First by sharedCount (3-shared before 2-shared)
+            // 2. For 2-shared recipes, sort by the earliest selected species
+            consolidatedNeedsList.sort((a, b) => {
+                // First sort by sharedCount (descending) - 3-shared comes first
+                if (a.sharedCount !== b.sharedCount) {
+                    return b.sharedCount - a.sharedCount;
+                }
+                
+                // For items with the same sharedCount (i.e., both are 2-shared)
+                // Find the earliest selected species for each need
+                const getEarliestSpeciesIndex = (item) => {
+                    let earliestIndex = state.maxSelection; // Start with max possible value
+                    item.species.forEach(speciesInfo => {
+                        // Find the species ID by matching the name
+                        const speciesId = Object.keys(speciesData).find(
+                            id => speciesData[id].name === speciesInfo.name
+                        );
+                        if (speciesId) {
+                            const selectedIndex = state.selectedSpecies.indexOf(speciesId);
+                            if (selectedIndex !== -1 && selectedIndex < earliestIndex) {
+                                earliestIndex = selectedIndex;
+                            }
+                        }
+                    });
+                    return earliestIndex;
+                };
+                
+                const aEarliestIndex = getEarliestSpeciesIndex(a);
+                const bEarliestIndex = getEarliestSpeciesIndex(b);
+                
+                // Sort by earliest species index (ascending) - earlier selections come first
+                return aEarliestIndex - bEarliestIndex;
             });
 
             const hasConsolidatedNeeds = consolidatedNeedsList.length > 0;
