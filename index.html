@@ -1858,15 +1858,16 @@
             blueprintList.querySelectorAll('.blueprint-recipe-tag').forEach(tag => {
                 const updateTooltipPosition = () => {
                     const tooltip = tag.querySelector('.recipe-tooltip');
-                    if (tooltip) {
-                        const rect = tag.getBoundingClientRect();
-                        tooltip.style.top = `${rect.top + rect.height / 2}px`;
-                        tooltip.style.left = `${rect.right + 8}px`;
+                    if (tooltip && window.getComputedStyle(tooltip).visibility === 'visible') {
+                        requestAnimationFrame(() => {
+                            const rect = tag.getBoundingClientRect();
+                            tooltip.style.top = `${rect.top + rect.height / 2}px`;
+                            tooltip.style.left = `${rect.right + 8}px`;
+                        });
                     }
                 };
                 
                 tag.addEventListener('mouseenter', updateTooltipPosition);
-                tag.addEventListener('mousemove', updateTooltipPosition);
             });
         }
 
