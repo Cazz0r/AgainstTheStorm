@@ -1087,6 +1087,7 @@
             background-color: var(--accent-color-light);
             transform: translateY(-1px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 10001;
         }
 
         .blueprint-recipe-icon {
@@ -1100,10 +1101,7 @@
         .blueprint-recipe-tag .recipe-tooltip {
             visibility: hidden;
             opacity: 0;
-            position: absolute;
-            top: 50%;
-            left: calc(100% + 8px);
-            transform: translateY(-50%) translateX(-5px);
+            position: fixed;
             background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
             border: 2px solid var(--accent-color);
             border-radius: 8px;
@@ -1112,10 +1110,11 @@
             max-width: 350px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
             z-index: 10000;
-            transition: opacity 0.2s ease-out, visibility 0.2s ease-out, transform 0.2s ease-out;
+            transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
             white-space: normal;
             word-wrap: break-word;
             pointer-events: none;
+            transform: translateY(-50%);
         }
 
         /* Tooltip arrow */
@@ -1145,7 +1144,6 @@
         .blueprint-recipe-tag:hover .recipe-tooltip {
             visibility: visible;
             opacity: 1;
-            transform: translateY(-50%) translateX(0);
         }
 
         .recipe-tooltip-title {
@@ -1852,6 +1850,18 @@
                         delete state.selectedBuildings[buildingName];
                         updateBlueprintList();
                         updateResults();
+                    }
+                });
+            });
+            
+            // Add hover listeners for tooltips to position them correctly
+            blueprintList.querySelectorAll('.blueprint-recipe-tag').forEach(tag => {
+                tag.addEventListener('mouseenter', (e) => {
+                    const tooltip = tag.querySelector('.recipe-tooltip');
+                    if (tooltip) {
+                        const rect = tag.getBoundingClientRect();
+                        tooltip.style.top = `${rect.top + rect.height / 2}px`;
+                        tooltip.style.left = `${rect.right + 8}px`;
                     }
                 });
             });
