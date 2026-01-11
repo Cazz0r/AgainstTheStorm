@@ -637,6 +637,18 @@
       {
         "building": "Tinctury",
         "stars": 3
+      },
+      {
+        "building": "Apothecary",
+        "stars": 2
+      },
+      {
+        "building": "Manufactory",
+        "stars": 2
+      },
+      {
+        "building": "Cobbler",
+        "stars": 1
       }
     ]
   },
