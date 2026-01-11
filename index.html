@@ -85,11 +85,8 @@
             background-color: var(--bg-secondary);
             border-right: 1px solid var(--border-color);
             padding: 1.5rem;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
             transition: transform var(--transition-speed);
-            z-index: 1000;
+            flex-shrink: 0;
         }
 
         .sidebar.collapsed {
@@ -187,7 +184,6 @@
         /* Main Content */
         .main-content {
             flex: 1;
-            margin-left: var(--sidebar-width);
             padding: 2rem;
             transition: margin-left var(--transition-speed);
             max-width: 100%;
@@ -975,8 +971,6 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
-            max-height: 300px;
-            overflow-y: auto;
         }
 
         .blueprint-item {
@@ -1045,6 +1039,159 @@
             font-size: 0.85rem;
             padding: 1rem;
             font-style: italic;
+        }
+
+        .blueprint-item-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .blueprint-item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .blueprint-recipes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.35rem;
+            padding-left: 0.5rem;
+        }
+
+        .blueprint-recipe-tag {
+            position: relative;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            cursor: help;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .blueprint-recipe-tag:hover {
+            border-color: var(--accent-color);
+            background-color: var(--accent-color-light);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 10001;
+        }
+
+        .blueprint-recipe-icon {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+            display: inline-block;
+        }
+
+        /* Enhanced custom tooltip */
+        .blueprint-recipe-tag .recipe-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            left: calc(100% + 8px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            min-width: 220px;
+            max-width: min(600px, calc(100vw - 350px));
+            width: max-content;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            z-index: 10000;
+            transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
+            white-space: normal;
+            word-wrap: break-word;
+            pointer-events: none;
+        }
+
+        /* Tooltip arrow */
+        .blueprint-recipe-tag .recipe-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 100%;
+            transform: translateY(-50%);
+            border: 8px solid transparent;
+            border-right-color: var(--accent-color);
+            filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+            z-index: -1;
+        }
+
+        .blueprint-recipe-tag .recipe-tooltip::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 100%;
+            transform: translateY(-50%) translateX(2px);
+            border: 6px solid transparent;
+            border-right-color: var(--bg-primary);
+            z-index: -1;
+        }
+
+        .blueprint-recipe-tag:hover .recipe-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .recipe-tooltip-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            margin-bottom: 0.6rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .recipe-tooltip-title-icon {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+        }
+
+        .recipe-tooltip-ingredients {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .recipe-tooltip-ingredient {
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.25rem 0;
+            line-height: 1.4;
+        }
+
+        .recipe-tooltip-ingredient::before {
+            content: '▪';
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .recipe-tooltip-ingredient-icon {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+            margin: 0 2px;
+            filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.15));
         }
     </style>
 </head>
@@ -1513,6 +1660,58 @@
             "Mine"
         ];
 
+        // Helper function to find all recipes that a building can produce
+        function getRecipesForBuilding(buildingName) {
+            const recipes = [];
+            
+            // Check recipes.json (final consumer goods)
+            for (const [recipeName, recipeData] of Object.entries(recipesData)) {
+                if (recipeData.buildings && recipeData.buildings.some(b => b.building === buildingName)) {
+                    recipes.push({
+                        name: recipeName,
+                        ingredients: recipeData.ingredients
+                    });
+                }
+            }
+            
+            // Check ingredientRecipes.json (intermediate goods)
+            // Only include ingredient recipes if the building is NOT a default building
+            // This excludes raw materials like wood, stone, herbs, etc.
+            if (!defaultBuildings.includes(buildingName)) {
+                for (const [recipeName, recipeData] of Object.entries(ingredientRecipes)) {
+                    if (recipeData.buildings && recipeData.buildings.some(b => b.building === buildingName)) {
+                        recipes.push({
+                            name: recipeName,
+                            ingredients: recipeData.ingredients
+                        });
+                    }
+                }
+            }
+            
+            return recipes;
+        }
+
+        // Helper function to determine recipe category for icon path
+        function getRecipeCategory(recipeName) {
+            const complexFood = ['Biscuits', 'Jerky', 'Pickled Goods', 'Pie', 'Skewers', 'Porridge', 'Paste'];
+            const clothing = ['Coats', 'Boots', 'Waterskins'];
+            const services = ['Leisure', 'Luxury', 'Cleanliness', 'Religion', 'Education', 'Brawling', 'Treatment'];
+            const tradableGoods = ['Ale', 'Wine', 'Pottery', 'Barrels', 'Scrolls', 'Incense', 'Tea', 'Training Gear', 'Pack of Crops', 'Pack of Provisions', 'Pack of Building Materials', 'Pack of Luxury Goods', 'Pack of Trade Goods'];
+            const buildingMaterials = ['Fabric', 'Planks', 'Bricks', 'Parts'];
+            const processingMaterials = ['Leather', 'Flour', 'Oil', 'Resin', 'Dye', 'Pigment', 'Crystalized Dew'];
+            
+            if (complexFood.includes(recipeName)) {
+                return 'complexFood';
+            } else if (clothing.includes(recipeName)) {
+                return 'clothing';
+            } else if (services.includes(recipeName)) {
+                return 'services';
+            } else {
+                // All other items (tradable goods, building materials, processing materials) use goods icons
+                return 'complexFood'; // Using complexFood as fallback since it uses the goods path
+            }
+        }
+
         // Update blueprint list in sidebar
         function updateBlueprintList() {
             const blueprintList = document.getElementById('blueprintList');
@@ -1559,11 +1758,80 @@
                 const badgeText = isDefault ? 'Default' : 'Obtained';
                 const itemClass = isDefault ? 'default' : '';
                 
+                // Get recipes this building can produce
+                const recipes = getRecipesForBuilding(building);
+                
+                // Build recipes HTML with enhanced tooltips and icons
+                let recipesHtml = '';
+                if (recipes.length > 0) {
+                    recipesHtml = `
+                        <div class="blueprint-recipes">
+                            ${recipes.map((recipe, idx) => {
+                                const escapedRecipeName = escapeHtml(recipe.name);
+                                const category = getRecipeCategory(recipe.name);
+                                
+                                // Get recipe icon
+                                let recipeIconPath = getNeedIconPath(recipe.name, category);
+                                recipeIconPath = recipeIconPath.replace(/[^a-zA-Z0-9\/_.-]/g, '');
+                                if (!recipeIconPath.startsWith('images/')) {
+                                    recipeIconPath = '';
+                                }
+                                
+                                const recipeIconHtml = recipeIconPath 
+                                    ? `<img src="${recipeIconPath}" alt="${escapedRecipeName}" class="blueprint-recipe-icon" onerror="this.style.display='none';" />`
+                                    : '';
+                                
+                                // Build tooltip content with ingredient icons
+                                const ingredientsHtml = recipe.ingredients.map(ing => {
+                                    // Parse ingredients for "or" options and render with icons
+                                    const ingParts = ing.split(' or ').map(part => part.trim());
+                                    const renderedParts = ingParts.map(part => {
+                                        let ingIconPath = getGoodIconPath(part);
+                                        ingIconPath = ingIconPath.replace(/[^a-zA-Z0-9\/_.-]/g, '');
+                                        if (!ingIconPath.startsWith('images/')) {
+                                            ingIconPath = '';
+                                        }
+                                        const ingIconHtml = ingIconPath 
+                                            ? `<img src="${ingIconPath}" alt="${escapeHtml(part)}" class="recipe-tooltip-ingredient-icon" onerror="this.style.display='none';" />`
+                                            : '';
+                                        return `${ingIconHtml}${escapeHtml(part)}`;
+                                    }).join(' <span style="color: var(--text-secondary); padding: 0 0.2rem; font-weight: normal;">or</span> ');
+                                    
+                                    return `<div class="recipe-tooltip-ingredient">${renderedParts}</div>`;
+                                }).join('');
+                                
+                                const tooltipTitleIconHtml = recipeIconPath 
+                                    ? `<img src="${recipeIconPath}" alt="${escapedRecipeName}" class="recipe-tooltip-title-icon" onerror="this.style.display='none';" />`
+                                    : '';
+                                
+                                return `
+                                    <div class="blueprint-recipe-tag">
+                                        ${recipeIconHtml}
+                                        ${escapedRecipeName}
+                                        <div class="recipe-tooltip">
+                                            <div class="recipe-tooltip-title">
+                                                ${tooltipTitleIconHtml}
+                                                ${escapedRecipeName}
+                                            </div>
+                                            <div class="recipe-tooltip-ingredients">
+                                                ${ingredientsHtml}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                }
+                
                 return `
-                    <div class="blueprint-item ${itemClass}" data-building-name="${escapedBuilding}">
-                        <span class="blueprint-item-name">${escapedBuilding}</span>
-                        <span class="blueprint-item-badge ${badgeClass}">${badgeText}</span>
-                        <button class="blueprint-remove-btn" data-building-name="${escapedBuilding}" title="Remove blueprint" aria-label="Remove ${escapedBuilding} blueprint">✕</button>
+                    <div class="blueprint-item-container ${itemClass}">
+                        <div class="blueprint-item ${itemClass}" data-building-name="${escapedBuilding}">
+                            <span class="blueprint-item-name">${escapedBuilding}</span>
+                            <span class="blueprint-item-badge ${badgeClass}">${badgeText}</span>
+                            <button class="blueprint-remove-btn" data-building-name="${escapedBuilding}" title="Remove blueprint" aria-label="Remove ${escapedBuilding} blueprint">✕</button>
+                        </div>
+                        ${recipesHtml}
                     </div>
                 `;
             }).join('');
@@ -1582,6 +1850,7 @@
                     }
                 });
             });
+            
         }
 
         // Calculate intersection of arrays
