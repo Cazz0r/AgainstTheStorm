@@ -526,6 +526,18 @@
       {
         "building": "Teahouse",
         "stars": 3
+      },
+      {
+        "building": "Apothecary",
+        "stars": 2
+      },
+      {
+        "building": "Alchemist's Hut",
+        "stars": 2
+      },
+      {
+        "building": "Druid's Hut",
+        "stars": 2
       }
     ]
   },
