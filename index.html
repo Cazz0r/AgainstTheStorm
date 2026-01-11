@@ -88,6 +88,7 @@
             position: fixed;
             height: 100vh;
             overflow-y: auto;
+            overflow-x: visible;
             transition: transform var(--transition-speed);
             z-index: 1000;
         }
@@ -975,6 +976,9 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            max-height: 400px;
+            overflow-y: auto;
+            overflow-x: visible;
         }
 
         .blueprint-item {
@@ -1099,10 +1103,7 @@
         .blueprint-recipe-tag .recipe-tooltip {
             visibility: hidden;
             opacity: 0;
-            position: absolute;
-            left: calc(100% + 8px);
-            top: 50%;
-            transform: translateY(-50%);
+            position: fixed;
             background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
             border: 2px solid var(--accent-color);
             border-radius: 8px;
@@ -1854,6 +1855,39 @@
                 });
             });
             
+            // Add tooltip positioning for recipe tags
+            blueprintList.querySelectorAll('.blueprint-recipe-tag').forEach(tag => {
+                const tooltip = tag.querySelector('.recipe-tooltip');
+                if (tooltip) {
+                    tag.addEventListener('mouseenter', () => {
+                        const rect = tag.getBoundingClientRect();
+                        const tooltipRect = tooltip.getBoundingClientRect();
+                        
+                        // Calculate desired position to the right of the tag
+                        let left = rect.right + 8;
+                        let top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+                        
+                        // Ensure tooltip stays within viewport bounds
+                        const viewportWidth = window.innerWidth;
+                        const viewportHeight = window.innerHeight;
+                        
+                        // If tooltip would exceed right edge, position it to the left instead
+                        if (left + tooltipRect.width > viewportWidth - 10) {
+                            left = rect.left - tooltipRect.width - 8;
+                        }
+                        
+                        // Ensure tooltip doesn't go off top or bottom
+                        if (top < 10) {
+                            top = 10;
+                        } else if (top + tooltipRect.height > viewportHeight - 10) {
+                            top = viewportHeight - tooltipRect.height - 10;
+                        }
+                        
+                        tooltip.style.left = `${left}px`;
+                        tooltip.style.top = `${top}px`;
+                    });
+                }
+            });
         }
 
         // Calculate intersection of arrays
