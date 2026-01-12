@@ -495,13 +495,25 @@
   },
   "Incense": {
     "ingredients": [
-      "Herbs or Reed or Roots",
-      "Wood or Oil or Coal"
+      "Herbs or Roots or Insects or Scales or Salt or Resin",
+      "Wood or Oil or Coal or Sea Marrow"
     ],
     "buildings": [
       {
-        "building": "Apothecary",
-        "stars": 3
+        "building": "Brick Oven",
+        "stars": 2
+      },
+      {
+        "building": "Distillery",
+        "stars": 2
+      },
+      {
+        "building": "Teahouse",
+        "stars": 2
+      },
+      {
+        "building": "Smokehouse",
+        "stars": 1
       }
     ]
   },
