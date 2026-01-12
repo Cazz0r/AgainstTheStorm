@@ -1356,6 +1356,61 @@
             buildingObtainOrder: [] // Track the order buildings are obtained (most recent at the end)
         };
 
+        // URL State Management
+        // Save current state to URL parameters
+        function saveStateToURL() {
+            const params = new URLSearchParams();
+            
+            // Save selected species (use species IDs in order)
+            if (state.selectedSpecies.length > 0) {
+                params.set('species', state.selectedSpecies.join(','));
+            }
+            
+            // Save selected blueprints (exclude default buildings)
+            const customBuildings = Object.keys(state.selectedBuildings)
+                .filter(building => state.selectedBuildings[building] && !defaultBuildings.includes(building));
+            
+            if (customBuildings.length > 0) {
+                // Encode building names for URL safety
+                params.set('blueprints', customBuildings.join(','));
+            }
+            
+            // Update URL without reloading the page
+            const newURL = params.toString() 
+                ? `${window.location.pathname}?${params.toString()}`
+                : window.location.pathname;
+            
+            window.history.replaceState({}, '', newURL);
+        }
+
+        // Restore state from URL parameters
+        function restoreStateFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            
+            // Restore selected species
+            const speciesParam = params.get('species');
+            if (speciesParam) {
+                const speciesIds = speciesParam.split(',').filter(id => speciesData[id]);
+                // Only restore valid species up to maxSelection
+                state.selectedSpecies = speciesIds.slice(0, state.maxSelection);
+            }
+            
+            // Restore selected blueprints
+            const blueprintsParam = params.get('blueprints');
+            if (blueprintsParam) {
+                const buildingNames = blueprintsParam.split(',').map(name => decodeURIComponent(name));
+                buildingNames.forEach(building => {
+                    if (building && !defaultBuildings.includes(building)) {
+                        state.selectedBuildings[building] = true;
+                        // Add to obtain order
+                        if (!state.buildingObtainOrder.includes(building)) {
+                            state.buildingObtainOrder.push(building);
+                        }
+                    }
+                });
+            }
+        }
+
         // Helper function to create image element with emoji fallback
         function createIconElement(imagePath, emoji, altText) {
             if (imagePath) {
@@ -1569,6 +1624,7 @@
         // Initialize the app
         async function init() {
             await loadConfigFiles();
+            restoreStateFromURL(); // Restore state from URL parameters
             renderSpeciesGrid();
             setupEventListeners();
             updateBlueprintList(); // Initialize the blueprint list on page load
@@ -1623,6 +1679,7 @@
                 state.selectedSpecies.push(speciesId);
             }
 
+            saveStateToURL(); // Save state to URL
             renderSpeciesGrid();
         }
 
@@ -1845,6 +1902,12 @@
                     const buildingName = btn.dataset.buildingName;
                     if (!defaultBuildings.includes(buildingName)) {
                         delete state.selectedBuildings[buildingName];
+                        // Remove from obtain order tracking
+                        const index = state.buildingObtainOrder.indexOf(buildingName);
+                        if (index > -1) {
+                            state.buildingObtainOrder.splice(index, 1);
+                        }
+                        saveStateToURL(); // Save state to URL
                         updateBlueprintList();
                         updateResults();
                     }
@@ -2806,6 +2869,7 @@
             // Clear building obtain order
             state.buildingObtainOrder = [];
             
+            saveStateToURL(); // Clear URL parameters
             // Re-render the UI
             renderSpeciesGrid();
             updateBlueprintList();
@@ -2876,6 +2940,7 @@
                 state.buildingObtainOrder.push(buildingName);
             }
             
+            saveStateToURL(); // Save state to URL
             // Re-render results to update the building states
             updateResults();
         }
