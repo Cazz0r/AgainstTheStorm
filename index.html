@@ -1356,6 +1356,105 @@
             buildingObtainOrder: [] // Track the order buildings are obtained (most recent at the end)
         };
 
+        // URL State Management
+        // Save current state to URL parameters
+        function saveStateToURL() {
+            const params = new URLSearchParams();
+            
+            // Save selected species (use species IDs in order)
+            if (state.selectedSpecies.length > 0) {
+                params.set('species', state.selectedSpecies.join(','));
+            }
+            
+            // Save selected blueprints (exclude default buildings)
+            const customBuildings = Object.keys(state.selectedBuildings)
+                .filter(building => state.selectedBuildings[building] && !defaultBuildings.includes(building));
+            
+            if (customBuildings.length > 0) {
+                // Encode building names for URL safety
+                params.set('blueprints', customBuildings.join(','));
+            }
+            
+            // Update URL without reloading the page
+            const newURL = params.toString() 
+                ? `${window.location.pathname}?${params.toString()}`
+                : window.location.pathname;
+            
+            window.history.replaceState({}, '', newURL);
+        }
+
+        // Restore state from URL parameters
+        function restoreStateFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            
+            // Restore selected species
+            const speciesParam = params.get('species');
+            if (speciesParam) {
+                // Validate and sanitize species parameter
+                // Only allow alphanumeric characters and underscores in species IDs
+                const sanitizedSpeciesParam = speciesParam.replace(/[^a-zA-Z0-9_,]/g, '');
+                const speciesIds = sanitizedSpeciesParam.split(',')
+                    .filter(id => id.length > 0 && id.length < 50) // Reasonable length check
+                    .filter(id => speciesData[id]); // Only valid species IDs from our data
+                // Only restore valid species up to maxSelection
+                state.selectedSpecies = speciesIds.slice(0, state.maxSelection);
+            }
+            
+            // Restore selected blueprints
+            const blueprintsParam = params.get('blueprints');
+            if (blueprintsParam) {
+                // First, get all valid building names from our data sources
+                const validBuildingNames = new Set();
+                
+                // Collect buildings from recipes
+                Object.values(recipesData).forEach(recipe => {
+                    if (recipe.buildings) {
+                        recipe.buildings.forEach(b => validBuildingNames.add(b.building));
+                    }
+                });
+                
+                // Collect buildings from ingredient recipes
+                Object.values(ingredientRecipes).forEach(recipeData => {
+                    const recipeGroups = Array.isArray(recipeData) ? recipeData : [recipeData];
+                    recipeGroups.forEach(group => {
+                        if (group.buildings) {
+                            group.buildings.forEach(b => validBuildingNames.add(b.building));
+                        }
+                    });
+                });
+                
+                // Parse and validate building names from URL
+                try {
+                    const buildingNames = blueprintsParam.split(',')
+                        .map(name => {
+                            // Decode URI component safely
+                            try {
+                                return decodeURIComponent(name);
+                            } catch (e) {
+                                return null; // Invalid encoding
+                            }
+                        })
+                        .filter(name => name !== null)
+                        .filter(name => name.length > 0 && name.length < 100) // Reasonable length check
+                        .filter(name => validBuildingNames.has(name)) // Only valid building names from game data
+                        .filter(name => !defaultBuildings.includes(name)); // Exclude default buildings
+                    
+                    // Limit number of blueprints to prevent abuse
+                    const maxBlueprints = 50;
+                    buildingNames.slice(0, maxBlueprints).forEach(building => {
+                        state.selectedBuildings[building] = true;
+                        // Add to obtain order
+                        if (!state.buildingObtainOrder.includes(building)) {
+                            state.buildingObtainOrder.push(building);
+                        }
+                    });
+                } catch (e) {
+                    // Silently ignore malformed blueprint parameter
+                    console.warn('Invalid blueprints parameter in URL');
+                }
+            }
+        }
+
         // Helper function to create image element with emoji fallback
         function createIconElement(imagePath, emoji, altText) {
             if (imagePath) {
@@ -1569,6 +1668,7 @@
         // Initialize the app
         async function init() {
             await loadConfigFiles();
+            restoreStateFromURL(); // Restore state from URL parameters
             renderSpeciesGrid();
             setupEventListeners();
             updateBlueprintList(); // Initialize the blueprint list on page load
@@ -1623,6 +1723,7 @@
                 state.selectedSpecies.push(speciesId);
             }
 
+            saveStateToURL(); // Save state to URL
             renderSpeciesGrid();
         }
 
@@ -1845,6 +1946,12 @@
                     const buildingName = btn.dataset.buildingName;
                     if (!defaultBuildings.includes(buildingName)) {
                         delete state.selectedBuildings[buildingName];
+                        // Remove from obtain order tracking
+                        const index = state.buildingObtainOrder.indexOf(buildingName);
+                        if (index > -1) {
+                            state.buildingObtainOrder.splice(index, 1);
+                        }
+                        saveStateToURL(); // Save state to URL
                         updateBlueprintList();
                         updateResults();
                     }
@@ -2806,6 +2913,7 @@
             // Clear building obtain order
             state.buildingObtainOrder = [];
             
+            saveStateToURL(); // Clear URL parameters
             // Re-render the UI
             renderSpeciesGrid();
             updateBlueprintList();
@@ -2876,6 +2984,7 @@
                 state.buildingObtainOrder.push(buildingName);
             }
             
+            saveStateToURL(); // Save state to URL
             // Re-render results to update the building states
             updateResults();
         }
