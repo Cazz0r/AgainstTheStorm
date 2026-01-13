@@ -361,5 +361,33 @@
       }
     ],
     "workerRequired": true
+  },
+  "Treatment": {
+    "ingredients": [
+      "Tea"
+    ],
+    "buildings": [
+      {
+        "building": "Bath House",
+        "stars": 1
+      },
+      {
+        "building": "Feast Hall",
+        "stars": 1
+      },
+      {
+        "building": "Holy Market",
+        "stars": 1
+      },
+      {
+        "building": "Market",
+        "stars": 1
+      },
+      {
+        "building": "Tea Doctor",
+        "stars": 1
+      }
+    ],
+    "workerRequired": true
   }
 }
