@@ -93,10 +93,6 @@
         "building": "Small Herbalists' Camp",
         "stars": 1,
         "isGathered": true
-      },
-      {
-        "building": "Ranch",
-        "stars": 1
       }
     ]
   },
