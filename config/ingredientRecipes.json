@@ -604,24 +604,16 @@
         "stars": 3
       },
       {
-        "building": "Flawless Cooperage",
-        "stars": 3
+        "building": "Artisan",
+        "stars": 2
       },
       {
-        "building": "Toolshop",
+        "building": "Manufactory",
         "stars": 2
       },
       {
         "building": "Provisioner",
         "stars": 2
-      },
-      {
-        "building": "Artisan",
-        "stars": 2
-      },
-      {
-        "building": "Distillery",
-        "stars": 1
       }
     ]
   },
